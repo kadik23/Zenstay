@@ -1,17 +1,16 @@
 const express = require("express")
 const cors = require('cors')
 const { default: mongoose } = require("mongoose")
-const User = require('module/User.js')
+const User = require('./models/User.js')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
-
-mongoose.connect(process.env.MONGO_URL)
 require("dotenv").config()
+mongoose.connect(process.env.MONGO_URL)
 
 const app = express()
 app.use(cors({
     credentials:true,
-    origin:'http://127.0.0.1:5173',
+    // origin:'http://127.0.0.1:5173',
 }))
 app.use(express.json())
 
@@ -23,14 +22,18 @@ app.get("/hello",(req,res)=>{
 })
 
 app.post("/register",async (req,res)=>{
-    const {username,firstName,lastname,email,password} = req.body
+    const {username,firstname,lastname,email,password,account_type} = req.body
     try{
+        let pass = bcrypt.hashSync(password, bcryptSalt)
         const userDoc = await User.create({
             email,
-            password:bcrypt.hashSync(password, bcryptSalt),
-            username
+            username,
+            firstname,
+            lastname,
+            password:pass,
+            account_type,
         })
-        res.json({username,firstName,lastname,email,password})
+        res.json({username,firstname,lastname,email,password,account_type})
     }catch(e){
         res.status(422).json(e)
     }  
