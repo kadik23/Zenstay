@@ -1,0 +1,37 @@
+.banner {
+    margin-block: 70px;
+    background-image: url("./assets/banner-room.jpg");
+}
+
+.navbar {
+    background: transparent;
+    backdrop-filter: blur(10px);
+}
+
+.rating {
+    background: #E1ffd7;
+    color: #42ba79;
+}
+.room-status {
+    color: #3bb37a;
+}
+.popularCard {
+    background-image: url("/src/assets/breakfast.jpg");
+    object-fit: cover;
+    background-size: cover;
+}
+
+.popularCard > div {
+    background: transparent;
+    backdrop-filter: blur(2px);
+}
+
+
+.modal {
+    --bs-modal-bg: none;
+}
+
+.Signup {
+    height: 100vh;
+    background-color: #111827;
+}
