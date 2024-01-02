@@ -1,3 +1,5 @@
+import { NavLink } from "react-router-dom";
+
 export default function Popular() {
 
     return(
@@ -8,7 +10,7 @@ export default function Popular() {
                         <h3 className="pt-5 mb-4 display-7 lh-1 fw-bold">breakfast</h3>
                         <ul className="d-flex list-unstyled mt-auto">
                             <li className="me-auto">
-                                <span className="text-scondary-body-emphasis me-lg-4" href="#">Zentsy</span>
+                                <NavLink to='/' className="text-scondary-body-emphasis me-lg-4">Zentsy</NavLink>
                             </li>
                             <li className="rounded-pill bg-white px-2 text-black">
                                 <small>10$</small>

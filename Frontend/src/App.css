@@ -28,10 +28,16 @@
 
 
 .modal {
-    --bs-modal-bg: none;
+    --bs-modal-bg: transparent;
 }
 
 .Signup {
     height: 100vh;
     background-color: #111827;
+    color: #6b6f71;
+}
+
+.form-control {
+    background-color: transparent;
+    border: none;
 }

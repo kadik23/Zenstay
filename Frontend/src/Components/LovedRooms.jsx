@@ -1,3 +1,4 @@
+import { NavLink } from "react-router-dom"
 import rightChevrone from "../assets/right-chevron.png"
 import image from "../assets/room1.jpg"
 
@@ -18,12 +19,12 @@ export default function LovedRooms() {
                         </small>
                         <ul className="d-flex list-unstyled mb-0">
                             <li className="w-100">
-                                    <a className="text-decoration-none text-body-emphasis me-lg-4" href="#">
+                                    <NavLink to='RoomsOverview' className="text-decoration-none text-body-emphasis me-lg-4" href="#">
                                         <small className="d-flex justify-content-between align-items-center">
                                             from $130/night
                                             <img src={rightChevrone} alt="" />
                                         </small>
-                                    </a>
+                                    </NavLink>
                             </li>
                         </ul>
                     </div>
