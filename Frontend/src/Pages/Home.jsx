@@ -1,10 +1,23 @@
 import Banner from "../Components/Banner"
 import Popular from "../Components/Popular"
 import LovedRooms from "../Components/LovedRooms"
-
+import axios from 'axios'
 export default function Home() {
 
-  return (
+    async function getRooms(){
+        try{
+            let response = await axios.get('getAllRooms')
+            if(response){
+                console.log(response.data)
+            }else{
+                console.log('some issues')
+            }
+        }catch(e){
+            console.log(e)
+        }
+    }
+    getRooms()
+    return (
     <>
         <Banner />
         <div className="container px-4 py-3" id="custom-cards">

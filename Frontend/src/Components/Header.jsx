@@ -6,7 +6,7 @@ export default function Header() {
         <div>
             <nav className="navbar navbar-expand-md navbar-light bg-white bg-opacity-75 fixed-top ">
                 <div className="container">
-                    <NavLink to='/' className="navbar-brand text-body-emphasis me-lg-4">Zentsy</NavLink>
+                    <NavLink to='/' className="navbar-brand text-body-emphasis me-lg-4">Zenstay</NavLink>
                     <div className="collapse navbar-collapse" id="navbarCollapse">
                         <ul className="navbar-nav me-auto mb-2 mb-md-0">
                             <li className="nav-item me-lg-4">
@@ -16,7 +16,7 @@ export default function Header() {
                                 <NavLink to='PreviewRooms' className="nav-link">Search</NavLink>
                             </li>
                             <li className="nav-item me-lg-4">
-                                <NavLink className="nav-link" >Popualr</NavLink>
+                                <NavLink className="nav-link" >Popular</NavLink>
                             </li>
                         </ul>
                         <div className="text-end">
