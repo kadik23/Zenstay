@@ -1,7 +1,27 @@
 import { NavLink } from 'react-router-dom';
 import fbicon from '../assets/icons/facebook.png'
 import googleicon from '../assets/icons/google.png'
+import axios from 'axios'
+import {useState} from 'react'
+    
+
 export default function LogIn(){
+
+    const [email,setEmail] = useState('')
+    const [password,setPassword] = useState('')
+
+    const login = async (ev) =>{
+        ev.preventDefault();
+        try{
+            let {response} = await axios.post('login',{
+                email,password
+            })
+            alert('Login successful');
+            console.log(response)
+        }catch(e){
+            alert('Login failed');
+        }
+    }
 
     return(
         <>
@@ -15,11 +35,25 @@ export default function LogIn(){
                         <div className="modal-body p-5 pt-0">
                             <form className="">
                                 <div className="border border-secondary rounded-2 form-floating mb-3">
-                                    <input type="email" className="form-control rounded-3" id="floatingInput" placeholder="name@example.com"/>
+                                    <input 
+                                            type="email" 
+                                            className="form-control rounded-3" 
+                                            id="floatingInput" 
+                                            value={email}
+                                            onChange={ev=>setEmail(ev.target.value)}
+                                            placeholder="name@example.com"
+                                    />
                                     <label htmlFor="floatingInput">Email address</label>
                                 </div>
                                 <div className="border border-secondary rounded-2 form-floating mb-3">
-                                    <input type="password" className="form-control rounded-3" id="floatingPassword" placeholder="Password"/>
+                                    <input   
+                                            type="password" 
+                                            className="form-control rounded-3" 
+                                            id="floatingPassword" 
+                                            placeholder="Password"
+                                            value={password}
+                                            onChange={ev=>setPassword(ev.target.value)}
+                                    />
                                     <label htmlFor="floatingPassword">Password</label>
                                 </div>
                                 <button className="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Log in</button>
