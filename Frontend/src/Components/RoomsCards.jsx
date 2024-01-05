@@ -1,5 +1,7 @@
+import { NavLink } from "react-router-dom"
 import image from "../assets/room2.jpg"
 export default function RoomsCards() {
+    
     return (
 
         <div className="col mb-3">
@@ -11,19 +13,19 @@ export default function RoomsCards() {
                         </div>
                         <div className="h-lg-100 d-flex flex-column">
                             <h4 className="mb-auto">Hotel Norrebro</h4>
-                                <span>comfort room</span>
-                                <span>1x king size bed</span>
-                                <span>1x bathroom</span>
-                                <div className="mt-3 d-lg-flex align-items-center">
-                                    <div className="d-md-block border border-primary rounded-pill p-1 px-3 text-primary me-2 "
-                                    style={{width:"fit-content"}}>
-                                        #Hot deal
-                                    </div>
-                                    <div className="d-md-block border border-primary rounded-pill p-1 px-3 text-primary"
-                                    style={{width:"fit-content"}} >
-                                        #Popular
-                                    </div>
+                            <span>comfort room</span>
+                            <span>1x king size bed</span>
+                            <span>1x bathroom</span>
+                            <div className="mt-3 d-lg-flex align-items-center">
+                                <div className="d-md-block border border-primary rounded-pill p-1 px-3 text-primary me-2 "
+                                style={{width:"fit-content"}}>
+                                    #Hot deal
                                 </div>
+                                <div className="d-md-block border border-primary rounded-pill p-1 px-3 text-primary"
+                                style={{width:"fit-content"}} >
+                                    #Popular
+                                </div>
+                            </div>
                         </div>
 
                     </div>
@@ -34,7 +36,7 @@ export default function RoomsCards() {
                         </div>
                         <strong className="align-self-end">$180</strong>
                         <span className="align-self-end">1x king size bed</span>
-                        <button className="w-md-75 btn btn-primary rounded-pill w-lg-100 mt-2">see booking options</button>
+                        <NavLink to='/BookingOpt' className="w-md-75 btn btn-primary rounded-pill w-lg-100 mt-2">see booking options</NavLink>
                     </div>
                 </div>
             </div>

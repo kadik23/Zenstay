@@ -7,7 +7,7 @@ export default function LovedRooms() {
     return(
         <div>
             <div className="col">
-                <div className="card card-cover h-100 overflow-hidden rounded-4 shadow-lg lovedRooms">
+                <div className="card card-cover h-100 overflow-hidden rounded-4 shadow lovedRooms">
                     <div className="d-flex flex-column h-100 p-2 text-black text-shadow-1">
                         <div>
                             <img src={image} className="position-relative w-100 rounded-4" alt="" />
