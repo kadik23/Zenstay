@@ -3,6 +3,7 @@ const cors = require('cors')
 const { default: mongoose } = require("mongoose")
 const User = require('./models/User.js')
 const Room = require('./models/Room.js')
+const Booking = require('./models/Booking.js')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
 require("dotenv").config()
@@ -106,9 +107,22 @@ app.post('/room_post',async(req, res)=>{
         }
         res.json(room)
     }catch(e){
-        res.status(500).json('Internal Server Error'+e)
+        res.status(500).json('Internal Server Error')
     }
 })
+
+app.post('/booking_room', async (req, res) => {
+    try{
+        const { userID, roomID,checkIn,checkOut } = req.body;
+        const doc = await Booking.create({
+            user_id: userID,room_id: roomID,check_in:checkIn,check_out:checkOut
+        })
+            res.json(doc);
+    } catch(err){
+        res.status(500).json('Internal Server Error' + err);
+    }
+});
+
 
 app.get('*',async(req,res)=>{
     res.status(422).json('not found')
@@ -119,36 +133,36 @@ app.listen(3000,()=>{
 })
 
 //for learning
-var http = require("http")
-console.log(http)
-http.createServer((req,res)=>{
-    res.writeHead(200,"ok" .writeHead(200, {
-        'Content-Length': Buffer.byteLength(body),
-        'Content-Type': 'text/plain',
-    }))
-    res.write("hello to port 100")
-    res.end()
-}).listen(101,"localhost",()=>{
-    console.log("hello from 101")
-})
-
-var http2 = require("http")
-console.log(http2)
-http2.createServer((req,res)=>{
-    res.writeHead(200,"ok" .writeHead(200, {
-        'Content-Length': Buffer.byteLength(body),
-        'Content-Type': 'text/plain',
-    }))
-    res.end("hello to port 102")
-}).listen(102,"localhost",()=>{
-    console.log("hello from 102")
-})
-
-fs = require('fs')
-// fs.appendFile("text.txt","hello from nodeJs",()=>{
-//     console.log("file is created")
+// var http = require("http")
+// console.log(http)
+// http.createServer((req,res)=>{
+//     res.writeHead(200,"ok" .writeHead(200, {
+//         'Content-Length': Buffer.byteLength(body),
+//         'Content-Type': 'text/plain',
+//     }))
+//     res.write("hello to port 100")
+//     res.end()
+// }).listen(101,"localhost",()=>{
+//     console.log("hello from 101")
 // })
-fs.readFile("package.json","utf-8",function(er,data){
-    console.log(data)
-})
+
+// var http2 = require("http")
+// console.log(http2)
+// http2.createServer((req,res)=>{
+//     res.writeHead(200,"ok" .writeHead(200, {
+//         'Content-Length': Buffer.byteLength(body),
+//         'Content-Type': 'text/plain',
+//     }))
+//     res.end("hello to port 102")
+// }).listen(102,"localhost",()=>{
+//     console.log("hello from 102")
+// })
+
+// fs = require('fs')
+// // fs.appendFile("text.txt","hello from nodeJs",()=>{
+// //     console.log("file is created")
+// // })
+// fs.readFile("package.json","utf-8",function(er,data){
+//     console.log(data)
+// })
 
