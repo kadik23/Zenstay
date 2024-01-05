@@ -8,6 +8,9 @@ import RoomsOverview from './Pages/RoomsOverview'
 import BookingOpt from './Pages/BookingOpt'
 import LogIn from './Pages/LogIn'
 import SignUp from './Pages/SignUp'
+import axios from "axios";
+axios.defaults.baseURL = 'http://127.0.0.1:3000';
+axios.defaults.withCredentials = true;
 
 // Layouts
 import RootLayout from './Layouts/RootLayout'

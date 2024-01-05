@@ -1,8 +1,28 @@
 import { NavLink } from 'react-router-dom'
 import fbicon from '../assets/icons/facebook.png'
 import googleicon from '../assets/icons/google.png'
-export default function SingUp(){
+import axios from "axios";
+import {useState} from "react";
 
+export default function SingUp(){
+    const [username,setUsername] = useState('')
+    const [email,setEmail] = useState('')
+    const [firstname,setFirstname] = useState('')
+    const [lastname,setLastname] = useState('')
+    const [password,setPassword] = useState('')
+    const [confirmPassword,setConfirmPassword] = useState('')
+    
+    async function registerUser(ev){
+        ev.preventDefault();
+        try{
+            await axios.post('/register',{
+                username,email,firstname,lastname,password
+            })
+            alert('Registration successful. Now you can log in')
+        }catch(e){
+            alert('Registration failed. Please try again later')
+        }
+    }
     return(
         <>
             <div className="modal modal-sheet position-static d-block p-4 py-md-5" tabIndex="-1" role="dialog" id="modalSignin" style={{height:"100vh",background:"#111827"}}>
@@ -15,35 +35,75 @@ export default function SingUp(){
                         <div className="modal-body p-5 pt-0">
                             <form className="">
                                 <div className="form-floating text-secondary mb-3">
-                                    <input type="text" className="border-bottom border-secondary form-control" id="floatingInputUsername" placeholder="name@example.com"/>
+                                    <input  
+                                            type="text" 
+                                            className="border-bottom border-secondary form-control" 
+                                            id="floatingInputUsername" 
+                                            placeholder="name@example.com"
+                                            value={username}
+                                            onChange={ev=>setUsername(ev.target.value)}
+                                    />
                                     <label htmlFor="floatingInput">Username</label>
                                 </div>
                                 <div className='d-lg-flex text-secondary'>
                                     <div className="form-floating mb-3 me-lg-2">
-                                        <input type="text" className="border-bottom border-secondary form-control" id="floatingInputFirstName" placeholder="name@example.com"/>
+                                        <input  
+                                                type="text" 
+                                                className="border-bottom border-secondary form-control" 
+                                                id="floatingInputFirstName" 
+                                                value={firstname}
+                                                onChange={ev=>setFirstname(ev.target.value)}
+                                                placeholder="name@example.com"
+                                        />
                                         <label htmlFor="floatingInput">First Name </label>
                                     </div>
                                     <div className="form-floating mb-3">
-                                        <input type="text" className="border-bottom border-secondary form-control" id="floatingInputLastName" placeholder="name@example.com"/>
+                                        <input  
+                                                type="text" 
+                                                className="border-bottom border-secondary form-control" 
+                                                id="floatingInputLastName" 
+                                                placeholder="name@example.com"
+                                                value={lastname}
+                                                onChange={ev=>setLastname(ev.target.value)}
+                                        />
                                         <label htmlFor="floatingInput">Last Name</label>
                                     </div>
                                 </div>
                                 <div className="form-floating text-secondary mb-3">
-                                    <input type="text" className="border-bottom border-secondary form-control" id="floatingInputEmail" placeholder="name@example.com"/>
+                                    <input  type="text" 
+                                            className="border-bottom border-secondary form-control" 
+                                            id="floatingInputEmail" 
+                                            placeholder="name@example.com"
+                                            value={email}
+                                            onChange={ev=>setEmail(ev.target.value)}
+                                    />
                                     <label htmlFor="floatingInput">Email</label>
                                 </div>
                                 <div className='d-lg-flex text-secondary'>
                                     <div className="form-floating me-lg-2">
-                                        <input type="password" className="border-bottom border-secondary form-control" id="floatingInputPassword" placeholder="Password"/>
+                                        <input 
+                                                type="password" 
+                                                className="border-bottom border-secondary form-control" 
+                                                id="floatingInputPassword" 
+                                                placeholder="Password"
+                                                value={password}
+                                                onChange={ev=>setPassword(ev.target.value)}
+                                        />
                                         <label htmlFor="floatingPassword">Password</label>
                                     </div>
                                     <div className="form-floating">
-                                        <input type="password" className="border-bottom border-secondary form-control" id="floatingInputConfirmPassword" placeholder="Password"/>
+                                        <input  type="password" 
+                                                className="border-bottom border-secondary form-control" 
+                                                id="floatingInputConfirmPassword" 
+                                                placeholder="Password"
+                                                value={confirmPassword}
+                                                onChange={ev=>setConfirmPassword(ev.target.value)}
+                                        />
                                         <label htmlFor="floatingPassword">Confirm Password</label>
                                     </div>
                                 </div>
                                 <div className="w-100 d-flex justify-content-center">
-                                    <button className="my-4 btn btn-lg rounded-pill px-5 btn-primary" type="submit">Sign up</button>
+                                    <button className="my-4 btn btn-lg rounded-pill px-5 btn-primary">Sign up</button>
                                 </div>
                                 <small className="text-secondary">By clicking Sign up, you agree to the terms of use.</small>
                                 <hr className=""/>
