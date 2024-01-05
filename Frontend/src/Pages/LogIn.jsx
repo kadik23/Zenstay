@@ -33,7 +33,7 @@ export default function LogIn(){
                             <NavLink to='/' className="btn-close"></NavLink>
                         </div>
                         <div className="modal-body p-5 pt-0">
-                            <form className="">
+                            <form className="" onSubmit={login}>
                                 <div className="border border-secondary rounded-2 form-floating mb-3">
                                     <input 
                                             type="email" 

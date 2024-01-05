@@ -2,7 +2,8 @@ import { NavLink } from 'react-router-dom'
 import fbicon from '../assets/icons/facebook.png'
 import googleicon from '../assets/icons/google.png'
 import axios from "axios";
-import {useState} from "react";
+import {useState,useContext} from "react";
+import {UserContext} from "./UserContext.jsx";
 
 export default function SingUp(){
     const [username,setUsername] = useState('')
@@ -11,17 +12,23 @@ export default function SingUp(){
     const [lastname,setLastname] = useState('')
     const [password,setPassword] = useState('')
     const [confirmPassword,setConfirmPassword] = useState('')
-    
+    const [errorPassword,setErrorPassword] = useState(false)
+    const {setUser} = useContext(UserContext);
+
     async function registerUser(ev){
         ev.preventDefault();
-        try{
-            await axios.post('/register',{
-                username,email,firstname,lastname,password
-            })
-            alert('Registration successful. Now you can log in')
-        }catch(e){
-            alert('Registration failed. Please try again later')
+        if(confirmPassword==password){
+            try{
+                data = await axios.post('/register',{
+                    username,email,firstname,lastname,password
+                })
+                alert('Registration successful. Now you can log in')
+                setUser(data)
+            }catch(e){
+                alert('Registration failed. Please try again later')
+            }
         }
+        else setErrorPassword(true)
     }
     return(
         <>
@@ -33,7 +40,7 @@ export default function SingUp(){
                             <NavLink to='/' className="btn-close bg-white"></NavLink>
                         </div>
                         <div className="modal-body p-5 pt-0">
-                            <form className="">
+                            <form className="" onSubmit={registerUser}>
                                 <div className="form-floating text-secondary mb-3">
                                     <input  
                                             type="text" 
@@ -100,6 +107,9 @@ export default function SingUp(){
                                                 onChange={ev=>setConfirmPassword(ev.target.value)}
                                         />
                                         <label htmlFor="floatingPassword">Confirm Password</label>
+                                        { errorPassword && 
+                                        <p className=' text-secondary' >Passwords do not match.</p>
+                                        }
                                     </div>
                                 </div>
                                 <div className="w-100 d-flex justify-content-center">
