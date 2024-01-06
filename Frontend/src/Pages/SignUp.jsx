@@ -3,7 +3,7 @@ import fbicon from '../assets/icons/facebook.png'
 import googleicon from '../assets/icons/google.png'
 import axios from "axios";
 import {useState,useContext} from "react";
-import {UserContext} from "./UserContext.jsx";
+// import {UserContext} from "./UserContext.jsx";
 
 export default function SingUp(){
     const [username,setUsername] = useState('')
@@ -13,7 +13,7 @@ export default function SingUp(){
     const [password,setPassword] = useState('')
     const [confirmPassword,setConfirmPassword] = useState('')
     const [errorPassword,setErrorPassword] = useState(false)
-    const {setUser} = useContext(UserContext);
+    // const {setUser} = useContext(UserContext);
 
     async function registerUser(ev){
         ev.preventDefault();
@@ -23,7 +23,7 @@ export default function SingUp(){
                     username,email,firstname,lastname,password
                 })
                 alert('Registration successful. Now you can log in')
-                setUser(data)
+                // setUser(data)
             }catch(e){
                 alert('Registration failed. Please try again later')
             }
