@@ -123,6 +123,45 @@ app.post('/booking_room', async (req, res) => {
     }
 });
 
+app.put('/update_profile',async(req,res)=>{
+
+    try{
+        const {
+            _id, email,username,account_type,telephone,
+            date_of_birth
+        } = req.body;
+        const updateUser = await User.findById(_id);
+        if (!(updateUser))
+        return          res.status(500).json('Internal Server Error'+req.body._id );
+        updateUser.set({
+          _id,email,username,account_type,
+          telephone : {$numberLong:telephone},date_of_birth 
+        });
+        await updateUser.save();
+
+
+        // const userDoc = req.body
+        // const userId = userDoc._id;
+        // const updateUser = await User.findByIdAndUpdate(userId , userDoc,
+        //     { projection: { password: 0, __v: 0 }, new: true });
+        return res.json(updateUser)
+    }catch(e){
+        res.status(500).json('Internal Server Error' + e);
+    }
+})
+
+app.delete('/delete_room',async(req,res)=>{
+    try{
+        const roomDoc = req.body
+        const roomId = roomDoc._id
+        await Room.findByIdAndDelete(roomId)
+        res.json("Deleted Successfully")
+    }catch(e){
+        res.status(500).json('Internal Server Error' + e);
+    }
+})
+
+
 
 app.get('*',async(req,res)=>{
     res.status(422).json('not found')
