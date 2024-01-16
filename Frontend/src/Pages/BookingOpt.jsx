@@ -1,7 +1,20 @@
 import RoomBookingInfo from "../Components/RoomBookingInfo";
 import UserInfoSideBar from "../Components/UserInfoSideBar";
+import axios from 'axios'
 
 export default function BookingOpt(){
+    async function getPreviewRoom(id){
+        try{
+            let response = await axios.get(`/getOneRoom/${id}`)
+            if(response){
+                console.log(response.data)
+            }else{
+                console.log('No data received from the server')
+            }
+        }catch(e){
+            console.log(e)
+        }
+    }
 
     return(
         <div className="w-100">

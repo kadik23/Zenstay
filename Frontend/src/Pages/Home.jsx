@@ -10,7 +10,7 @@ export default function Home() {
             if(response){
                 console.log(response.data)
             }else{
-                console.log('some issues')
+                console.log('No data received from the server')
             }
         }catch(e){
             console.log(e)
