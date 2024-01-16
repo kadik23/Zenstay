@@ -83,7 +83,7 @@ app.post('/getRoomsBySearch/:bed_type',async(req,res)=>{
     } 
 })
 
-app.post('/getOneRoom/:id',async(req,res)=>{
+app.get('/getOneRoom/:id',async(req,res)=>{
     try{
         const roomId = req.params.id;
         const room = await Room.findById(roomId)
