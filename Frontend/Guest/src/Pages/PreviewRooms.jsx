@@ -1,25 +1,7 @@
 import SideBar from "../Components/SideBar";
 import RoomsCards from "../Components/RoomsCards";
-import axios from 'axios'
+
 export default function PreviewRooms() {
-    var params = {
-        check_in:"2/2/2",
-        check_out:"3/3/3",
-        guests:2,
-        bed_type:"1 room"
-    }
-    async function get_rooms_by_search(){
-        try{
-            let response = await axios.post('/getRoomsBySearch/',params)
-            if(response){
-                console.log(response.data)
-            }else{
-                console.log('No data received from the server')
-            }
-        }catch(e){
-            console.log(e)
-        }
-    }
     return(
         <div>
             <div className="d-flex">

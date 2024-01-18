@@ -6,6 +6,8 @@ import Home from './Pages/Home'
 import PreviewRooms from "./Pages/PreviewRooms"
 import RoomsOverview from './Pages/RoomsOverview'
 import BookingOpt from './Pages/BookingOpt'
+import BookingConfirmed from './Pages/BookingConfirmed.jsx'
+import Profile from './Pages/Profile.jsx'
 import LogIn from './Pages/LogIn'
 import SignUp from './Pages/SignUp'
 import axios from "axios";
@@ -27,6 +29,8 @@ const router = createBrowserRouter(
           <Route path="PreviewRooms" element={<PreviewRooms/>}/>
           <Route path="LogIn" element={<LogIn/>} />
           <Route path="BookingOpt" element={<BookingOpt/>} />
+          <Route path="BookingConfirmed" element={<BookingConfirmed/>} />
+          <Route path="Profile" element={<Profile/>} />
         </Route>
         <Route path='/'>
           <Route path="SignUp" element={<SignUp/>}/>
