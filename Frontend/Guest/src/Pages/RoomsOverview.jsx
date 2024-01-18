@@ -10,23 +10,7 @@ import keycardicon from "../assets/icons/card-key.png"
 import airconicon from "../assets/icons/air-conditioner.png"
 import plusicon from "../assets/icons/plus.png"
 import { NavLink } from "react-router-dom";
-import axios from 'axios'
-
 export default function RoomsOverview() {
-
-    async function getPreviewRoom(id){
-        try{
-            let response = await axios.get(`/getOneRoom/${id}`)
-            if(response){
-                console.log(response.data)
-            }else{
-                console.log('No data received from the server')
-            }
-        }catch(e){
-            console.log(e)
-        }
-    }
-
     return(
         <div className="container">
             <div style={{marginTop:"60px"}} className="pb-4">

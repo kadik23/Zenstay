@@ -1,3 +1,4 @@
+import { NavLink } from 'react-router-dom'
 import image from '../assets/room1.jpg'
 export default function RoomBookingInfo(){
     return(
@@ -6,7 +7,7 @@ export default function RoomBookingInfo(){
                 <img src={image} height={250} style={{objectFit:'cover'}} className='w-100 rounded-4' alt="" />
                 <div className='mt-4'>
                     <h4 className="mb-5 fw-bold">Room </h4>
-                    <div>
+                     <div>
                         <div className='d-flex gap-3 border-bottom pb-3'>
                             <div className='d-flex flex-column'>
                                 <span className='pe-0' style={{fontWeight:'500'}}>
@@ -59,7 +60,7 @@ export default function RoomBookingInfo(){
                     </div>
                 </div>
             </div>
-            <button className="btn btn-primary rounded-pill w-100 mt-3">Book now</button>
+            <NavLink to='/BookingConfirmed' className="btn btn-primary rounded-pill w-100 mt-3">Book now</NavLink>
         </div>
     )
 }
