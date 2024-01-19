@@ -8,7 +8,7 @@ export default function Profile() {
                 <div className="h-100">
                     <ProfileSideBar />
                 </div>
-                <div className="flex-grow-1 px-4" style={{marginLeft:"36opx",marginTop:"60px"}} >
+                <div className="flex-grow-1 p-4" style={{marginLeft:"36opx"}} >
                     <PersonalDetails />
                 </div>
             </div>

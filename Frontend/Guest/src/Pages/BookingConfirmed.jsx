@@ -1,5 +1,5 @@
 import RoomBooked from "../Components/RoomBooked";
-import Confirmed from "../assets/icons/plus.png"
+import Confirmed from "../assets/icons/correct.png"
 import checkin from '../assets/icons/check-in.png'
 import checkout from '../assets/icons/check-out.png'
 
@@ -8,7 +8,7 @@ export default function BookingOpt(){
     return(
         <div className="container">
             <div className="row row-cols-2 w-100">
-                <div className="col-5 " style={{marginTop:"100px"}}>
+                <div className="col-sm-8 col-xl-5" style={{marginTop:"100px"}}>
                     <RoomBooked/>
                     <div className="mt-5 pb-4 border-bottom">
                         <h5 className="mb-3">Your trip starts Friday, 09 December 2022</h5>
@@ -74,15 +74,15 @@ export default function BookingOpt(){
                             </div>
                         </div>
                     </div>
-                    <div className="d-flex gap-3 align-items-center mb-5">
-                        <button style={{fontWeight:"500"}} className="px-5 btn btn-primary rounded-pill">Contact property</button>
-                        <button style={{fontWeight:"500"}} className="px-5 btn btn-outline-primary rounded-pill">cancel reservation</button>
+                    <div className="d-flex flex-row flex-sm-column flex-md-row gap-3 align-items-center mb-5">
+                        <button style={{fontWeight:"500"}} className="px-md-3 px-lg-3 btn btn-primary rounded-pill w-100 w-md-50">Contact property</button>
+                        <button style={{fontWeight:"500"}} className="px-md-3 px-lg-3 btn btn-outline-primary rounded-pill w-100 w-md-50">cancel reservation</button>
                     </div>
                 </div>
-                <div className="col-7 px-5">
+                <div className="col-sm-4 col-xl-7 px-md-5 text-center">
                     <div style={{marginTop:"100px"}} className="d-flex justify-content-center">
                         <div className="d-flex flex-column align-items-center">
-                            <img src={Confirmed} alt="" />
+                            <img src={Confirmed} width={90} alt="" />
                             <strong>Your booking is now confirmed!</strong>
                         </div>
                     </div>
