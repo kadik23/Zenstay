@@ -1,7 +1,7 @@
 export default function PersonalDetails(){
   return(
     <div className="p-5 row">
-      <div className="col-6">
+      <div className="col-7">
         <div className="mb-5">
           <h3>Personal details</h3>
           <span className="text-secondary">Edit your personal details</span>
@@ -85,8 +85,8 @@ export default function PersonalDetails(){
             </div>
         </div>
       </div>
-      <div className="col-6 d-flex justify-content-end align-items-center">
-        <div className="shadow rounded-4 w-50 p-3">
+      <div className="col-5 d-flex justify-content-end align-items-center">
+        <div className="shadow rounded-4 w-md-75 p-3">
           <strong>Pssst!</strong>
           <div className="mb-3 text-secondary">
             <span>
