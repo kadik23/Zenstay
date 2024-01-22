@@ -50,7 +50,7 @@ export default function Recent() {
                             <img src={room} className="p-0 rounded-3 w-100" style={{objectFit:"cover"}} alt="" />
                         </div>
                         <div className="row h-auto">
-                            <img src={room} className="p-0 w-100" style={{objectFit:"cover",borderRadius:"15px"}} alt="" />
+                            <img src={room} className="p-0 w-100 rounded-3" style={{objectFit:"cover"}} alt="" />
                         </div>
                     </div>
                 </div>
