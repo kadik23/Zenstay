@@ -1,7 +1,7 @@
 export default function PersonalDetails(){
   return(
     <div className="p-5 row">
-      <div className="col-7">
+      <div className="col-8">
         <div className="mb-5">
           <h3>Personal details</h3>
           <span className="text-secondary">Edit your personal details</span>
@@ -9,7 +9,7 @@ export default function PersonalDetails(){
         <img src="https://github.com/mdo.png" alt="mdo" width="80" height="80" className="rounded-circle"/>
         <div className="mt-4 d-flex flex-column gap-4">
             <div className="row">
-              <div className="col-4">
+              <div className="col-3">
                 <strong>Full Name</strong>
               </div>
               <div className="col-4">
@@ -17,14 +17,14 @@ export default function PersonalDetails(){
                   Maria Lost
                 </span>
               </div>
-              <div className="col-4">
+              <div className="col-1">
                 <span className="text-secondary">
                   Edit
                 </span>
               </div>
             </div>
             <div className="row">
-              <div className="col-4">
+              <div className="col-3">
                 <strong>Location</strong>
               </div>
               <div className="col-4">
@@ -32,14 +32,14 @@ export default function PersonalDetails(){
                   Hamburg, Germany
                 </span>
               </div>
-              <div className="col-4">
+              <div className="col-1">
                 <span className="text-secondary">
                   Edit
                 </span>
               </div>
             </div>
             <div className="row">
-              <div className="col-4">
+              <div className="col-3">
                 <strong>Email</strong>
               </div>
               <div className="col-4">
@@ -47,14 +47,14 @@ export default function PersonalDetails(){
                   maria@lostpost.de
                 </span>
               </div>
-              <div className="col-4">
+              <div className="col-1">
                 <span className="text-secondary">
                   Edit
                 </span>
               </div>
             </div>
             <div className="row">
-              <div className="col-4">
+              <div className="col-3">
                 <strong>Nationality</strong>
               </div>
               <div className="col-4">
@@ -62,14 +62,14 @@ export default function PersonalDetails(){
                   German
                 </span>
               </div>
-              <div className="col-4">
+              <div className="col-1">
                 <span className="text-secondary">
                   Edit
                 </span>
               </div>
             </div>
             <div className="row">
-              <div className="col-4">
+              <div className="col-3">
                 <strong>Date of birth</strong>
               </div>
               <div className="col-4">
@@ -77,7 +77,7 @@ export default function PersonalDetails(){
                   06/11/1988
                 </span>
               </div>
-              <div className="col-4">
+              <div className="col-1">
                 <span className="text-secondary">
                   Edit
                 </span>
@@ -85,7 +85,7 @@ export default function PersonalDetails(){
             </div>
         </div>
       </div>
-      <div className="col-5 d-flex justify-content-end align-items-center">
+      <div className="col-4 d-flex justify-content-end align-items-center">
         <div className="shadow rounded-4 w-md-75 p-3">
           <strong>Pssst!</strong>
           <div className="mb-3 text-secondary">
