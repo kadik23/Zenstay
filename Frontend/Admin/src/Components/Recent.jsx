@@ -56,7 +56,7 @@ export default function Recent() {
                 </div>
                 <div className="mb-3">
                     <strong>Overview</strong>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus cupiditate optio quidem in vitae itaque nobis. Voluptas explicabo, modi architecto eius incidunt voluptates consequuntur vero distinctio amet aliquam quas recusandae?</p>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus cupiditate optio quidem in vitae itaque nobis...<a className="text-decoration-none" style={{color:"#3d94ff",fontWeight:"500"}} href="#">Read more</a> </p>
                 </div>
                 <div className="w-100 p-0">
                     <strong>Location</strong>
