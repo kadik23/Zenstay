@@ -5,7 +5,7 @@ import { NavLink } from "react-router-dom"
 export default function Dashboard(){
 
     return(
-        <div className="px-3 py-4">
+        <div className="">
             <div className="mb-5">
                 <strong className="me-2">
                     Find room to stay
@@ -17,7 +17,7 @@ export default function Dashboard(){
                     <h4 className="fw-bold mb-3">Date</h4>
                     <div className="bg-white rounded-4 p-2">
                         <img src={calender} width={25} alt="" />
-                        <input className="ms-2 border-0 p-2" style={{color:"#adadad",fontWeight:"500"}} type="text" name="" id="" placeholder="Jul 12 - Jul 14" />
+                        <input className="ms-2 border-0 p-2" style={{fontWeight:"500"}} type="text" name="" id="" placeholder="Jul 12 - Jul 14" />
                     </div>
                 </div>
                 <div>
@@ -26,7 +26,7 @@ export default function Dashboard(){
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M3.33333 14.1666V5.83331L9.16666 14.1666V5.83331M12.5 14.1666H16.6667M12.5 8.33331C12.5 8.99635 12.7195 9.63224 13.1102 10.1011C13.5009 10.5699 14.0308 10.8333 14.5833 10.8333C15.1359 10.8333 15.6658 10.5699 16.0565 10.1011C16.4472 9.63224 16.6667 8.99635 16.6667 8.33331C16.6667 7.67027 16.4472 7.03439 16.0565 6.56555C15.6658 6.09671 15.1359 5.83331 14.5833 5.83331C14.0308 5.83331 13.5009 6.09671 13.1102 6.56555C12.7195 7.03439 12.5 7.67027 12.5 8.33331Z" stroke="#71B0FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                        <input className="ms-2 border-0 p-2" style={{color:"#adadad",fontWeight:"500"}} type="text" name="" id="" placeholder="Yogyakarta, Ind..." />
+                        <input className="ms-2 border-0 p-2" style={{fontWeight:"500"}} type="text" name="" id="" placeholder="Yogyakarta, Ind..." />
                     </div>
                 </div>
                 <div className="d-flex flex-column">

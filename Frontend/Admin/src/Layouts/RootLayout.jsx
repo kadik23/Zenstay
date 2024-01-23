@@ -8,7 +8,7 @@ export default function RootLayout(){
             <div style={{maxWidth:"300px"}}>
                 <SideBar />
             </div>
-            <div className=" " style={{background:"#fbfbfb"}}>
+            <div className="flex-fill px-3 py-4 " style={{background:"#fbfbfb"}}>
                 <Outlet />
             </div>
             <div className="ps-3 py-4" style={{maxWidth:"280px"}}>
