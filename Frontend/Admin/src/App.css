@@ -31,7 +31,3 @@ input::placeholder{
     font-weight: bold;
     font-size: 0.8em;
 }
-
-.notif-image::shadow {
-    width: 50%;
-}
