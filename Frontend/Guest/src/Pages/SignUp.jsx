@@ -2,29 +2,53 @@ import { NavLink } from 'react-router-dom'
 import fbicon from '../assets/icons/facebook.png'
 import googleicon from '../assets/icons/google.png'
 import axios from "axios";
-import {useState,useContext} from "react";
-// import {UserContext} from "./UserContext.jsx";
+import {useState,useContext,useReducer} from "react";
+import {userContext} from "./UserContext";
 
 export default function SingUp(){
-    const [username,setUsername] = useState('')
-    const [email,setEmail] = useState('')
-    const [firstname,setFirstname] = useState('')
-    const [lastname,setLastname] = useState('')
-    const [password,setPassword] = useState('')
-    const [confirmPassword,setConfirmPassword] = useState('')
     const [errorPassword,setErrorPassword] = useState(false)
-    // const {setUser} = useContext(UserContext);
+    const [user,setUser] = useContext(userContext);
+
+    const initState = {
+        email:"",
+        username:"",
+        firstname:"",
+        lastname:"",
+        password:"",
+        confirmPassword:"",
+    }
+    const Reducer = (state , action)=>{
+        switch(action.type){
+            case "SET_EMAIL": return{...state,email:action.payload}
+            case "SET_USERNAME":return{...state,username:action.payload}
+            case "SET_FIRSTNAME":return{...state,firstname:action.payload}
+            case "SET_LASTNAME":return{...state,lastname:action.payload}
+            case "SET_PASSWORD":return{...state,password:action.payload}
+            case "SET_CONFIRM_PASSWORD":return{...state,confirmPassword:action.payload}
+            default :return state;
+        }
+    }
+    
+    const [state,dispatch] = useReducer(Reducer,initState) 
+    const handleChange = (ev)=>{
+            dispatch({
+                payload:ev.target.value,
+                type:ev.target.name,
+            })
+    }
 
     async function registerUser(ev){
         ev.preventDefault();
-        if(confirmPassword==password){
+        if(state.confirmPassword==state.password){
             try{
-                data = await axios.post('/register',{
-                    username,email,firstname,lastname,password
+                let data = await axios.post('/register',{
+                    username:state.username,email:state.email,firstname:state.firstname,lastname:state.lastname,password:state.password
                 })
                 alert('Registration successful. Now you can log in')
-                // setUser(data)
+                setUser(data.data)
+                console.log(user)
             }catch(e){
+                console.log(e)
                 alert('Registration failed. Please try again later')
             }
         }
@@ -44,11 +68,12 @@ export default function SingUp(){
                                 <div className="form-floating text-secondary mb-3">
                                     <input  
                                             type="text" 
+                                            name="SET_USERNAME"
                                             className="border-bottom border-secondary form-control" 
                                             id="floatingInputUsername" 
                                             placeholder="name@example.com"
-                                            value={username}
-                                            onChange={ev=>setUsername(ev.target.value)}
+                                            value={state.username}
+                                            onChange={handleChange}                                    
                                     />
                                     <label htmlFor="floatingInput">Username</label>
                                 </div>
@@ -57,9 +82,10 @@ export default function SingUp(){
                                         <input  
                                                 type="text" 
                                                 className="border-bottom border-secondary form-control" 
+                                                name='SET_FIRSTNAME'
                                                 id="floatingInputFirstName" 
-                                                value={firstname}
-                                                onChange={ev=>setFirstname(ev.target.value)}
+                                                value={state.firstname}
+                                                onChange={handleChange}                                  
                                                 placeholder="name@example.com"
                                         />
                                         <label htmlFor="floatingInput">First Name </label>
@@ -68,22 +94,22 @@ export default function SingUp(){
                                         <input  
                                                 type="text" 
                                                 className="border-bottom border-secondary form-control" 
+                                                name='SET_LASTNAME'
                                                 id="floatingInputLastName" 
                                                 placeholder="name@example.com"
-                                                value={lastname}
-                                                onChange={ev=>setLastname(ev.target.value)}
-                                        />
+                                                value={state.lastname}
+                                                onChange={handleChange}                                        />
                                         <label htmlFor="floatingInput">Last Name</label>
                                     </div>
                                 </div>
                                 <div className="form-floating text-secondary mb-3">
                                     <input  type="text" 
                                             className="border-bottom border-secondary form-control" 
+                                            name='SET_EMAIL'
                                             id="floatingInputEmail" 
                                             placeholder="name@example.com"
-                                            value={email}
-                                            onChange={ev=>setEmail(ev.target.value)}
-                                    />
+                                            value={state.email}
+                                            onChange={handleChange}                                    />
                                     <label htmlFor="floatingInput">Email</label>
                                 </div>
                                 <div className='d-lg-flex text-secondary'>
@@ -91,20 +117,21 @@ export default function SingUp(){
                                         <input 
                                                 type="password" 
                                                 className="border-bottom border-secondary form-control" 
+                                                name='SET_PASSWORD'
                                                 id="floatingInputPassword" 
                                                 placeholder="Password"
-                                                value={password}
-                                                onChange={ev=>setPassword(ev.target.value)}
-                                        />
+                                                value={state.password}
+                                                onChange={handleChange}                                        />
                                         <label htmlFor="floatingPassword">Password</label>
                                     </div>
                                     <div className="form-floating">
                                         <input  type="password" 
-                                                className="border-bottom border-secondary form-control" 
+                                                className="border-bottom border-secondary form-control"
+                                                name="SET_CONFIRM_PASSWORD" 
                                                 id="floatingInputConfirmPassword" 
                                                 placeholder="Password"
-                                                value={confirmPassword}
-                                                onChange={ev=>setConfirmPassword(ev.target.value)}
+                                                value={state.confirmPassword}
+                                                onChange={handleChange}                              
                                         />
                                         <label htmlFor="floatingPassword">Confirm Password</label>
                                         { errorPassword && 

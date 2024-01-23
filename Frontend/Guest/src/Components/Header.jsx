@@ -1,13 +1,18 @@
-import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import user from '../assets/icons/user.png'
 import logout from '../assets/icons/logout.png'
 import setting from '../assets/icons/setting.png'
+import {useContext, useEffect ,useState} from 'react'
+import { userContext } from "../Pages/UserContext";
 
 export default function Header() {
 
-    const [signin,setSignin] = useState(false);
-
+    const [user,setUser] = useContext(userContext)
+    const [signin,setSignin] = useState(true);
+    useEffect(()=>{
+        if(user) setSignin(false)
+        console.log(user)
+    },[user])
     const toogleSignin = () => {
         setSignin((value) => value = !value);
     }

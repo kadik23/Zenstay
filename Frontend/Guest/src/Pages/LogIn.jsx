@@ -2,25 +2,47 @@ import { NavLink } from 'react-router-dom';
 import fbicon from '../assets/icons/facebook.png'
 import googleicon from '../assets/icons/google.png'
 import axios from 'axios'
-import {useState} from 'react'
-    
+import {useState,useReducer,useContext} from 'react'
+import {userContext} from "./UserContext";    
+
 
 export default function LogIn(){
 
-    const [email,setEmail] = useState('')
-    const [password,setPassword] = useState('')
+    const [user,setUser] = useContext(userContext);
+    const initState = {
+        email:"",
+        password:""
+    }
+    const Reducer = (state , action)=>{
+        switch(action.type){
+            case "SET_EMAIL": return{...state,email:action.payload}
+            case "SET_PASSWORD":return{...state,password:action.payload}
+            default :return state;
+        }
+    }
+    
+    const [state,dispatch] = useReducer(Reducer,initState) 
 
     const login = async (ev) =>{
         ev.preventDefault();
         try{
-            let {response} = await axios.post('login',{
-                email,password
+            let response = await axios.post('login',{
+                email: state.email ,
+                password: state.password
             })
             alert('Login successful');
-            console.log(response)
+            setUser(response.data)
+            console.log(user)
         }catch(e){
             alert('Login failed');
         }
+    }
+
+    const handleChange = (ev)=>{
+        dispatch({
+            payload:ev.target.value,
+            type:ev.target.name,
+        })
     }
 
     return(
@@ -39,8 +61,9 @@ export default function LogIn(){
                                             type="email" 
                                             className="form-control rounded-3" 
                                             id="floatingInput" 
-                                            value={email}
-                                            onChange={ev=>setEmail(ev.target.value)}
+                                            name="SET_EMAIL"
+                                            value={state.email}
+                                            onChange={handleChange}
                                             placeholder="name@example.com"
                                     />
                                     <label htmlFor="floatingInput">Email address</label>
@@ -51,8 +74,9 @@ export default function LogIn(){
                                             className="form-control rounded-3" 
                                             id="floatingPassword" 
                                             placeholder="Password"
-                                            value={password}
-                                            onChange={ev=>setPassword(ev.target.value)}
+                                            name="SET_PASSWORD"
+                                            value={state.password}
+                                            onChange={handleChange}
                                     />
                                     <label htmlFor="floatingPassword">Password</label>
                                 </div>

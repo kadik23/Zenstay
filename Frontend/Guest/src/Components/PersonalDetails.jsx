@@ -1,4 +1,21 @@
+import { useContext,useReducer } from "react"
+import { userContext } from "../Pages/UserContext"
+
 export default function PersonalDetails(){
+  const [user,setUser] = useContext(userContext)
+    const initState = {
+        email:"",
+        password:""
+    }
+    const Reducer = (state , action)=>{
+        switch(action.type){
+            case "SET_EMAIL": return{...state,email:action.payload}
+            case "SET_PASSWORD":return{...state,password:action.payload}
+            default :return state;
+        }
+    }
+    
+    const [state,dispatch] = useReducer(Reducer,initState) 
   return(
     <div className="p-5 row">
       <div className="col-8">
