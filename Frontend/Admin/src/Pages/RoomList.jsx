@@ -20,13 +20,13 @@ function RoomList() {
           <div className='d-flex justify-content-between gap-5'>
             <div className='flex-grow-1 px-5 me-auto bg-white d-flex align-items-center justify-content-between'>
                 <div className='fw-bold border-bottom py-3 border-primary border-4 rounded-1'>
-                  All Room(457)
+                  <a href="#" className='text-decoration-none text-dark'>All Rooms (457)</a>
                 </div>
                 <div className='fw-bold' style={{color:"#adadad"}}>
-                  All Room(457)
+                  <a href="#" className='text-decoration-none text-secondary'>Available Room (457)</a>
                 </div>
                 <div className='fw-bold' style={{color:"#adadad"}}>
-                  All Room(457)
+                  <a href="#" className='text-decoration-none text-secondary'>Booked (457)</a>
                 </div>
             </div>
             <div className='flex-grow-1 bg-white d-flex align-items-center p-3'>

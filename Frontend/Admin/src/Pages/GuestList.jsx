@@ -7,7 +7,7 @@ function GuestList() {
   return (
     <div>
        <div className='mb-5 d-flex align-items-center justify-content-between'>
-            <h3 className='fw-bold' style={{color:"#7d7d7d"}}>Geust List</h3>
+            <h3 className='fw-bold' style={{color:"#7d7d7d"}}>Guest List</h3>
             <a className="d-block p-3 link-body-emphasis text-decoration-none bg-white d-flex align-items-center gap-1 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                 <img src="https://github.com/mdo.png" alt="mdo" width="40" height="40" className="rounded-circle me-2"/>
                 <div className="d-flex flex-column user-select-none me-5">
@@ -19,14 +19,14 @@ function GuestList() {
         <div className='mb-4'>
           <div className='d-flex justify-content-between gap-5'>
             <div className='flex-grow-1 px-5 me-auto bg-white d-flex align-items-center justify-content-between'>
-                <div className='fw-bold border-bottom py-3 border-primary border-4 rounded-1'>
-                  All Guest(457)
+              <div className='fw-bold border-bottom py-3 border-primary border-4 rounded-1'>
+                  <a href="#" className='text-decoration-none text-dark'>All Guests (457)</a>
                 </div>
                 <div className='fw-bold' style={{color:"#adadad"}}>
-                  Booked(457)
+                  <a href="#" className='text-decoration-none text-secondary'>Booked (457)</a>
                 </div>
                 <div className='fw-bold' style={{color:"#adadad"}}>
-                   new Booked(457)
+                  <a href="#" className='text-decoration-none text-secondary'>new Booked (457)</a>
                 </div>
             </div>
             <div className='flex-grow-1 bg-white d-flex align-items-center p-3'>
