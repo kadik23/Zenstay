@@ -6,6 +6,7 @@ const Room = require('./models/Room.js')
 const Booking = require('./models/Booking.js')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
+const cookieParser = require('cookie-parser');
 require("dotenv").config()
 mongoose.connect(process.env.MONGO_URL)
 
@@ -16,9 +17,10 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 app.use(express.json())
+app.use(cookieParser());
 
 const bcryptSalt = bcrypt.genSaltSync(10);
-const jwrSecret = 'sdjjfldwjn2vpbcwytp'
+const jwtSecret = 'sdjjfldwjn2vpbcwytp'
 
 app.post("/register",async (req,res)=>{
     const {username,email,firstname,lastname,password} = req.body
@@ -49,7 +51,7 @@ app.post("/login",async(req,res)=>{
                 jwt.sign({
                     email:userDoc.email,
                     id:userDoc._id
-                },jwrSecret,{},(err,token)=>{
+                },jwtSecret,{},(err,token)=>{
                     if(err) throw err
                     res.cookie('token',token).json(userDoc)
                 })
@@ -98,53 +100,79 @@ app.get('/getOneRoom/:id',async(req,res)=>{
 
 app.post('/room_post',async(req, res)=>{
     try{
-        // let userToken ;
+        const {token} = req.cookies
         let {name,space,bed_type,price} = req.body
-        const doc = {name : name,space:space,bed_type:bed_type,viewers:0,price:price}
-        const room = await Room.create(doc)
-        if(!room){
-            return res.status(404).json({ error: 'Room not found' });
-        }
-        res.json(room)
+        jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+            if (err) throw err;
+            const doc = {name : name,space:space,bed_type:bed_type,viewers:0,price:price}
+            const room = await Room.create(doc)
+            if(!room){
+                return res.status(404).json({ error: 'Room not found' });
+            }
+            res.json(room)
+        });
     }catch(e){
-        res.status(500).json('Internal Server Error')
+        res.status(500).json('Internal Server Error'+e)
     }
 })
 
 app.post('/booking_room', async (req, res) => {
     try{
+        const {token} = req.cookies
         const { userID, roomID,checkIn,checkOut } = req.body;
-        const doc = await Booking.create({
-            user_id: userID,room_id: roomID,check_in:checkIn,check_out:checkOut
-        })
-            res.json(doc);
+        jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+            if (err) throw err;
+            const doc = await Booking.create({
+                user_id: userID,room_id: roomID,check_in:checkIn,check_out:checkOut
+            })
+                res.json(doc);
+        });
     } catch(err){
         res.status(500).json('Internal Server Error' + err);
     }
 });
 
 app.put('/update_profile',async(req,res)=>{
-
     try{
+        const {token} = req.cookies
         const {
             _id, email,username,account_type,telephone,
             date_of_birth
         } = req.body;
-        const updateUser = await User.findById(_id);
-        if (!(updateUser))
-        return          res.status(500).json('Internal Server Error'+req.body._id );
-        updateUser.set({
-          _id,email,username,account_type,
-          telephone : {$numberLong:telephone},date_of_birth 
-        });
-        await updateUser.save();
+        jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+            if (err) throw err;
+            const updateUser = await User.findById(_id);
+            if (!(updateUser))
+            return   res.status(500).json('Internal Server Error'+req.body._id );
+            updateUser.set({
+                _id,email,username,account_type,
+                telephone ,date_of_birth 
+            });
+            await updateUser.save();
+            return res.json(updateUser)
+        })
+    }catch(e){
+        res.status(500).json('Internal Server Error' + e);
+    }
+})
 
 
-        // const userDoc = req.body
-        // const userId = userDoc._id;
-        // const updateUser = await User.findByIdAndUpdate(userId , userDoc,
-        //     { projection: { password: 0, __v: 0 }, new: true });
-        return res.json(updateUser)
+app.put('/update_room',async(req,res)=>{
+    try{
+        const {
+            _id, name, space,bed_type,price,
+        } = req.body;
+        const {token} = req.cookies
+        jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+            if (err) throw err;
+            const updateRoom = await Room.findById(_id);
+            if (!(updateRoom))
+            return   res.status(500).json('Internal Server Error'+req.body._id );
+            await updateRoom.set({
+                _id, name, space,bed_type,price
+            }).save()
+            return res.json(updateRoom)
+        })
     }catch(e){
         res.status(500).json('Internal Server Error' + e);
     }
@@ -153,15 +181,21 @@ app.put('/update_profile',async(req,res)=>{
 app.delete('/delete_room',async(req,res)=>{
     try{
         const roomDoc = req.body
-        const roomId = roomDoc._id
-        await Room.findByIdAndDelete(roomId)
-        res.json("Deleted Successfully")
+        const {token} = req.cookies
+        jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+            if (err) throw err;
+            const roomId = roomDoc._id
+            await Room.findByIdAndDelete(roomId)
+            res.json("Deleted Successfully")
+        })
     }catch(e){
         res.status(500).json('Internal Server Error' + e);
     }
 })
 
-
+app.post('/logout', (req,res) => {
+    res.cookie('token', '').json(true);
+});
 
 app.get('*',async(req,res)=>{
     res.status(422).json('not found')
@@ -170,38 +204,3 @@ app.get('*',async(req,res)=>{
 app.listen(3000,()=>{
     console.log("hello im listening")
 })
-
-//for learning
-// var http = require("http")
-// console.log(http)
-// http.createServer((req,res)=>{
-//     res.writeHead(200,"ok" .writeHead(200, {
-//         'Content-Length': Buffer.byteLength(body),
-//         'Content-Type': 'text/plain',
-//     }))
-//     res.write("hello to port 100")
-//     res.end()
-// }).listen(101,"localhost",()=>{
-//     console.log("hello from 101")
-// })
-
-// var http2 = require("http")
-// console.log(http2)
-// http2.createServer((req,res)=>{
-//     res.writeHead(200,"ok" .writeHead(200, {
-//         'Content-Length': Buffer.byteLength(body),
-//         'Content-Type': 'text/plain',
-//     }))
-//     res.end("hello to port 102")
-// }).listen(102,"localhost",()=>{
-//     console.log("hello from 102")
-// })
-
-// fs = require('fs')
-// // fs.appendFile("text.txt","hello from nodeJs",()=>{
-// //     console.log("file is created")
-// // })
-// fs.readFile("package.json","utf-8",function(er,data){
-//     console.log(data)
-// })
-

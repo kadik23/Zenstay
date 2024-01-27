@@ -1,7 +1,19 @@
 import SideBar from "../Components/SideBar";
 import RoomsCards from "../Components/RoomsCards";
-
+import axios from 'axios'
 export default function PreviewRooms() {
+    async function getPreviewRooms(){
+        try{
+            let response = await axios.get('getAllRooms')
+            if(response){
+                console.log(response.data)
+            }else{
+                console.log('some issues')
+            }
+        }catch(e){
+            console.log(e)
+        }
+    }
     return(
         <div>
             <div className="d-flex">
