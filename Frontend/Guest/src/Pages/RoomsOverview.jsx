@@ -10,7 +10,25 @@ import keycardicon from "../assets/icons/card-key.png"
 import airconicon from "../assets/icons/air-conditioner.png"
 import plusicon from "../assets/icons/plus.png"
 import { NavLink } from "react-router-dom";
+import axios from 'axios'
+import { useContext } from "react"
+import { userContext } from "../Pages/UserContext"
+
 export default function RoomsOverview() {
+
+    const [user,setUser] = useContext(userContext)
+    async function getRoom(){
+        try{
+            let response = await axios.get(`getOneRoom/${user._id}`)
+            if(response){
+                console.log(response.data)
+            }else{
+                console.log('some issues')
+            }
+        }catch(e){
+            console.log(e)
+        }
+    }
     return(
         <div className="container">
             <div style={{marginTop:"60px"}} className="pb-4">
