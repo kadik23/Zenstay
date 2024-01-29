@@ -2,8 +2,28 @@ import React from 'react'
 import search from '../assets/icons/search-blue.png'
 import more from '../assets/icons/more.png'
 import room from "../assets/img/room5.jpg"
+import axios from "axios";
+import {useState,useEffect} from "react"
 
 function RoomList() {
+  const [rooms, setRooms] = useState([]);
+  useEffect(()=>{
+      getRooms()
+  }   
+  ,[])
+  async function getRooms(){
+      try{
+          let response = await axios.get('getAllRooms')
+          if(response){
+              console.log(response.data)
+              setRooms(response.data)
+          }else{
+              console.log('some issues')
+          }
+      }catch(e){
+          console.log(e)
+      }
+  }
   return (
     <div>
        <div className='mb-5 d-flex align-items-center justify-content-between'>

@@ -2,8 +2,28 @@ import React from 'react'
 import search from '../assets/icons/search-blue.png'
 import more from '../assets/icons/more.png'
 import room from "../assets/img/room5.jpg"
+import axios from "axios";
+import {useState,useEffect} from "react"
 
 function GuestList() {
+  const [guest, setGuest] = useState([]);
+  useEffect(()=>{
+      getOrders()
+  }   
+  ,[])
+  async function getOrders(){
+      try{
+          let response = await axios.get('getUsers')
+          if(response){
+              console.log(response.data)
+              setGuest(response.data)
+          }else{
+              console.log('some issues')
+          }
+      }catch(e){
+          console.log(e)
+      }
+  }
   return (
     <div>
        <div className='mb-5 d-flex align-items-center justify-content-between'>

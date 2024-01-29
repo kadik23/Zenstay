@@ -7,6 +7,9 @@ const Booking = require('./models/Booking.js')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-parser');
+const fs = require('fs');
+const multer = require('multer');
+const mime = require('mime-types');
 require("dotenv").config()
 mongoose.connect(process.env.MONGO_URL)
 
@@ -192,6 +195,38 @@ app.delete('/delete_room',async(req,res)=>{
         res.status(500).json('Internal Server Error' + e);
     }
 })
+
+app.get('/getUsers',(req,res)=>{
+    const {token} = req.cookies
+    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+        if (err) throw err;
+        let users=await User.find();
+        res.json(users)
+    })
+})
+
+app.get('/getOrders',(req,res)=>{
+    const {token} = req.cookies
+    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+        if (err) throw err;
+        let orders=await Booking.find();
+        res.json(orders)
+    })
+})
+
+const photosMiddleware = multer({dest:'/upload'});
+app.post('/upload_photos', photosMiddleware.array('photos', 10), async (req,res) => {
+    const uploadedImages = [];
+    for (let i = 0; i < req.files.length; i++) {
+        const {path,originalname,mimetype} = req.files[i];
+        const parts = originalname.split('.')
+        const ext = parts[parts.length -1]
+        const newPath = path + '.' + ext
+        fs.renameSync(path,newPath)
+        uploadedImages.push(newPath.replace('uploads/',''));
+    }
+    res.json(uploadedImages);
+});
 
 app.post('/logout', (req,res) => {
     res.cookie('token', '').json(true);

@@ -4,6 +4,24 @@ import more from '../assets/icons/more.png'
 import room from "../assets/img/room5.jpg"
 
 function OrderList() {
+  const [orders, setOrders] = useState([]);
+  useEffect(()=>{
+    getOrders()
+  }   
+  ,[])
+  async function getOrders(){
+      try{
+          let response = await axios.get('getOrders')
+          if(response){
+              console.log(response.data)
+              setOrders(response.data)
+          }else{
+              console.log('some issues')
+          }
+      }catch(e){
+          console.log(e)
+      }
+  }
   return (
     <div>
        <div className='mb-5 d-flex align-items-center justify-content-between'>
