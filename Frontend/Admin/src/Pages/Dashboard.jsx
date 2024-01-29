@@ -2,8 +2,28 @@ import bed from "../assets/icons/sleeping.png"
 import calender from "../assets/icons/calendar.png"
 import room from "../assets/img/room5.jpg"
 import { NavLink } from "react-router-dom"
-export default function Dashboard(){
+import axios from "axios";
+import {useState,useEffect} from "react"
 
+export default function Dashboard(){
+    const [data, setData] = useState([]);
+    useEffect(()=>{
+        getRooms()
+    }   
+    ,[])
+    async function getRooms(){
+        try{
+            let response = await axios.get('getAllRooms')
+            if(response){
+                console.log(response.data)
+                setData(response.data)
+            }else{
+                console.log('some issues')
+            }
+        }catch(e){
+            console.log(e)
+        }
+    }
     return(
         <div className="">
             <div className="mb-5">

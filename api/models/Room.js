@@ -6,9 +6,9 @@ const RoomSchema = new Schema({
     bed_type: String , 
     review_id: String , 
     price: String,
+    status: String 
+
 })
-
-
 
 const RoomModel = mongoose.model('Room',RoomSchema)
 
