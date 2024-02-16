@@ -6,7 +6,8 @@ const RoomSchema = new Schema({
     bed_type: String , 
     review_id: String , 
     price: String,
-    status: String 
+    status: String,
+    places: String,
 
 })
 
