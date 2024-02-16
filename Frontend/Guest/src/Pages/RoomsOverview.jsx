@@ -11,17 +11,27 @@ import airconicon from "../assets/icons/air-conditioner.png"
 import plusicon from "../assets/icons/plus.png"
 import { NavLink } from "react-router-dom";
 import axios from 'axios'
-import { useContext } from "react"
+import { useContext, useEffect, useState } from "react"
 import { userContext } from "../Pages/UserContext"
+import { useParams } from 'react-router-dom';
 
 export default function RoomsOverview() {
 
     const [user,setUser] = useContext(userContext)
+    const [room,setRooms] = useState()
+    const {id} = useParams();
+
+
+    useEffect(()=>{
+        getRoom()
+    }
+    ,[id])
     async function getRoom(){
         try{
-            let response = await axios.get(`getOneRoom/${user._id}`)
+            let response = await axios.get(`getOneRoom/${id}`)
             if(response){
                 console.log(response.data)
+                setRooms(response.data)
             }else{
                 console.log('some issues')
             }
@@ -53,9 +63,9 @@ export default function RoomsOverview() {
             </div>
             <div className="d-flex justify-content-center align-items-center mb-3">
                 <div className="w-50">
-                    <h4 className="mb-2 fw-bold">Hotel Norrebro</h4>
+                    <h4 className="mb-2 fw-bold">Room {room.name}</h4>
                     <div className="d-flex align-items-center">
-                        <span className="d-flex align-items-center"><img width={20} src={adulticon} alt="" />2 adults</span>
+                        <span className="d-flex align-items-center"><img width={20} src={adulticon} alt="" />2 adults {room.places}</span>
                         <span className="mx-2">/</span>
                         <span className="d-flex align-items-center"><img src={kidicon} width={20} alt="" /> 3 kids </span>
                     </div>
@@ -100,7 +110,7 @@ export default function RoomsOverview() {
                         </div>
                         <div>
                             <img src={bedicon} width={20} className="me-2" alt="" />
-                            <span>2 bed</span>
+                            <span>{room.bed_type}</span>
                         </div>
                     </div>
                 </div>

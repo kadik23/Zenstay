@@ -11,7 +11,16 @@ const fs = require('fs');
 const multer = require('multer');
 const mime = require('mime-types');
 require("dotenv").config()
-mongoose.connect(process.env.MONGO_URL)
+const port = process.env.PORT || 3000
+const url = process.env.MONGO_URL
+mongoose.connect(url)
+const loginMiddleware = (req , res ,next) =>{
+    const {token} = req.cookies
+    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+        if (err) throw err;
+        next()
+    });
+} 
 
 const app = express()
 const corsOptions = {
@@ -101,59 +110,48 @@ app.get('/getOneRoom/:id',async(req,res)=>{
     }
 })
 
-app.post('/room_post',async(req, res)=>{
+app.post('/room_post',loginMiddleware,async(req, res)=>{
     try{
-        const {token} = req.cookies
-        let {name,space,bed_type,price} = req.body
-        jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-            if (err) throw err;
-            const doc = {name : name,space:space,bed_type:bed_type,viewers:0,price:price}
+        let {name,space,bed_type,price,places} = req.body
+            const doc = {name : name,space:space,bed_type:bed_type,viewers:0,price:price,places:places}
             const room = await Room.create(doc)
             if(!room){
                 return res.status(404).json({ error: 'Room not found' });
             }
             res.json(room)
-        });
     }catch(e){
         res.status(500).json('Internal Server Error'+e)
     }
 })
 
-app.post('/booking_room', async (req, res) => {
+app.post('/booking_room',loginMiddleware, async (req, res) => {
     try{
-        const {token} = req.cookies
         const { userID, roomID,checkIn,checkOut } = req.body;
-        jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-            if (err) throw err;
-            const doc = await Booking.create({
-                user_id: userID,room_id: roomID,check_in:checkIn,check_out:checkOut
-            })
-                res.json(doc);
-        });
+        const doc = await Booking.create({
+            user_id: userID,room_id: roomID,check_in:checkIn,check_out:checkOut
+        })
+        res.json(doc);
+       
     } catch(err){
         res.status(500).json('Internal Server Error' + err);
     }
 });
 
-app.put('/update_profile',async(req,res)=>{
+app.put('/update_profile',loginMiddleware,async(req,res)=>{
     try{
-        const {token} = req.cookies
         const {
             _id, email,username,account_type,telephone,
             date_of_birth
         } = req.body;
-        jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-            if (err) throw err;
-            const updateUser = await User.findById(_id);
-            if (!(updateUser))
-            return   res.status(500).json('Internal Server Error'+req.body._id );
-            updateUser.set({
-                _id,email,username,account_type,
-                telephone ,date_of_birth 
-            });
-            await updateUser.save();
-            return res.json(updateUser)
-        })
+        const updateUser = await User.findById(_id);
+        if (!(updateUser))
+        return   res.status(500).json('Internal Server Error'+req.body._id );
+        updateUser.set({
+            _id,email,username,account_type,
+            telephone ,date_of_birth 
+        });
+        await updateUser.save();
+        return res.json(updateUser)
     }catch(e){
         res.status(500).json('Internal Server Error' + e);
     }
@@ -163,55 +161,39 @@ app.put('/update_profile',async(req,res)=>{
 app.put('/update_room',async(req,res)=>{
     try{
         const {
-            _id, name, space,bed_type,price,
+            _id, name, space,bed_type,price,places
         } = req.body;
-        const {token} = req.cookies
-        jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-            if (err) throw err;
-            const updateRoom = await Room.findById(_id);
-            if (!(updateRoom))
-            return   res.status(500).json('Internal Server Error'+req.body._id );
-            await updateRoom.set({
-                _id, name, space,bed_type,price
-            }).save()
-            return res.json(updateRoom)
-        })
+        const updateRoom = await Room.findById(_id);
+        if (!(updateRoom))
+        return   res.status(500).json('Internal Server Error'+req.body._id );
+        await updateRoom.set({
+            _id, name, space,bed_type,price,places
+        }).save()
+        return res.json(updateRoom)
     }catch(e){
         res.status(500).json('Internal Server Error' + e);
     }
 })
 
-app.delete('/delete_room',async(req,res)=>{
+app.delete('/delete_room',loginMiddleware,async(req,res)=>{
     try{
         const roomDoc = req.body
-        const {token} = req.cookies
-        jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-            if (err) throw err;
-            const roomId = roomDoc._id
-            await Room.findByIdAndDelete(roomId)
-            res.json("Deleted Successfully")
-        })
+        const roomId = roomDoc._id
+        await Room.findByIdAndDelete(roomId)
+        res.json("Deleted Successfully")
     }catch(e){
         res.status(500).json('Internal Server Error' + e);
     }
 })
 
-app.get('/getUsers',(req,res)=>{
-    const {token} = req.cookies
-    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-        if (err) throw err;
+app.get('/getUsers',async(req,res)=>{
         let users=await User.find();
         res.json(users)
-    })
 })
 
-app.get('/getOrders',(req,res)=>{
-    const {token} = req.cookies
-    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-        if (err) throw err;
+app.get('/getOrders',async(req,res)=>{    
         let orders=await Booking.find();
         res.json(orders)
-    })
 })
 
 const photosMiddleware = multer({dest:'/upload'});
@@ -235,7 +217,6 @@ app.post('/logout', (req,res) => {
 app.get('*',async(req,res)=>{
     res.status(422).json('not found')
 })
-
-app.listen(3000,()=>{
+app.listen(port,()=>{
     console.log("hello im listening")
 })
