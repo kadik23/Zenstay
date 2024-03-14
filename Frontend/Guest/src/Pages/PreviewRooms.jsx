@@ -1,12 +1,18 @@
 import SideBar from "../Components/SideBar";
 import RoomsCards from "../Components/RoomsCards";
 import axios from 'axios'
+import { useEffect } from "react";
 export default function PreviewRooms() {
+    const [rooms,setRooms] = useState()
+    useEffect(() =>{
+        getPreviewRooms()
+    },[])
     async function getPreviewRooms(){
         try{
             let response = await axios.get('getAllRooms')
             if(response){
                 console.log(response.data)
+                setRooms(response.data)
             }else{
                 console.log('some issues')
             }
@@ -29,10 +35,8 @@ export default function PreviewRooms() {
                         </select>
                     </div>
                     <div className="row row-cols-md-2 row-cols-sm-1 row-cols-lg-1 mt-3">
-                        <RoomsCards />
-                        <RoomsCards />
-                        <RoomsCards />
-                        <RoomsCards />
+                        {rooms.map(room => <RoomsCards room={room}/>
+                        )}
                     </div>
                 </div>
             </div>
