@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')    
+import mongoose from 'mongoose'    
 const {Schema} = mongoose
 const BookingSchema = new Schema({
     user_id: String ,
@@ -14,4 +14,4 @@ const BookingSchema = new Schema({
 
 const BookingModel = mongoose.model('Booking',BookingSchema)
 
-module.exports = BookingModel
+export default BookingModel

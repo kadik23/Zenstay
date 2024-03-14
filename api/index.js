@@ -1,26 +1,18 @@
-const express = require("express")
-const cors = require('cors')
-const { default: mongoose } = require("mongoose")
-const User = require('./models/User.js')
-const Room = require('./models/Room.js')
-const Booking = require('./models/Booking.js')
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken')
-const cookieParser = require('cookie-parser');
-const fs = require('fs');
-const multer = require('multer');
-const mime = require('mime-types');
-require("dotenv").config()
+// const express = require("express")
+import express from "express";
+import cors from 'cors'
+import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
+import fs from "fs";
+import multer from "multer";
+import mime from "mime-types";
+import dotenv from 'dotenv';
+dotenv.config();
 const port = process.env.PORT || 3000
 const url = process.env.MONGO_URL
 mongoose.connect(url)
-const loginMiddleware = (req , res ,next) =>{
-    const {token} = req.cookies
-    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-        if (err) throw err;
-        next()
-    });
-} 
+
+import routes from "./routes/index.mjs"
 
 const app = express()
 const corsOptions = {
@@ -30,171 +22,11 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json())
 app.use(cookieParser());
+app.use(express.urlencoded({ extended: true })); // To parse URL-encoded bodies
 
-const bcryptSalt = bcrypt.genSaltSync(10);
-const jwtSecret = 'sdjjfldwjn2vpbcwytp'
-
-app.post("/register",async (req,res)=>{
-    const {username,email,firstname,lastname,password} = req.body
-    let account_type = 'Guest'
-    try{
-        let pass = bcrypt.hashSync(password, bcryptSalt)
-        const userDoc = await User.create({
-            email,
-            username,
-            firstname,
-            lastname,
-            password:pass,
-            account_type,
-        })
-        res.json({username,firstname,lastname,email,password,account_type})
-    }catch(e){
-        res.status(500).json({ error: e.message });
-    }  
-})
-
-app.post("/login",async(req,res)=>{
-    const {email , password} = req.body 
-    try{
-        const userDoc = await User.findOne({email})
-        if(userDoc){
-            const passOk = bcrypt.compareSync(password,userDoc.password)
-            if(passOk){
-                jwt.sign({
-                    email:userDoc.email,
-                    id:userDoc._id
-                },jwtSecret,{},(err,token)=>{
-                    if(err) throw err
-                    res.cookie('token',token).json(userDoc)
-                })
-            }else{
-                res.status(422).json('pass not ok')
-            }
-        }else{
-            res.status(422).json('not found')
-        }
-    }catch(e){
-        res.status(422).json(e)
-    }
-})
-
-app.get('/getAllRooms',async(req,res)=>{
-    try{
-        const rooms = await Room.find()
-        res.json(rooms)
-    }catch(e){
-        res.status(500).json('Internal Server Error')
-    }
-})
-
-app.post('/getRoomsBySearch/:bed_type',async(req,res)=>{
-    try{
-        const bed_type = req.params.bed_type;
-        const rooms = await Room.find({ bed_type: bed_type })
-        res.json(rooms)
-    }catch(e){
-        res.status(500).json('Internal Server Error')
-    } 
-})
-
-app.get('/getOneRoom/:id',async(req,res)=>{
-    try{
-        const roomId = req.params.id;
-        const room = await Room.findById(roomId)
-        if (!room) {
-            return res.status(404).json({ error: 'Room not found' });
-        }
-        res.json(room)
-    }catch(e){
-        res.status(500).json('Internal Server Error')
-    }
-})
-
-app.post('/room_post',loginMiddleware,async(req, res)=>{
-    try{
-        let {name,space,bed_type,price,places} = req.body
-            const doc = {name : name,space:space,bed_type:bed_type,viewers:0,price:price,places:places}
-            const room = await Room.create(doc)
-            if(!room){
-                return res.status(404).json({ error: 'Room not found' });
-            }
-            res.json(room)
-    }catch(e){
-        res.status(500).json('Internal Server Error'+e)
-    }
-})
-
-app.post('/booking_room',loginMiddleware, async (req, res) => {
-    try{
-        const { userID, roomID,checkIn,checkOut } = req.body;
-        const doc = await Booking.create({
-            user_id: userID,room_id: roomID,check_in:checkIn,check_out:checkOut
-        })
-        res.json(doc);
-       
-    } catch(err){
-        res.status(500).json('Internal Server Error' + err);
-    }
-});
-
-app.put('/update_profile',loginMiddleware,async(req,res)=>{
-    try{
-        const {
-            _id, email,username,account_type,telephone,
-            date_of_birth
-        } = req.body;
-        const updateUser = await User.findById(_id);
-        if (!(updateUser))
-        return   res.status(500).json('Internal Server Error'+req.body._id );
-        updateUser.set({
-            _id,email,username,account_type,
-            telephone ,date_of_birth 
-        });
-        await updateUser.save();
-        return res.json(updateUser)
-    }catch(e){
-        res.status(500).json('Internal Server Error' + e);
-    }
-})
+app.use(routes)
 
 
-app.put('/update_room',async(req,res)=>{
-    try{
-        const {
-            _id, name, space,bed_type,price,places
-        } = req.body;
-        const updateRoom = await Room.findById(_id);
-        if (!(updateRoom))
-        return   res.status(500).json('Internal Server Error'+req.body._id );
-        await updateRoom.set({
-            _id, name, space,bed_type,price,places
-        }).save()
-        return res.json(updateRoom)
-    }catch(e){
-        res.status(500).json('Internal Server Error' + e);
-    }
-})
-
-app.delete('/delete_room',loginMiddleware,async(req,res)=>{
-    try{
-        const roomDoc = req.body
-        const roomId = roomDoc._id
-        await Room.findByIdAndDelete(roomId)
-        res.json("Deleted Successfully")
-    }catch(e){
-        res.status(500).json('Internal Server Error' + e);
-    }
-})
-
-app.get('/getUsers',async(req,res)=>{
-        let users=await User.find();
-        res.json(users)
-})
-
-app.get('/getOrders',async(req,res)=>{    
-        let orders=await Booking.find();
-        res.json(orders)
-})
 
 const photosMiddleware = multer({dest:'/upload'});
 app.post('/upload_photos', photosMiddleware.array('photos', 10), async (req,res) => {
@@ -210,9 +42,7 @@ app.post('/upload_photos', photosMiddleware.array('photos', 10), async (req,res)
     res.json(uploadedImages);
 });
 
-app.post('/logout', (req,res) => {
-    res.cookie('token', '').json(true);
-});
+
 
 app.get('*',async(req,res)=>{
     res.status(422).json('not found')
