@@ -1,8 +1,8 @@
-import { useContext,useReducer } from "react"
-import { userContext } from "../../Pages/guest/UserContext"
+import { useReducer } from "react"
+import useUserStore from "../../Hooks/useUserStore"
 
 export default function PersonalDetails(){
-  const [user,setUser] = useContext(userContext)
+  const [user,setUser] = useUserStore()
     const initState = {
         email:"",
         password:""

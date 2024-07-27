@@ -11,13 +11,13 @@ import airconicon from "../../assets/icons/air-conditioner.png"
 import plusicon from "../../assets/icons/plus.png"
 import { NavLink } from "react-router-dom";
 import axios from 'axios'
-import { useContext, useEffect, useState } from "react"
-import { userContext } from "./UserContext"
+import { useEffect, useState } from "react"
 import { useParams } from 'react-router-dom';
+import useUserStore from "../../Hooks/useUserStore";
 
 export default function RoomsOverview() {
 
-    const [user,setUser] = useContext(userContext)
+    const [user,setUser] = useUserStore()
     const [room,setRooms] = useState()
     const {id} = useParams();
 

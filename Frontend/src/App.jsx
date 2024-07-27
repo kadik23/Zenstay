@@ -1,6 +1,5 @@
 import './App.css'
 import { Route, createBrowserRouter, createRoutesFromChildren, RouterProvider } from 'react-router-dom'
-import {UserContextProvider} from './Pages/guest/UserContext'
 // guest///
 //Pages
 import Home from './Pages/guest/Home'
@@ -72,9 +71,7 @@ const router = createBrowserRouter(
 
 function App() {
   return (
-    <UserContextProvider>
       <RouterProvider router={router} />
-    </UserContextProvider>
   );
 }
 export default App

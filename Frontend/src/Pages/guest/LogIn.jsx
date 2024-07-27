@@ -2,13 +2,12 @@ import { NavLink } from 'react-router-dom';
 import fbicon from '../../assets/icons/facebook.png'
 import googleicon from '../../assets/icons/google.png'
 import axios from 'axios'
-import {useState,useReducer,useContext} from 'react'
-import {userContext} from "./UserContext";    
-
+import {useReducer} from 'react'
+import useUserStore from '../../Hooks/useUserStore';
 
 export default function LogIn(){
 
-    const [user,setUser] = useContext(userContext);
+    const {  login } = useUserStore();
     const initState = {
         email:"",
         password:""
@@ -23,19 +22,9 @@ export default function LogIn(){
     
     const [state,dispatch] = useReducer(Reducer,initState) 
 
-    const login = async (ev) =>{
+    const signin = async (ev) =>{
         ev.preventDefault();
-        try{
-            let response = await axios.post('login',{
-                email: state.email ,
-                password: state.password
-            })
-            alert('Login successful');
-            setUser(response.data)
-            console.log(user)
-        }catch(e){
-            alert('Login failed');
-        }
+        login(state)
     }
 
     const handleChange = (ev)=>{
@@ -55,7 +44,7 @@ export default function LogIn(){
                             <NavLink to='/' className="btn-close"></NavLink>
                         </div>
                         <div className="modal-body p-5 pt-0">
-                            <form className="" onSubmit={login}>
+                            <form className="" onSubmit={signin}>
                                 <div className="border border-secondary rounded-2 form-floating mb-3">
                                     <input 
                                             type="email" 

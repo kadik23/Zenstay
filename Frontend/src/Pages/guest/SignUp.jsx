@@ -2,61 +2,51 @@ import { NavLink } from 'react-router-dom'
 import fbicon from '../../assets/icons/facebook.png'
 import googleicon from '../../assets/icons/google.png'
 import axios from "axios";
-import {useState,useContext,useReducer} from "react";
-import {userContext} from "./UserContext";
+import { useState, useContext, useReducer } from "react";
+import useUserStore from '../../Hooks/useUserStore';
 
-export default function SingUp(){
-    const [errorPassword,setErrorPassword] = useState(false)
-    const [user,setUser] = useContext(userContext);
+export default function SingUp() {
+    const [errorPassword, setErrorPassword] = useState(false)
+    const { register } = useUserStore();
 
     const initState = {
-        email:"",
-        username:"",
-        firstname:"",
-        lastname:"",
-        password:"",
-        confirmPassword:"",
+        email: "",
+        username: "",
+        firstname: "",
+        lastname: "",
+        password: "",
+        confirmPassword: "",
     }
-    const Reducer = (state , action)=>{
-        switch(action.type){
-            case "SET_EMAIL": return{...state,email:action.payload}
-            case "SET_USERNAME":return{...state,username:action.payload}
-            case "SET_FIRSTNAME":return{...state,firstname:action.payload}
-            case "SET_LASTNAME":return{...state,lastname:action.payload}
-            case "SET_PASSWORD":return{...state,password:action.payload}
-            case "SET_CONFIRM_PASSWORD":return{...state,confirmPassword:action.payload}
-            default :return state;
+    const Reducer = (state, action) => {
+        switch (action.type) {
+            case "SET_EMAIL": return { ...state, email: action.payload }
+            case "SET_USERNAME": return { ...state, username: action.payload }
+            case "SET_FIRSTNAME": return { ...state, firstname: action.payload }
+            case "SET_LASTNAME": return { ...state, lastname: action.payload }
+            case "SET_PASSWORD": return { ...state, password: action.payload }
+            case "SET_CONFIRM_PASSWORD": return { ...state, confirmPassword: action.payload }
+            default: return state;
         }
     }
-    
-    const [state,dispatch] = useReducer(Reducer,initState) 
-    const handleChange = (ev)=>{
-            dispatch({
-                payload:ev.target.value,
-                type:ev.target.name,
-            })
+
+    const [state, dispatch] = useReducer(Reducer, initState)
+    const handleChange = (ev) => {
+        dispatch({
+            payload: ev.target.value,
+            type: ev.target.name,
+        })
     }
 
-    async function registerUser(ev){
+    async function registerUser(ev) {
         ev.preventDefault();
-        if(state.confirmPassword==state.password){
-            try{
-                let data = await axios.post('/register',{
-                    username:state.username,email:state.email,firstname:state.firstname,lastname:state.lastname,password:state.password
-                })
-                alert('Registration successful. Now you can log in')
-                setUser(data.data)
-                console.log(user)
-            }catch(e){
-                console.log(e)
-                alert('Registration failed. Please try again later')
-            }
+        if (state.confirmPassword == state.password) {
+            register(state)
         }
         else setErrorPassword(true)
     }
-    return(
+    return (
         <>
-            <div className="modal modal-sheet position-static d-block p-4 py-md-5" tabIndex="-1" role="dialog" id="modalSignin" style={{height:"100vh",background:"#111827"}}>
+            <div className="modal modal-sheet position-static d-block p-4 py-md-5" tabIndex="-1" role="dialog" id="modalSignin" style={{ height: "100vh", background: "#111827" }}>
                 <div className="modal-dialog" role="document">
                     <div className="modal-content rounded-4">
                         <div className="modal-header p-5 pb-4 border-bottom-0">
@@ -66,76 +56,76 @@ export default function SingUp(){
                         <div className="modal-body p-5 pt-0">
                             <form className="" onSubmit={registerUser}>
                                 <div className="form-floating text-secondary mb-3">
-                                    <input  
-                                            type="text" 
-                                            name="SET_USERNAME"
-                                            className="border-bottom border-secondary form-control" 
-                                            id="floatingInputUsername" 
-                                            placeholder="name@example.com"
-                                            value={state.username}
-                                            onChange={handleChange}                                    
+                                    <input
+                                        type="text"
+                                        name="SET_USERNAME"
+                                        className="border-bottom border-secondary form-control"
+                                        id="floatingInputUsername"
+                                        placeholder="name@example.com"
+                                        value={state.username}
+                                        onChange={handleChange}
                                     />
                                     <label htmlFor="floatingInput">Username</label>
                                 </div>
                                 <div className='d-lg-flex text-secondary'>
                                     <div className="form-floating mb-3 me-lg-2">
-                                        <input  
-                                                type="text" 
-                                                className="border-bottom border-secondary form-control" 
-                                                name='SET_FIRSTNAME'
-                                                id="floatingInputFirstName" 
-                                                value={state.firstname}
-                                                onChange={handleChange}                                  
-                                                placeholder="name@example.com"
+                                        <input
+                                            type="text"
+                                            className="border-bottom border-secondary form-control"
+                                            name='SET_FIRSTNAME'
+                                            id="floatingInputFirstName"
+                                            value={state.firstname}
+                                            onChange={handleChange}
+                                            placeholder="name@example.com"
                                         />
                                         <label htmlFor="floatingInput">First Name </label>
                                     </div>
                                     <div className="form-floating mb-3">
-                                        <input  
-                                                type="text" 
-                                                className="border-bottom border-secondary form-control" 
-                                                name='SET_LASTNAME'
-                                                id="floatingInputLastName" 
-                                                placeholder="name@example.com"
-                                                value={state.lastname}
-                                                onChange={handleChange}                                        />
+                                        <input
+                                            type="text"
+                                            className="border-bottom border-secondary form-control"
+                                            name='SET_LASTNAME'
+                                            id="floatingInputLastName"
+                                            placeholder="name@example.com"
+                                            value={state.lastname}
+                                            onChange={handleChange} />
                                         <label htmlFor="floatingInput">Last Name</label>
                                     </div>
                                 </div>
                                 <div className="form-floating text-secondary mb-3">
-                                    <input  type="text" 
-                                            className="border-bottom border-secondary form-control" 
-                                            name='SET_EMAIL'
-                                            id="floatingInputEmail" 
-                                            placeholder="name@example.com"
-                                            value={state.email}
-                                            onChange={handleChange}                                    />
+                                    <input type="text"
+                                        className="border-bottom border-secondary form-control"
+                                        name='SET_EMAIL'
+                                        id="floatingInputEmail"
+                                        placeholder="name@example.com"
+                                        value={state.email}
+                                        onChange={handleChange} />
                                     <label htmlFor="floatingInput">Email</label>
                                 </div>
                                 <div className='d-lg-flex text-secondary'>
                                     <div className="form-floating me-lg-2">
-                                        <input 
-                                                type="password" 
-                                                className="border-bottom border-secondary form-control" 
-                                                name='SET_PASSWORD'
-                                                id="floatingInputPassword" 
-                                                placeholder="Password"
-                                                value={state.password}
-                                                onChange={handleChange}                                        />
+                                        <input
+                                            type="password"
+                                            className="border-bottom border-secondary form-control"
+                                            name='SET_PASSWORD'
+                                            id="floatingInputPassword"
+                                            placeholder="Password"
+                                            value={state.password}
+                                            onChange={handleChange} />
                                         <label htmlFor="floatingPassword">Password</label>
                                     </div>
                                     <div className="form-floating">
-                                        <input  type="password" 
-                                                className="border-bottom border-secondary form-control"
-                                                name="SET_CONFIRM_PASSWORD" 
-                                                id="floatingInputConfirmPassword" 
-                                                placeholder="Password"
-                                                value={state.confirmPassword}
-                                                onChange={handleChange}                              
+                                        <input type="password"
+                                            className="border-bottom border-secondary form-control"
+                                            name="SET_CONFIRM_PASSWORD"
+                                            id="floatingInputConfirmPassword"
+                                            placeholder="Password"
+                                            value={state.confirmPassword}
+                                            onChange={handleChange}
                                         />
                                         <label htmlFor="floatingPassword">Confirm Password</label>
-                                        { errorPassword && 
-                                        <p className=' text-secondary' >Passwords do not match.</p>
+                                        {errorPassword &&
+                                            <p className=' text-secondary' >Passwords do not match.</p>
                                         }
                                     </div>
                                 </div>
@@ -143,7 +133,7 @@ export default function SingUp(){
                                     <button className="my-4 btn btn-lg rounded-pill px-5 btn-primary">Sign up</button>
                                 </div>
                                 <small className="text-secondary">By clicking Sign up, you agree to the terms of use.</small>
-                                <hr className=""/>
+                                <hr className="" />
                                 <h2 className="fs-5 fw-bold mb-3 text-white">Or use a third-party</h2>
                                 <button className="d-flex justify-content-center align-items-center w-100 py-2 mb-2 btn btn-outline-light rounded-3" type="submit">
                                     <img src={googleicon} width={20} alt="Twitter" className='me-2' />
