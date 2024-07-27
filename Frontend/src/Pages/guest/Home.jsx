@@ -2,15 +2,11 @@ import Banner from "../../Components/guest/Banner"
 import Popular from "../../Components/guest/Popular"
 import LovedRooms from "../../Components/guest/LovedRooms"
 import axios from 'axios'
-import {userContext} from "./UserContext";    
-import {useContext, useEffect, useState} from 'react'
+import { useEffect, useState} from 'react'
 
 export default function Home() {
-    const [user,setUser] = useContext(userContext);
     const [rooms,setRooms] = useState([]);
     useEffect(()=>{
-        if(user)
-        console.log(user.username)
         getRooms()
     },[])
     async function getRooms(){

@@ -35,7 +35,7 @@ export default function PreviewRooms() {
                         </select>
                     </div>
                     <div className="row row-cols-md-2 row-cols-sm-1 row-cols-lg-1 mt-3">
-                        {rooms.map(room => <RoomsCards room={room}/>
+                        {rooms && rooms.map(room => <RoomsCards room={room}/>
                         )}
                     </div>
                 </div>
