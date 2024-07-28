@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 
-export default function Popular() {
+export default function Popular({room}) {
 
     return(
         <div>           
