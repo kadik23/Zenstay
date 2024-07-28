@@ -17,7 +17,7 @@ import useUserStore from "../../Hooks/useUserStore";
 
 export default function RoomsOverview() {
 
-    const [user,setUser] = useUserStore()
+    const {user,setUser} = useUserStore()
     const [room,setRooms] = useState()
     const {id} = useParams();
 
