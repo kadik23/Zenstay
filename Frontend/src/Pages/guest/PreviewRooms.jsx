@@ -2,24 +2,12 @@ import SideBar from "../../Components/guest/SideBar";
 import RoomsCards from "../../Components/guest/RoomsCards";
 import axios from 'axios'
 import { useEffect,useState } from "react";
+import useRoomsStore from "../../Hooks/useRoomsStore";
 export default function PreviewRooms() {
-    const [rooms,setRooms] = useState()
+    const {rooms,fetchRooms} = useRoomsStore()
     useEffect(() =>{
-        getPreviewRooms()
+        fetchRooms()
     },[])
-    async function getPreviewRooms(){
-        try{
-            let response = await axios.get('getAllRooms')
-            if(response){
-                console.log(response.data)
-                setRooms(response.data)
-            }else{
-                console.log('some issues')
-            }
-        }catch(e){
-            console.log(e)
-        }
-    }
     return(
         <div>
             <div className="d-flex">
