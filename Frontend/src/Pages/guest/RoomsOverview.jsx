@@ -9,36 +9,24 @@ import smarttvicon from "../../assets/icons/smart-tv.png"
 import keycardicon from "../../assets/icons/card-key.png"
 import airconicon from "../../assets/icons/air-conditioner.png"
 import plusicon from "../../assets/icons/plus.png"
+import bathroom from "../../assets/icons/bathroom.png"
 import { NavLink } from "react-router-dom";
-import axios from 'axios'
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useParams } from 'react-router-dom';
 import useUserStore from "../../Hooks/useUserStore";
+import useRoomStore from "../../Hooks/useRoomStore";
 
 export default function RoomsOverview() {
 
     const {user,setUser} = useUserStore()
-    const [room,setRooms] = useState()
     const {id} = useParams();
-
+    const {room,fetchRoomById} = useRoomStore()
 
     useEffect(()=>{
-        getRoom()
+        fetchRoomById(id)
     }
     ,[id])
-    async function getRoom(){
-        try{
-            let response = await axios.get(`getOneRoom/${id}`)
-            if(response){
-                console.log(response.data)
-                setRooms(response.data)
-            }else{
-                console.log('some issues')
-            }
-        }catch(e){
-            console.log(e)
-        }
-    }
+
     return(
         <div className="container">
             <div style={{marginTop:"60px"}} className="pb-4">
@@ -61,18 +49,18 @@ export default function RoomsOverview() {
 
                 </div>
             </div>
+            {room && (
+            <>
             <div className="d-flex justify-content-center align-items-center mb-3">
                 <div className="w-50">
                     <h4 className="mb-2 fw-bold">Room {room.name}</h4>
                     <div className="d-flex align-items-center">
-                        <span className="d-flex align-items-center"><img width={20} src={adulticon} alt="" />2 adults {room.places}</span>
-                        <span className="mx-2">/</span>
-                        <span className="d-flex align-items-center"><img src={kidicon} width={20} alt="" /> 3 kids </span>
+                        <span className="d-flex align-items-center"><img width={20} src={adulticon} alt="" />2 Adults {room.places}</span>
                     </div>
                 </div>
                 <div className="d-flex mb-lg-auto justify-content-end align-items-center w-100 mb-lg -auto">
-                            <span className="flex-1 rounded-pill px-3 room-status">Excellent</span>
-                            <span className="rating rounded-pill px-3">9.0</span>
+                    <span className="flex-1 rounded-pill px-3 room-status">Excellent</span>
+                    <span className="rating rounded-pill px-3">9.0</span>
                 </div>
             </div>
             <a href="#" className="text-decoration-none text-primary fw-bold">Overview</a>
@@ -80,41 +68,61 @@ export default function RoomsOverview() {
             <div className="row row-cols-md-3 w-100">
                 <div className="col row">
                     <div className="col d-flex flex-column">
+                    {room.free_wifi && ( 
                         <div>
                             <img src={wifiicon} width={20} className="me-2" alt="" />
-                            <span>free wifi</span>
+                            <span>Free wifi</span>
                         </div>
+                    )}
+                    {room.air_conditioning && ( 
                         <div>
                             <img src={airconicon} width={20} className="me-2" alt="" />
                             <span>Air conditioning</span>
                         </div>
+                    )}
                     </div>
                 </div>
                 <div className="col row">
                     <div className="col d-flex flex-column">
+                    {room.key_card_access && ( 
                         <div>
                             <img src={keycardicon} width={20} className="me-2" alt="" />
                             <span>Key and card access</span>
                         </div>
+                    )}
+                    {room.bed_type == "king size bed" || room.bed_type == "queen size bed" 
+                    ? ( 
                         <div>
                             <img src={kingbedicon} width={20} className="me-2" alt="" />
-                            <span>king size bed</span>
+                            <span>{room.bed_type}</span>
                         </div>
-                    </div>
-                </div>
-                <div className="col row">
-                    <div className="col d-flex flex-column">
-                        <div>
-                            <img src={smarttvicon} width={20} className="me-2" alt="" />
-                            <span>Smart TV</span>
-                        </div>
+                    )
+                    : (
                         <div>
                             <img src={bedicon} width={20} className="me-2" alt="" />
                             <span>{room.bed_type}</span>
                         </div>
+                    )}
+                    </div>
+                </div>
+                <div className="col row">
+                    <div className="col d-flex flex-column">
+                        {room.smart_tv && ( 
+                            <div>
+                                <img src={smarttvicon} width={20} className="me-2" alt="" />
+                                <span>Smart TV</span>
+                            </div>
+                        )}
+                        {room.bathroom && ( 
+                        <div>
+                            <img src={bathroom} width={20} className="me-2" alt="" />
+                            <span>Private bathroom</span>
+                        </div>
+                        )}
                     </div>
                 </div>
             </div>
+            <hr className="my-4 border-t border-gray-300" />
             <h5 className="mt-4">Reviews</h5>
             <div className="row row-clos-md-2 row-cols-1">
                 <div className="col-md-4 col">
@@ -191,7 +199,7 @@ export default function RoomsOverview() {
                     </div>
                 </div>
                 <div className="col-md-8 col">
-                    <div className="row row-cols-1">
+                    {/* <div className="row row-cols-1">
                         <div className="col d-flex justify-content-between">
                             <div className="">
                                 <div className="">
@@ -200,7 +208,7 @@ export default function RoomsOverview() {
                                 <span className="text-secondary">Mark M.</span>
                                 <div className="mb-3">
                                     <p className="mb-3">
-                                        we enjoyed our stay at this Hotelwe will definetlycome back
+                                        we enjoyed our stay at this Hotelwe will definetly come back
                                     </p>
                                     <div>
                                         <div className="d-flex align-items-center mb-1">
@@ -230,9 +238,13 @@ export default function RoomsOverview() {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
+                    {/* Comments soon... */}
                 </div>
             </div>
+            
+            </>
+        )}
         </div>
     )
 }

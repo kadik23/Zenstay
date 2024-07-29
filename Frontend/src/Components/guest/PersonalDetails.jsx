@@ -2,7 +2,7 @@ import { useReducer } from "react"
 import useUserStore from "../../Hooks/useUserStore"
 
 export default function PersonalDetails(){
-  const [user,setUser] = useUserStore()
+  const {user,setUser} = useUserStore()
     const initState = {
         email:"",
         password:""

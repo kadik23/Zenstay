@@ -17,7 +17,7 @@ export default function Home() {
     <>
         <Banner />
         <div className="container px-4 py-3" id="custom-cards">
-            <h4>Room Services</h4>
+            <h4>Popular Rooms</h4>
             <div className="row row-cols-1 row-cols-lg-4 align-items-stretch g-4 py-2">
                 {rooms && rooms.map( (room)=> 
                 <Popular room = {room} key={room._id}/>
