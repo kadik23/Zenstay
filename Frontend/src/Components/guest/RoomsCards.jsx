@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom"
 import image from "../../assets/room2.jpg"
-export default function RoomsCards() {
+export default function RoomsCards({room}) {
     
     return (
 
@@ -12,10 +12,12 @@ export default function RoomsCards() {
                             <img width={300} src={image} className="rounded-4" alt="" />
                         </div>
                         <div className="h-lg-100 d-flex flex-column">
-                            <h4 className="mb-auto">Hotel Norrebro</h4>
-                            <span>comfort room</span>
-                            <span>1x king size bed</span>
-                            <span>1x bathroom</span>
+                            <h4 className="mb-auto">Room {room.name}</h4>
+                            {room.air_conditioning && (<span>1x Air conditioning</span>)}
+                            {room.bathroom && (<span>1x Bathroom</span>)}
+                            {room.free_wifi && (<span>1x Free Wifi</span>)}
+                            {room.key_card_access && (<span>1x Key Card Access</span>)}
+                            {room.smart_tv && (<span>1x Smart TV</span>)}
                             <div className="mt-3 d-lg-flex align-items-center">
                                 <div className="d-md-block border border-primary rounded-pill p-1 px-3 text-primary me-2 "
                                 style={{width:"fit-content"}}>
@@ -32,11 +34,11 @@ export default function RoomsCards() {
                     <div className="h-100 d-flex flex-column">
                         <div className="d-flex mb-lg-auto justify-content-lg-end justify-content-center align-items-center w-100 mb-lg -auto">
                             <span className="flex-1 rounded-pill px-3 room-status">Excellent</span>
-                            <span className="rating rounded-pill px-3">9.0</span>
+                            <span className="rating rounded-pill px-3">{room.rating}</span>
                         </div>
-                        <strong className="align-self-end">$180</strong>
-                        <span className="align-self-end">1x king size bed</span>
-                        <NavLink to='/BookingOpt' className="w-md-75 btn btn-primary rounded-pill w-lg-100 mt-2">see booking options</NavLink>
+                        <strong className="align-self-end">${room.price}</strong>
+                        <span className="align-self-end">1x {room.bed_type}</span>
+                        <NavLink to={`/BookingOpt/${room._id}`} className="w-md-75 btn btn-primary rounded-pill w-lg-100 mt-2">See booking options</NavLink>
                     </div>
                 </div>
             </div>

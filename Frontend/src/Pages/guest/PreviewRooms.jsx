@@ -4,10 +4,19 @@ import axios from 'axios'
 import { useEffect,useState } from "react";
 import useRoomsStore from "../../Hooks/useRoomsStore";
 export default function PreviewRooms() {
-    const {rooms,fetchRooms} = useRoomsStore()
+    const { rooms, fetchRooms, filteredRooms, } = useRoomsStore();
     useEffect(() =>{
         fetchRooms()
     },[])
+
+    if (!rooms) {
+        return <div>Loading...</div>;
+    }
+    
+    if (rooms.length === 0) {
+        return <div>No rooms available</div>;
+    }
+    
     return(
         <div>
             <div className="d-flex">
@@ -23,8 +32,7 @@ export default function PreviewRooms() {
                         </select>
                     </div>
                     <div className="row row-cols-md-2 row-cols-sm-1 row-cols-lg-1 mt-3">
-                        {rooms && rooms.map(room => <RoomsCards room={room}/>
-                        )}
+                        {filteredRooms && filteredRooms.map(room => <RoomsCards key={room.id} room={room} />)}
                     </div>
                 </div>
             </div>
