@@ -17,6 +17,7 @@ const RoomSchema = new Schema({
     air_conditioning: Boolean,
     smart_tv: Boolean,
     free_wifi: Boolean,
+    guests_number: String,
 })
 
 const RoomModel = mongoose.model('Room',RoomSchema)
