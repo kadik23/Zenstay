@@ -4,26 +4,11 @@ import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import { body, validationResult } from 'express-validator';
 import { userHandler } from '../handlers/users.js';
+import { loginMiddleware } from '../middleware/loginMiddleware.js';
 
 const router = Router();
 const bcryptSalt = bcrypt.genSaltSync(10);
-const jwtSecret = 'sdjjfldwjn2vpbcwytp';
-
-const loginMiddleware = (req, res, next) => {
-    const { token } = req.cookies;
-    if (!token) {
-        return res.status(401).json({ message: 'No token provided' });
-    }
-
-    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-        if (err) {
-            return res.status(401).json({ message: 'Invalid token' });
-        }
-
-        req.userData = userData;
-        next();
-    });
-};
+const jwtSecret = 'sdjjfldwjn2vpbcwytp'
 
 router.post("/register",
     [
@@ -68,7 +53,8 @@ router.post("/login", async (req, res) => {
                     id: userDoc._id
                 }, jwtSecret, {}, (err, token) => {
                     if (err) throw err;
-                    res.cookie('token', token, { maxAge: 3600 * 60 }).json(userDoc);
+                    const { password, ...userWithoutPassword } = userDoc.toObject();
+                    res.cookie('token', token,{maxAge:3600*3600,sameSite:'none',path:'*',secure:true}).json(userWithoutPassword);
                 });
             } else {
                 res.status(422).json('password not ok');

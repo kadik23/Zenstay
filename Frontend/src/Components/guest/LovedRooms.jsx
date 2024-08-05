@@ -12,7 +12,7 @@ export default function LovedRooms(props) {
                         <div>
                             <img src={image} className="position-relative w-100 rounded-4" alt="" />
                         </div>
-                        <div className="position-absolute mt-2 ms-2 rounded-pill bg-warning px-3 text-dark bg-opacity-70">9.0</div>
+                        <div className="position-absolute mt-2 ms-2 rounded-pill bg-warning px-3 text-dark bg-opacity-70">{room.rating}</div>
                         <h5 className="pt-2 mb-2 lh-1 fw-bold">Room {room.name}</h5>
                         <small>
                             <span className="text-decoration-none text-body-secondary me-lg-4" href="#">2 people,3 kids {room.places}</span>
