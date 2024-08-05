@@ -4,7 +4,7 @@ export default function Footer() {
         <>
             <footer className="row row-cols-1 row-cols-sm-2 row-cols-md-5 py-4">
                 <div className="col">
-                <a className="navbar-brand text-body-emphasis me-lg-4" href="#">Zentsy</a><br />
+                <a className="navbar-brand text-body-emphasis fw-bold me-lg-4" href="#">Zenstay</a><br />
                 <small>Your favourite hotel booking experience since 1997!</small>
                 <p className="text-body-secondary mt-5">© 2023</p>
                 </div>

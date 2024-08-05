@@ -1,19 +1,8 @@
 import {Router} from 'express'
-import jwt from "jsonwebtoken";
 import Room from "../models/Room.js";
 import Booking from '../models/Booking.js';
+import { loginMiddleware } from '../middleware/loginMiddleware.js';
 const router  = Router()
-
-const loginMiddleware = (req , res ,next) =>{
-    const {token} = req.cookies
-    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-        if (err) {
-            return res.status(401).json({ error: 'Invalid or expired token' });
-        }
-        req.userData = userData;
-        next();
-    });
-} 
 
 router.get('/getAllRooms',async(req,res)=>{
     try{
@@ -27,7 +16,7 @@ router.get('/getAllRooms',async(req,res)=>{
 router.post('/getRoomsBySearch/:bed_type',async(req,res)=>{
     try{
         const bed_type = req.params.bed_type;
-        const rooms = await Room.find({ bed_type: bed_type })
+        const rooms = await Room.find({bed_type })
         res.json(rooms)
     }catch(e){
         res.status(500).json('Internal Server Error')
@@ -63,11 +52,11 @@ router.post('/room_post',loginMiddleware,async(req, res)=>{
 
 router.post('/booking_room',loginMiddleware, async (req, res) => {
     try{
-        const { userID, roomID,checkIn,checkOut } = req.body;
+        const { user_id, room_id,check_in,check_out } = req.body;
         const doc = await Booking.create({
-            user_id: userID,room_id: roomID,check_in:checkIn,check_out:checkOut
+            user_id, room_id, check_in, check_out
         })
-        res.json(doc);
+        res.status(200).json({"data":doc});
     } catch(err){
         res.status(500).json('Internal Server Error' + err);
     }
@@ -105,8 +94,22 @@ router.delete('/delete_room',loginMiddleware,async(req,res)=>{
 
 
 router.get('/getOrders',async(req,res)=>{    
-        let orders=await Booking.find();
-        res.json(orders)
+    let orders=await Booking.find();
+    res.json(orders)
+})
+
+router.get('/getOrder',async(req,res)=>{    
+    let orders=await Booking.find();
+    res.json(orders)
+})
+
+router.get('/getBookedRoomById/:room_id', async(req,res)=>{
+    try{
+        let bookedRoom = await Booking.findOne(req.params);
+        res.status(200).json({'data': bookedRoom})
+    }catch(e){
+        res.status(500).json('Internal Server Error' + e);
+    }
 })
 
 export default router
