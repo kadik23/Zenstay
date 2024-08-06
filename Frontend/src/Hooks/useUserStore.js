@@ -61,7 +61,21 @@ const useUserStore = create(
                     alert('Logout failed. Please try again later')
                     return false
                 }
-            }
+            },
+            update: async () => {
+                try{
+                    console.log(get().user)
+                    let data = await axios.put('/update_profile',get().user)
+                    if(data.status === 200){
+                        alert('Updated successful.')
+                    }
+                    return true
+                }catch(e){
+                    console.log(e)
+                    alert('Update failed. Please try again later')
+                    return false
+                }
+            },
         }),
         {
             name: 'user_credentials',
