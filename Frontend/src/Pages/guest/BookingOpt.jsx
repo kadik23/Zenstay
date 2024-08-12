@@ -16,14 +16,14 @@ export default function BookingOpt(){
         getBookedAppointments(id)
     }, [id]);
     return(
-        <div className="w-100">
-            <div className="row row-cols-2 w-100">
-                <div className="col-5">
-                    <UserInfoSideBar room={room}/>
+        <div className="container-fluid">
+            <div className="row flex-column flex-md-row w-100">
+                <div className="col-md-5 col-12">
+                    <UserInfoSideBar room={room} />
                 </div>
-                <div className="col-7 border-start px-5">
-                    <div style={{marginTop:"80px"}}>
-                        <RoomBookingInfo room={room}/>
+                <div className="col-md-7 col-12 border-start px-5">
+                    <div style={{ marginTop: "80px" }}>
+                        <RoomBookingInfo room={room} />
                     </div>
                 </div>
             </div>

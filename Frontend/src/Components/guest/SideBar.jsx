@@ -10,8 +10,10 @@ export default function roomsPreview() {
     };
 
     return(
-        <div className="d-flex flex-column flex-shrink-0 p-4 text-dark h-100" style={{color:"black",background:"#F8F8F8",width: "320px"}}>
-            <div style={{marginTop:"60px"}}>
+        <div
+            className="d-flex flex-column flex-shrink-0 p-4 text-dark h-100 custom-sidebar-width"
+            style={{color: "black", background: "#F8F8F8"}}
+        >            <div style={{marginTop:"60px"}}>
                 <NavLink to='/' href="#"><img src={backarrow} alt="" /></NavLink>
             </div>
             <strong className="py-3">Your Search</strong>

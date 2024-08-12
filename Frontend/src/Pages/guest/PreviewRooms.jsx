@@ -19,8 +19,8 @@ export default function PreviewRooms() {
     
     return(
         <div>
-            <div className="d-flex">
-                <div>
+            <div className="d-flex flex-column flex-md-row">
+                <div >
                     <SideBar />
                 </div>
                 <div className="flex-grow-1 px-4" style={{marginLeft:"36opx"}}>

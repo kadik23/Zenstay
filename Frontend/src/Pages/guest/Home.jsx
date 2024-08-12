@@ -31,7 +31,7 @@ export default function Home() {
             <h6>Rooms loved by guests</h6>
             <div className="row g-2 py-3 row-cols-1 row-cols-lg-5">
                 {rooms && rooms.map(room => 
-                    parseInt(room.rating)>= 9.0 && <LovedRooms room = {room} key= {room._id} />
+                    parseInt(room.rating)<= 9.0 && <LovedRooms room = {room} key= {room._id} />
                 )}
             </div>
         </div>
