@@ -30,6 +30,7 @@ import OrderList from './Pages/admin/OrderList';
 // Layouts
 import RootLayout2 from './Layouts/admin/RootLayout';
 import ChildLayout from './Layouts/admin/ChildLayout'
+import PopularRooms from './Pages/guest/PopularRooms.jsx'
 
 
 const router = createBrowserRouter(
@@ -44,6 +45,7 @@ const router = createBrowserRouter(
           <Route path="BookingOpt/:id" element={<BookingOpt/>} />
           <Route path="BookingConfirmed" element={<BookingConfirmed/>} />
           <Route path="Profile" element={<Profile/>} />
+          <Route path="PopularRooms" element={<PopularRooms/>} />
         </Route>
         <Route path='/'>
           <Route path="SignUp" element={<SignUp/>}/>

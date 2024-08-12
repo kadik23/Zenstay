@@ -41,3 +41,13 @@
     background-color: transparent;
     border: none;
 }
+
+.custom-sidebar-width {
+    width: 100%; /* Full width on small screens */
+}
+
+@media (min-width: 768px) { /* Medium screens and above (md breakpoint) */
+    .custom-sidebar-width {
+        width: 320px; /* Fixed width on medium screens and above */
+    }
+}
