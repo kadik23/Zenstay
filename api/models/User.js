@@ -5,10 +5,12 @@ const UserSchema = new Schema({
     username: String,
     firstname: String , 
     lastname: String , 
+    location: String ,
     password: String,
     account_type: String,
     telephone: Number,
-    date_of_birth: Object
+    date_of_birth: Object,
+    nationality: String,
 })
 
 

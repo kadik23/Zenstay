@@ -69,23 +69,24 @@ router.post("/login", async (req, res) => {
 
 router.put('/update_profile', loginMiddleware, async (req, res) => {
     try {
-        const {
-            _id, email, username, account_type, telephone,
-            date_of_birth
-        } = req.body;
+        const { _id, username, __v, account_type, ...allowedUpdated } = req.body;
         const updateUser = await User.findById(_id);
-        if (!updateUser)
-            return res.status(500).json('Internal Server Error' + req.body._id);
-        updateUser.set({
-            _id, email, username, account_type,
-            telephone, date_of_birth
+        if (!updateUser) {
+            return res.status(500).json('Internal Server Error: User not found');
+        }
+        
+        Object.keys(allowedUpdated).forEach(key => {
+            updateUser[key] = allowedUpdated[key];
         });
+        
         await updateUser.save();
-        return res.json(updateUser);
+        console.log(allowedUpdated);
+        return res.status(200).json(updateUser);
     } catch (e) {
-        res.status(500).json('Internal Server Error' + e);
+        res.status(500).json('Internal Server Error: ' + e);
     }
 });
+
 
 router.get('/getUsers', userHandler);
 
