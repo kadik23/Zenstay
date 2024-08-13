@@ -27,7 +27,7 @@ app.use(routes)
 
 
 
-const photosMiddleware = multer({dest:'/upload'});
+const photosMiddleware = multer({ storage: multer.memoryStorage() });
 app.post('/upload_photos', photosMiddleware.array('photos', 10), async (req,res) => {
     const uploadedImages = [];
     for (let i = 0; i < req.files.length; i++) {
