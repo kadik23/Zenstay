@@ -11,7 +11,8 @@ import Profile from './Pages/guest/Profile.jsx'
 import LogIn from './Pages/guest/LogIn'
 import SignUp from './Pages/guest/SignUp'
 import axios from "axios";
-axios.defaults.baseURL = 'http://127.0.0.1:3000';
+
+axios.defaults.baseURL = "https://zenstay-1sey.onrender.com/";
 axios.defaults.withCredentials = true;
 
 // Layouts
