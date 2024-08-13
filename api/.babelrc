@@ -1,0 +1,12 @@
+{
+    "presets": [
+        [
+            "@babel/preeset-env",
+            {
+                "targets": {
+                    "node": "current"
+                }
+            }
+        ]
+    ]
+}
