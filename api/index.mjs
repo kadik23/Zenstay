@@ -16,7 +16,7 @@ import routes from "./routes/index.js"
 const app = express()
 const corsOptions = {
     credentials: true,
-    origin: 'http://localhost:5173', 
+    origin: ['http://localhost:5173', 'https://zenstay-1sey.onrender.com/'],
 };
 app.use(cors(corsOptions));
 app.use(express.json())
