@@ -10,7 +10,7 @@ export default function Popular({room}) {
                         <h3 className="pt-5 mb-4 display-7 lh-1 fw-bold">Room {room.name}</h3>
                         <ul className="d-flex list-unstyled mt-auto">
                             <li className="me-auto">
-                                <NavLink to={`/RoomOverview/${room._id}`} className="text-decoration-none text-white shadow-lg me-lg-4">Zentsy</NavLink>
+                                <NavLink to={`/RoomOverview/${room._id}`} className="text-decoration-none text-white shadow-lg me-lg-4">    View Details</NavLink>
                             </li>
                             <li className="rounded-pill bg-white px-2 text-black">
                                 <small>{room.price}$</small>

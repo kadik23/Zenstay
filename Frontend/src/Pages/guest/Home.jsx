@@ -12,14 +12,23 @@ export default function Home() {
     useEffect(() => {
         fetchRooms();
     }, []);
-
+    if(!rooms){
+        return (
+            <div class="d-flex justify-content-center align-items-center vh-100">
+                <div class="spinner-border text-primary me-3" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <div class="fs-4 text-primary">Loading...</div>
+            </div>
+        )
+    }
     return (
     <>
         <Banner />
         <div className="container px-4 py-3" id="custom-cards">
             <h4>Popular Rooms</h4>
             <div className="row row-cols-1 row-cols-lg-4 align-items-stretch g-4 py-2">
-                {rooms && rooms.map( (room)=> 
+                {rooms.map( (room)=> 
                 <Popular room = {room} key={room._id}/>
                 )}
             </div>
@@ -30,7 +39,7 @@ export default function Home() {
         <div className="container px-4 py-3" id="featured-3">
             <h6>Rooms loved by guests</h6>
             <div className="row g-2 py-3 row-cols-1 row-cols-lg-5">
-                {rooms && rooms.map(room => 
+                {rooms.map(room => 
                     parseInt(room.rating)<= 9.0 && <LovedRooms room = {room} key= {room._id} />
                 )}
             </div>
