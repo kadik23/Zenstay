@@ -1,9 +1,9 @@
 import Banner from "../../Components/guest/Banner"
 import Popular from "../../Components/guest/Popular"
 import LovedRooms from "../../Components/guest/LovedRooms"
-import axios from 'axios'
 import { useEffect, useState} from 'react'
 import useRoomsStore from "../../Hooks/useRoomsStore"
+import Loading from "../../Components/guest/Loading"
 
 export default function Home() {
     const rooms = useRoomsStore((state) => state.rooms);
@@ -13,14 +13,7 @@ export default function Home() {
         fetchRooms();
     }, []);
     if(!rooms){
-        return (
-            <div class="d-flex justify-content-center align-items-center vh-100">
-                <div class="spinner-border text-primary me-3" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-                <div class="fs-4 text-primary">Loading...</div>
-            </div>
-        )
+        return (<Loading/>)
     }
     return (
     <>
