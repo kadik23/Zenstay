@@ -4,6 +4,7 @@ import LovedRooms from "../../Components/guest/LovedRooms"
 import axios from 'axios'
 import { useEffect, useState} from 'react'
 import useRoomsStore from "../../Hooks/useRoomsStore"
+import Loading from "../../Components/guest/Loading"
 
 export default function PopularRooms() {
     const rooms = useRoomsStore((state) => state.rooms);
@@ -12,7 +13,9 @@ export default function PopularRooms() {
     useEffect(() => {
         fetchRooms();
     }, []);
-
+    if(!rooms){
+        return (<Loading/>)
+    }
     return (
     <div className="container px-4 mt-5 py-3" id="custom-cards">
         <h4>Popular Rooms</h4>

@@ -6,6 +6,7 @@ export default function RootLayout(){
     return(
         <div className="root-layout">
             <Header />
+            
             <Outlet />
             <div className='bg-body-secondary'>
                 <div className="container">

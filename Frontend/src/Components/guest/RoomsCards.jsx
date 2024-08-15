@@ -1,7 +1,26 @@
 import { NavLink } from "react-router-dom"
 import image from "../../assets/room2.jpg"
 export default function RoomsCards({room}) {
+    function getRatingClass(rating) {
+        if (rating < 5.0) return 'bad';
+        if (rating < 6.0) return 'alright';
+        if (rating < 7.0) return 'good';
+        return 'excellent';
+    }
+
+    function getRatingClassState(rating) {
+        if (rating < 5.0) return 'bad-room-status';
+        if (rating < 6.0) return 'alright-room-status';
+        if (rating < 7.0) return 'good-room-status';
+        return 'excellent-room-status';
+    }
     
+    function getRatingStatus(rating) {
+        if (rating < 5.0) return 'Bad';
+        if (rating < 6.0) return 'Alright';
+        if (rating < 7.0) return 'Good';
+        return 'Excellent';
+    }
     return (
 
         <div className="col mb-3">
@@ -32,10 +51,12 @@ export default function RoomsCards({room}) {
 
                     </div>
                     <div className="h-100 d-flex flex-column">
-                        <div className="d-flex mb-lg-auto justify-content-lg-end justify-content-center align-items-center w-100 mb-lg -auto">
-                            <span className="flex-1 rounded-pill px-3 room-status">Excellent</span>
-                            <span className="rating rounded-pill px-3">{room.rating}</span>
-                        </div>
+                    <div className="d-flex mb-lg-auto justify-content-lg-end justify-content-center align-items-center w-100 mb-lg-auto">
+                        <span className={`flex-1 rounded-pill px-3 ${getRatingClassState(room.rating)}`}>
+                            {getRatingStatus(room.rating)}
+                        </span>
+                        <span className={`rounded-pill px-3 ${getRatingClass(room.rating)}`}>{room.rating}</span>
+                    </div>
                         <strong className="align-self-end">${room.price}</strong>
                         <span className="align-self-end">1x {room.bed_type}</span>
                         <NavLink to={`/BookingOpt/${room._id}`} className="w-md-75 btn btn-primary rounded-pill w-lg-100 mt-2">See booking options</NavLink>

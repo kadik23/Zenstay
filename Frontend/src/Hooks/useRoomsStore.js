@@ -9,6 +9,12 @@ const useRoomsStore = create((set, get) => ({
     priceRange: [],
     ratingRange: [],
     filteredRooms: null,
+    sortBy: '',
+    
+    setSortBy: (sortBy) => {
+        set({ sortBy });
+        get().applyFilters();
+    },
 
     fetchRooms: async () => {
         try {
@@ -60,6 +66,7 @@ const useRoomsStore = create((set, get) => ({
                 if (ratingRange === "<5.0") {
                     matchesGuestsRating = room.rating <= 5.0;
                 } else if (ratingRange === "5.0-6.0") {
+                    console.log("first")
                     matchesGuestsRating = room.rating >= 5.0 && room.rating <= 6.0;
                 } else if (ratingRange === "6.0-7.0") {
                     matchesGuestsRating = room.rating >= 6.0 && room.rating <= 7.0;
@@ -70,8 +77,14 @@ const useRoomsStore = create((set, get) => ({
 
             let matchesGuests = guests ? room.guests_number == guests : true;
 
-            return matchesGuests && matchesPrice && matchesGuests;
+            return matchesGuestsRating && matchesPrice && matchesGuests;
         });
+
+        if (get().sortBy === 'price') {
+            filteredRooms.sort((a, b) => a.price - b.price);
+        } else if (get().sortBy === 'rating') {
+            filteredRooms.sort((a, b) => b.rating - a.rating);
+        }
 
         set({ filteredRooms });
     }

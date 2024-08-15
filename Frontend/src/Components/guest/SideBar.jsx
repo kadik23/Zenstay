@@ -3,7 +3,7 @@ import backarrow from "../../assets/icons/back-arrow.png"
 import useRoomsStore from "../../Hooks/useRoomsStore";
 export default function roomsPreview() {
 
-    const { setRatingRange, setPriceRange, priceRange, ratingRange, setGuests, guests, rooms, applyFilters } = useRoomsStore();
+    const { setRatingRange, setPriceRange, priceRange, ratingRange, setGuests, guests, applyFilters } = useRoomsStore();
 
     const handleInputsChanges = () => {
         applyFilters();

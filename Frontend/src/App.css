@@ -8,11 +8,32 @@
     backdrop-filter: blur(10px);
 }
 
-.rating {
+.excellent {
     background: #E1ffd7;
     color: #1b8a4f;
 }
-.room-status {
+.bad {
+    background: #ffd7d7;
+    color: #f82d2d;
+}
+.good {
+    background: #f3ffd7;
+    color: #878d2d;
+}
+.alright {
+    background: #ffefd7;
+    color: #ff700b;
+}
+.bad-room-status {
+    color: #f82d2d;
+}
+.good-room-status {
+    color: #878d2d;
+}
+.alright-room-status {
+    color: #ff700b;
+}
+.excellent-room-status {
     color: #3bb37a;
 }
 .popularCard {
