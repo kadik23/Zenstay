@@ -48,7 +48,7 @@ const useBookRoomStore = create((set, get) => ({
     },
 
     handleSubmit: async (user_id, room_id) => {
-        const { setAlert } = useAlertMessageStore.getState();
+        const { setAlert, clearAlert } = useAlertMessageStore.getState();
 
         try {
             const response = await axios.post('/booking_room', {
@@ -56,12 +56,17 @@ const useBookRoomStore = create((set, get) => ({
                 room_id,
                 check_in: get().firstStep.check_in,
                 check_out: get().firstStep.check_out,
-                secondStep: get().secondStep
+                secondStep: get().secondStep,
+                totalPrice: get().totalPrice,
             });
 
             if (response.data) {
                 console.log("Booking successful");
                 setAlert({ message: 'Booking room completed successfully!', type: 'success' });
+                setTimeout(() => {
+                    clearAlert()
+                    window.location.href = `/BookingConfirmed/${room_id}`
+                }, 3000)
             }
         } catch (e) {
             console.log(e);
@@ -69,8 +74,29 @@ const useBookRoomStore = create((set, get) => ({
         }
     },
 
+    cancelReservation: async (id) => {
+        const { setAlert, clearAlert } = useAlertMessageStore.getState();
+
+        try {
+            const response = await axios.delete(`/cancel_reservation/${id}`);
+
+            if (response.data) {
+                console.log("Reservation canceled successful");
+                setAlert({ message: 'Booking room completed successfully!', type: 'success' });
+                setTimeout(() => {
+                    clearAlert()
+                    window.location.href = `/`
+                }, 3000)
+            }
+        } catch (e) {
+            console.log(e);
+            setAlert({ message: 'Reservation canceled failed. Please try again.', type: 'danger' });
+        }
+    },
+
     getBookedAppointments: async (room_id) => {
         try {
+            console.log("room:" +room_id)
             const response = await axios.get(`/getBookedRoomById/${room_id}`, {
                 withCredentials: true,
             });

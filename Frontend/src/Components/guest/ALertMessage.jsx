@@ -6,7 +6,7 @@ function ALertMessage({ type, message }) {
 
     if (!alert.visible) return null;
     return (
-    <div className={`alert alert-${type} alert-dismissible fade show`} role="alert" style={{zIndex: 9999}}>
+    <div className={`alert alert-${type} alert-dismissible fade show`} role="alert" style={{zIndex: 9999, position: 'fixed', bottom:'0', right:'0'}}>
         {message}
         <button
             type="button"

@@ -2,11 +2,14 @@ import { NavLink } from "react-router-dom";
 import setting from '../../assets/icons/setting.png';
 import { useEffect, useState } from 'react';
 import useUserStore from "../../Hooks/useUserStore";
+import ALertMessage from "./ALertMessage";
+import useAlertMessageStore from "../../Hooks/useAlertMessage";
 
 export default function Header() {
 
     const { user, logout } = useUserStore();
     const [signin, setSignin] = useState(true);
+    const {alert} = useAlertMessageStore()
 
     useEffect(() => {
         if (user) setSignin(false);
@@ -23,9 +26,11 @@ export default function Header() {
     return (
         <div>
             <nav className="navbar navbar-expand-md navbar-light bg-white bg-opacity-75 fixed-top">
+                {alert.visible && (
+                    <ALertMessage type={alert.type} message={alert.message} />
+                )}
                 <div className="container">
                     <NavLink to='/' className="navbar-brand text-body-emphasis me-lg-4">Zenstay</NavLink>
-                    
                     {/* Toggler button for small screens */}
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>

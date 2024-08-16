@@ -52,9 +52,9 @@ router.post('/room_post',loginMiddleware,async(req, res)=>{
 
 router.post('/booking_room',loginMiddleware, async (req, res) => {
     try{
-        const { user_id, room_id,check_in,check_out } = req.body;
+        const { user_id, room_id,check_in,check_out, totalPrice } = req.body;
         const doc = await Booking.create({
-            user_id, room_id, check_in, check_out
+            user_id, room_id, check_in, check_out, totalPrice
         })
         res.status(200).json({"data":doc});
     } catch(err){
@@ -109,6 +109,22 @@ router.get('/getBookedRoomById/:room_id', async(req,res)=>{
         res.status(200).json({'data': bookedRoom})
     }catch(e){
         res.status(500).json('Internal Server Error' + e);
+    }
+})
+
+router.delete('/cancel_reservation/:id',loginMiddleware,async(req,res)=>{
+    try{
+        const {id} = req.params
+        const result = await Booking.findByIdAndDelete(id);
+        console.log(id)
+        if (result) {
+            res.json({ message: "Deleted Successfully" });
+        } else {
+            res.status(404).json({ message: "Reservation not found" });
+        }
+        
+    }catch(e){
+        res.status(500).json('Internal Server Error' + e.message);
     }
 })
 

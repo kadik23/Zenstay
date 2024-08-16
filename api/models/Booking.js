@@ -7,7 +7,8 @@ const BookingSchema = new Schema({
     check_out: String,
     numberOfGuests: Number , 
     status: String ,// pending, confirmed, rejected, checked-in, checked-out
-    review: Number
+    review: Number,
+    totalPrice: Number
 })
 
 

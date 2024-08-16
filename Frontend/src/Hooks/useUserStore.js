@@ -1,6 +1,7 @@
 import create from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware'
 import axios from 'axios';
+import useAlertMessageStore from './useAlertMessage';
 
 const useUserStore = create(
     persist(
@@ -23,42 +24,53 @@ const useUserStore = create(
                 }
             },
             register: async (state) => {
+                const { setAlert, clearAlert } = useAlertMessageStore.getState();
+
                 try{
                     let data = await axios.post('/register',{
                         username:state.username,email:state.email,firstname:state.firstname,lastname:state.lastname,password:state.password
                     })
-                    alert('Registration successful. Now you can log in')
+                    setAlert({ message: 'Registration successful , Now you can log in!', type: 'success' });
                     set({ user: response.data });
-                    console.log(get().user)
+                    setTimeout(() => {
+                        clearAlert()
+                        window.location.href = '/LogIn';
+                    }, 3000)
                 }catch(e){
                     console.log(e)
                     alert('Registration failed. Please try again later')
                 }
             },
             login: async (state) => {
+                const { setAlert, clearAlert } = useAlertMessageStore.getState();
                 try{
                     let response = await axios.post('login',{
                         email: state.email ,
                         password: state.password
                     })
-                    alert('Login successful');
+                    setAlert({ message: 'Login successful!', type: 'success' });
                     set({ user: response.data });
-                    window.location.href = '/';
+                    setTimeout(() => {
+                        clearAlert()
+                        window.location.href = '/';
+                    }, 3000)
                 }catch(e){
-                    alert('Login failed');
+                    setAlert({ message: 'Login failed!', type: 'danger' });
                 }
             },
             logout: async () => {
+                const { setAlert,clearAlert } = useAlertMessageStore.getState();
                 try{
                     let data = await axios.post('/logout')
                     if(data.status === 200){
                         set({ user: null });
-                        alert('Logout successful.')
+                        setAlert({ message: 'Logout successful!', type: 'success' });
+                        setTimeout(() => clearAlert(), 3000)
                     }
                     return true
                 }catch(e){
                     console.log(e)
-                    alert('Logout failed. Please try again later')
+                    setAlert({ message: 'Logout failed. Please try again later!', type: 'success' });
                     return false
                 }
             },
