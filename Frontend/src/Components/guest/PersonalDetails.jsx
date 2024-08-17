@@ -53,8 +53,8 @@ export default function PersonalDetails() {
   };
 
   return (
-    <div className="p-5 row">
-      <div className="col-8">
+    <div className="p-md-5 row">
+      <div className="col-10 col-md-7">
         <div className="mb-5">
           <h3>Personal details</h3>
           <span className="text-secondary">Edit your personal details</span>
@@ -63,10 +63,10 @@ export default function PersonalDetails() {
         <div className="mt-4 d-flex flex-column gap-4">
           {["firstname", "lastname", "location", "email",  "telephone", "nationality", "date_of_birth"].map((field) => (
             <div className="row" key={field}>
-              <div className="col-3">
+              <div className="col-4">
                 <strong>{field.charAt(0).toUpperCase() + field.slice(1).replace('_', ' ')}</strong>
               </div>
-              <div className="col-5">
+              <div className="col-7 col-md-5">
                 {isEditing[field] ? (
                   <motion.input
                     initial={{ opacity: 0 }}
@@ -98,8 +98,8 @@ export default function PersonalDetails() {
             <button onClick={update_user} className="btn btn-outline-primary rounded-pill">Update</button>
         </div>
       </div>
-      <div className="col-4 d-flex justify-content-end align-items-center">
-        <div className="shadow rounded-4 w-md-75 p-3">
+      <div className="col-8 col-md-10 custom-sidebar-width mt-5 mt-md-0 d-flex justify-content-end align-items-center">
+        <div className="shadow rounded-4 w-md-75 w-md-75 w-100 p-3">
           <strong>Pssst!</strong>
           <div className="mb-3 text-secondary">
             <span>

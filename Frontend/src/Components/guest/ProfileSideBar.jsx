@@ -5,7 +5,7 @@ import payment from "../../assets/icons/credit-card.png"
 
 export default function ProfileSideBar() {
     return(
-        <div className="d-flex flex-column flex-shrink-0 p-4 text-dark h-100" style={{color:"black",background:"#F8F8F8",width: "320px"}}>
+        <div className="d-flex flex-column flex-shrink-0 custom-sidebar-width p-4 text-dark h-100" style={{color:"black",background:"#F8F8F8",}}>
             <div style={{marginTop:"60px"}}>
                 <NavLink to='/' href="#"><img src={backarrow} alt="" /></NavLink>
             </div>

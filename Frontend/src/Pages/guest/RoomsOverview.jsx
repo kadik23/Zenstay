@@ -15,6 +15,7 @@ import { useEffect } from "react"
 import { useParams } from 'react-router-dom';
 import useUserStore from "../../Hooks/useUserStore";
 import useRoomStore from "../../Hooks/useRoomStore";
+import getRatingStatus from "../../Utils/getRatingStatus";
 
 export default function RoomsOverview() {
 
@@ -32,40 +33,49 @@ export default function RoomsOverview() {
             <div style={{marginTop:"60px"}} className="pb-4">
                 <NavLink to='/PreviewRooms' href="#"><img src={backarrow} alt="" /></NavLink>
             </div>
-            <div className="p-0 row row-cols-lg-2 row-cols-sm-1 mb-4">
-                <div className="me-2 p-0 col-lg-6 h-100 w-sm-100">
-                    <img src={image} className="h-100 rounded-4 w-100" alt="" />
+            <div className="row row-cols-1 row-cols-lg-2 mb-4">
+                <div className="col mb-3 mb-lg-0">
+                    <img src={image} className="w-100 h-100 rounded-4" alt="" />
                 </div>
-                <div className="p-0 col-lg-6 row pe-sm-0 pe-lg-2 w-sm-100">
-                    <div className="col-6 gap-2 pe-lg-2 d-flex flex-column justify-content-between">
-                        <img src={image} className="w-100 h-50 rounded-4" alt="" />
-                        <img src={image} className="w-100 h-50 rounded-4" alt="" />
-
+                <div className="col d-flex flex-column gap-3">
+                    <div className="row mb-3">
+                        <div className="col-6">
+                            <img src={image} className="w-100 h-100 rounded-4" alt="" />
+                        </div>
+                        <div className="col-6">
+                            <img src={image} className="w-100 h-100 rounded-4" alt="" />
+                        </div>
                     </div>
-                    <div className="p-0 col-6 gap-2 pe-sm-0 pe-lg-2 d-flex flex-column">
-                        <img src={image} className="w-100 h-50 rounded-4" alt="" />
-                        <img src={image} className="w-100 h-50 rounded-4" alt="" />
+                    <div className="row">
+                        <div className="col-6">
+                            <img src={image} className="w-100 h-100 rounded-4" alt="" />
+                        </div>
+                        <div className="col-6">
+                            <img src={image} className="w-100 h-100 rounded-4" alt="" />
+                        </div>
                     </div>
-
                 </div>
             </div>
+
             {room && (
             <>
-            <div className="d-flex justify-content-center align-items-center mb-3">
-                <div className="w-50">
+            <div className="d-flex flex-column flex-md-row justify-content-md-center align-items-start align-items-md-center mb-3">
+                <div className="w-50 order-2 order-md-1 mb-3 mb-md-0">
                     <h4 className="mb-2 fw-bold">Room {room.name}</h4>
                     <div className="d-flex align-items-center">
-                        <span className="d-flex align-items-center"><img width={20} src={adulticon} alt="" />2 Adults {room.places}</span>
+                        <span className="d-flex align-items-center">
+                            <img width={20} src={adulticon} alt="" /> {room.guests_number} Adults 
+                        </span>
                     </div>
                 </div>
-                <div className="d-flex mb-lg-auto justify-content-end align-items-center w-100 mb-lg -auto">
-                    <span className="flex-1 rounded-pill px-3 room-status">Excellent</span>
-                    <span className="rating rounded-pill px-3">9.0</span>
+                <div className="d-flex justify-content-end align-items-center w-100 order-1 order-md-2">
+                    <span className="flex-1 rounded-pill px-3 room-status">{getRatingStatus(room.rating)}</span>
+                    <span className="rating rounded-pill px-3">{room.rating}</span>
                 </div>
             </div>
             <a href="#" className="text-decoration-none text-primary fw-bold">Overview</a>
             <h5 className="mt-4">Room overview</h5>
-            <div className="row row-cols-md-3 w-100">
+            <div className="row row-cols-md-3 row-cols-2 w-100">
                 <div className="col row">
                     <div className="col d-flex flex-column">
                     {room.free_wifi && ( 
@@ -126,7 +136,7 @@ export default function RoomsOverview() {
             <h5 className="mt-4">Reviews</h5>
             <div className="row row-clos-md-2 row-cols-1">
                 <div className="col-md-4 col">
-                    <div className="display-6 text-primary mb-2"><strong>9.6/10</strong></div>
+                    <div className="display-6 text-primary mb-2"><strong>{room.rating}/10</strong></div>
                     <div>
                         <div className="d-flex justify-content-between align-items-center text-secondary mb-1">
                             <span>
@@ -158,7 +168,7 @@ export default function RoomsOverview() {
                     <div>
                         <div className="d-flex justify-content-between align-items-center text-secondary mb-1">
                             <span>
-                                Location
+                                Bathroom
                             </span>
                             <span>
                                 9/10

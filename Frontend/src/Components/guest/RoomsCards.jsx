@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom"
 import image from "../../assets/room2.jpg"
+import getRatingStatus from "../../Utils/getRatingStatus";
 export default function RoomsCards({room}) {
     function getRatingClass(rating) {
         if (rating < 5.0) return 'bad';
@@ -14,13 +15,7 @@ export default function RoomsCards({room}) {
         if (rating < 7.0) return 'good-room-status';
         return 'excellent-room-status';
     }
-    
-    function getRatingStatus(rating) {
-        if (rating < 5.0) return 'Bad';
-        if (rating < 6.0) return 'Alright';
-        if (rating < 7.0) return 'Good';
-        return 'Excellent';
-    }
+
     return (
 
         <div className="col mb-3">
