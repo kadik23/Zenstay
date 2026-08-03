@@ -52,7 +52,11 @@ const useUserStore = create(
                     set({ user: response.data });
                     setTimeout(() => {
                         clearAlert()
-                        window.location.href = '/';
+                        if (response.data.account_type === 'admin') {
+                            window.location.href = '/admin';
+                        } else {
+                            window.location.href = '/';
+                        }
                     }, 3000)
                 }catch(e){
                     setAlert({ message: 'Login failed!', type: 'danger' });
