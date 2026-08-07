@@ -8,12 +8,14 @@ import economy from '../../assets/icons/economy.png'
 function Notification() {
   return (
     <div>
-        <div className='mb-5'>
-            <h3 className='fw-bold' style={{color:"#494949"}}>Notifications</h3>
-            <small className='fw-bold' style={{color:"#c7c9d9"}}>With all of the styling tool options availablein today's market</small>
+        <div className='mb-5 d-flex align-items-center justify-content-between'>
+            <div className='d-flex flex-column gap-1'>
+                <h3 className='fw-bold mb-0' style={{color:"#2b2b2b"}}>Notifications</h3>
+                <small className='fw-medium' style={{color:"#8a8d9d"}}>With all of the styling tool options availablein today's market</small>
+            </div>
         </div>
-        <div className='p-4'>
-            <div className='shadow rounded-3 px-4 py-3'>
+        <div className='mb-4'>
+            <div className='shadow bg-white rounded-3 px-4 py-4'>
                 <div className='rounded-3 px-3 py-1 d-flex align-items-center gap-2 mb-5' style={{background:"#eff0f6"}}>
                     <img src={search} width={15} alt="" />
                     <input type="text" name="NotifSearch" id="NotifSearch" 

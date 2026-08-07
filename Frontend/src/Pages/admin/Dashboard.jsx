@@ -26,11 +26,13 @@ export default function Dashboard(){
     }
     return(
         <div className="">
-            <div className="mb-5">
-                <strong className="me-2">
-                    Find room to stay
-                </strong>
-                <img src={bed} width={20} alt="" />
+            <div className="mb-5 d-flex align-items-center justify-content-between">
+                <div className='d-flex flex-column gap-1'>
+                    <h3 className='fw-bold mb-0 d-flex align-items-center gap-2' style={{color:"#2b2b2b"}}>
+                        Dashboard <img src={bed} width={24} alt="" />
+                    </h3>
+                    <small className='fw-medium' style={{color:"#8a8d9d"}}>Find room to stay</small>
+                </div>
             </div>
             <form action="" className="d-flex gap-3 mb-5">
                 <div className="">

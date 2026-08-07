@@ -26,6 +26,8 @@ import Notification from './Pages/admin/Notification';
 import RoomList from './Pages/admin/RoomList';
 import GuestList from './Pages/admin/GuestList';
 import OrderList from './Pages/admin/OrderList';
+import Settings from './Pages/admin/Settings';
+import ProfileAdmin from './Pages/admin/ProfileAdmin';
 
 // Layouts
 import RootLayout2 from './Layouts/admin/RootLayout';
@@ -55,6 +57,8 @@ const router = createBrowserRouter(
           <Route element={(<RootLayout2/>)}>
             <Route index element={<Dashboard/>}/>
             <Route path="Notification" element={<Notification/>}/>
+            <Route path="settings" element={<Settings/>}/>
+            <Route path="profile" element={<ProfileAdmin/>}/>
           </Route>
           <Route element={(<ChildLayout/>)}>
             <Route path="RoomList" element={<RoomList/>}/>

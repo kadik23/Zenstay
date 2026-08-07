@@ -4,7 +4,6 @@ import cors from 'cors'
 import cookieParser from "cookie-parser";
 import fs from "fs";
 import multer from "multer";
-import mime from "mime-types";
 import dotenv from 'dotenv';
 import {mongoose} from "mongoose"
 dotenv.config();

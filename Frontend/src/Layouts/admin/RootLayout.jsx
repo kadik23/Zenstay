@@ -11,7 +11,7 @@ export default function RootLayout2(){
             <div className="flex-fill px-3 py-4 " style={{background:"#fbfbfb"}}>
                 <Outlet />
             </div>
-            <div className="ps-3 py-4" style={{maxWidth:"280px"}}>
+            <div className="ps-3 pe-4 py-4" style={{maxWidth:"280px"}}>
                 <Recent/>
             </div>
 

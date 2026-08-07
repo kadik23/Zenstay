@@ -72,3 +72,37 @@
         width: 320px; /* Fixed width on medium screens and above */
     }
 }
+
+.sidebar-link {
+    padding: 15px 30px;
+    border-radius: 30px 0 0 30px;
+    position: relative;
+    color: #3d94ff;
+    transition: background-color 0.3s;
+}
+
+.sidebar-link.active {
+    background-color: #fbfbfb;
+}
+
+/* Create the smooth curves for the active item */
+.sidebar-link.active::before,
+.sidebar-link.active::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    background-color: transparent;
+    pointer-events: none;
+}
+
+.sidebar-link.active::before {
+    bottom: 100%;
+    background: radial-gradient(circle at top left, transparent 29.5px, #fbfbfb 30px);
+}
+
+.sidebar-link.active::after {
+    top: 100%;
+    background: radial-gradient(circle at bottom left, transparent 29.5px, #fbfbfb 30px);
+}

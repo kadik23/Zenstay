@@ -27,14 +27,9 @@ function RoomList() {
   return (
     <div>
        <div className='mb-5 d-flex align-items-center justify-content-between'>
-            <h3 className='fw-bold' style={{color:"#7d7d7d"}}>Room List</h3>
-            <a className="d-block p-3 link-body-emphasis text-decoration-none bg-white d-flex align-items-center gap-1 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="https://github.com/mdo.png" alt="mdo" width="40" height="40" className="rounded-circle me-2"/>
-                <div className="d-flex flex-column user-select-none me-5">
-                    <strong>Jhonathen Smith</strong>
-                    <span style={{color:"#adadad"}}>Traveller Enthusiast</span>
-                </div>
-            </a>
+            <div className='d-flex flex-column gap-1'>
+                <h3 className='fw-bold mb-0' style={{color:"#2b2b2b"}}>Room List</h3>
+            </div>
         </div>
         <div className='mb-4'>
           <div className='d-flex justify-content-between gap-5'>
