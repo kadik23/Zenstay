@@ -90,6 +90,19 @@ router.put('/update_profile', loginMiddleware, async (req, res) => {
 
 router.get('/getUsers', userHandler);
 
+router.get('/getAdminContact', async (req, res) => {
+    try {
+        const admin = await User.findOne({ account_type: 'admin' });
+        if (admin) {
+            res.json({ email: admin.email, telephone: admin.telephone || '+49 002 001 030' });
+        } else {
+            res.status(404).json('Admin not found');
+        }
+    } catch (e) {
+        res.status(500).json('Internal Server Error');
+    }
+});
+
 router.post('/logout', (req, res) => {
     res.cookie('token', '').json(true);
 });

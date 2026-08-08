@@ -1,7 +1,26 @@
 import Recent from '../../Components/admin/Recent'
 import SideBar from '../../Components/admin/SideBar'
 import { Outlet  } from 'react-router-dom'
+import { useEffect } from 'react'
+import useNotificationStore from '../../Hooks/useNotificationStore'
+
 export default function RootLayout2(){
+    const { fetchNotifications, addNotification } = useNotificationStore();
+
+    useEffect(() => {
+        fetchNotifications();
+
+        const eventSource = new EventSource('http://localhost:3000/notifications/stream');
+
+        eventSource.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            addNotification(data);
+        };
+
+        return () => {
+            eventSource.close();
+        };
+    }, []);
 
     return(
         <div className="d-flex">

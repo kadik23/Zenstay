@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import useUserStore from "../../Hooks/useUserStore";
 import useAlertMessageStore from "../../Hooks/useAlertMessage";
 import ALertMessage from "../../Components/guest/ALertMessage";
+import axios from "axios";
 
 export default function BookingOpt(){
     const {getBookedAppointments, bookedAppointments, cancelReservation} = useBookRoomStore();
@@ -15,6 +16,21 @@ export default function BookingOpt(){
     const {id} = useParams();
     const [appointment, setAppointment] = useState(null)
     const {alert} = useAlertMessageStore()
+    const [adminContact, setAdminContact] = useState({ email: 'desk@hotelmitte.dk', telephone: '+49 002 001 030' });
+
+    useEffect(() => {
+        const fetchAdminContact = async () => {
+            try {
+                const response = await axios.get('/getAdminContact');
+                if (response.data) {
+                    setAdminContact(response.data);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        };
+        fetchAdminContact();
+    }, []);
 
     useEffect(() => {
         console.log("id"+id)
@@ -80,10 +96,10 @@ export default function BookingOpt(){
                                     <span>Norrebrogade 9, 10178 Copenhagen, Denmark</span>
                                 </div>
                                 <div className="">
-                                    <span>desk@hotelmitte.dk</span>
+                                    <span>{adminContact.email}</span>
                                 </div>
                                 <div className="">
-                                    <span>+49 002 001 030</span>
+                                    <span>{adminContact.telephone}</span>
                                 </div>
                             </div>
                         </div>

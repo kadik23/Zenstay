@@ -1,9 +1,44 @@
 import {Router} from 'express'
 import Room from "../models/Room.js";
 import Booking from '../models/Booking.js';
+import Notification from '../models/Notification.js';
 import { loginMiddleware } from '../middleware/loginMiddleware.js';
 import mongoose from 'mongoose';
 const router  = Router()
+
+let clients = [];
+
+router.get('/notifications/stream', (req, res) => {
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.flushHeaders();
+
+    clients.push(res);
+
+    req.on('close', () => {
+        clients = clients.filter(client => client !== res);
+    });
+});
+
+router.get('/notifications', async (req, res) => {
+    try {
+        const notifs = await Notification.find().sort({ createdAt: -1 }).limit(50);
+        res.json(notifs);
+    } catch(err) {
+        res.status(500).json(err);
+    }
+});
+
+const dispatchNotification = async (type, message, details) => {
+    try {
+        const notif = await Notification.create({ type, message, details });
+        const data = `data: ${JSON.stringify(notif)}\n\n`;
+        clients.forEach(client => client.write(data));
+    } catch(e) {
+        console.error("Error saving notification", e);
+    }
+};
 
 router.get('/getAllRooms',async(req,res)=>{
     try{
@@ -138,6 +173,7 @@ router.post('/booking_room',loginMiddleware, async (req, res) => {
         const doc = await Booking.create({
             user_id, room_id, check_in, check_out, totalPrice
         })
+        await dispatchNotification('CREATE_RESERVATION', `A new reservation was booked!`, doc);
         res.status(200).json({"data":doc});
     } catch(err){
         res.status(500).json('Internal Server Error' + err);
@@ -200,6 +236,7 @@ router.delete('/cancel_reservation/:id',loginMiddleware,async(req,res)=>{
         const result = await Booking.findByIdAndDelete(id);
         console.log(id)
         if (result) {
+            await dispatchNotification('CANCEL_RESERVATION', `A reservation was cancelled!`, { id });
             res.json({ message: "Deleted Successfully" });
         } else {
             res.status(404).json({ message: "Reservation not found" });

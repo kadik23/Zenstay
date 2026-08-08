@@ -33,7 +33,7 @@ import ProfileAdmin from './Pages/admin/ProfileAdmin';
 import RootLayout2 from './Layouts/admin/RootLayout';
 import ChildLayout from './Layouts/admin/ChildLayout'
 import PopularRooms from './Pages/guest/PopularRooms.jsx'
-
+import ProtectedRoute from './Components/ProtectedRoute.jsx'
 
 const router = createBrowserRouter(
     createRoutesFromChildren(
@@ -53,7 +53,7 @@ const router = createBrowserRouter(
           <Route path="SignUp" element={<SignUp/>}/>
         </Route>
         {/* admin pages */}
-        <Route path='/admin'>
+        <Route path='/admin' element={<ProtectedRoute />}>
           <Route element={(<RootLayout2/>)}>
             <Route index element={<Dashboard/>}/>
             <Route path="Notification" element={<Notification/>}/>

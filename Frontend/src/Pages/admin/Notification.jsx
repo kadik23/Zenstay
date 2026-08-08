@@ -1,11 +1,11 @@
 import React from 'react'
 import search from '../../assets/icons/search.png'
-import message from '../../assets/icons/Message.png'
 import notificationmessage from '../../assets/icons/discussion.png'
-import diagram from '../../assets/icons/diagram.webp'
-import economy from '../../assets/icons/economy.png'
+import useNotificationStore from '../../Hooks/useNotificationStore'
 
 function Notification() {
+  const { notifications } = useNotificationStore();
+
   return (
     <div>
         <div className='mb-5 d-flex align-items-center justify-content-between'>
@@ -26,59 +26,26 @@ function Notification() {
                 </div>
                 <div className='fw-bolder mb-5'>Recent Notification</div>
                 <div className='d-flex flex-column'>
-                    <div className='p-3 d-flex align-items-center justify-content-between'>
-                        <div className='d-flex gap-4 align-items-start' style={{width:"60%"}}>
-                            <img src={notificationmessage} alt="" />
-                            <div className=''>
-                                <strong className=''>Glenn Gereer</strong>
-                                <small className='mt-2 mb-4 fw-bold d-block' style={{color:"#c7c9d9"}}>
-                                    Commented on <span style={{color:"#3d94ff"}}>Collab.</span> 12h
-                                </small>
-                                <div className='fw-bold' style={{color:"#b0b3c9"}}>
-                                    "Love this so much! What tools do you use to create your 3d illustration?"
+                    {notifications.length === 0 && <div className="p-3 text-muted">No recent notifications.</div>}
+                    {notifications.map((notif, idx) => (
+                        <div key={idx}>
+                            <div className='p-3 d-flex align-items-center justify-content-between'>
+                                <div className='d-flex gap-4 align-items-start' style={{width:"80%"}}>
+                                    <img src={notificationmessage} alt="" />
+                                    <div className=''>
+                                        <strong className=''>System Alert</strong>
+                                        <small className='mt-2 mb-2 fw-bold d-block' style={{color:"#c7c9d9"}}>
+                                            {new Date(notif.createdAt).toLocaleString()}
+                                        </small>
+                                        <div className='fw-bold' style={{color:"#b0b3c9"}}>
+                                            {notif.message}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                            {idx !== notifications.length - 1 && <hr className='w-100'/>}
                         </div>
-                        <div className='d-flex justify-content-end'>
-                            <img src={message} width={100} className='notif-image p-2 rounded-3' style={{background:"#cfc8ff",boxShadow:"rgba(231, 227, 255) 0px 10px 0px 0px"}} alt="" />
-                        </div>
-                    </div>
-                    <hr className='w-100'/>
-                    <div className='p-3 d-flex align-items-center justify-content-between'>
-                        <div className='d-flex gap-4 align-items-start' style={{width:"60%"}}>
-                            <img src={notificationmessage} alt="" />
-                            <div className=''>
-                                <strong className=''>Glenn Gereer</strong>
-                                <small className='mt-2 mb-4 fw-bold d-block' style={{color:"#c7c9d9"}}>
-                                    Commented on <span style={{color:"#3d94ff"}}>Collab.</span> 12h
-                                </small>
-                                <div className='fw-bold' style={{color:"#b0b3c9"}}>
-                                    "Love this so much! What tools do you use to create your 3d illustration?"
-                                </div>
-                            </div>
-                        </div>
-                        <div className='d-flex justify-content-end'>
-                            <img src={diagram} width={100} className='notif-image p-2 rounded-3' style={{background:"#bce1d9",boxShadow:"rgba(221, 240, 236) 0px 10px 0px 0px"}} alt="" />
-                        </div>
-                    </div>
-                    <hr className='w-100'/>
-                    <div className='p-3 d-flex align-items-center justify-content-between'>
-                        <div className='d-flex gap-4 align-items-start' style={{width:"60%"}}>
-                            <img src={notificationmessage} alt="" />
-                            <div className=''>
-                                <strong className=''>Glenn Gereer</strong>
-                                <small className='mt-2 mb-4 fw-bold d-block' style={{color:"#c7c9d9"}}>
-                                    Commented on <span style={{color:"#3d94ff"}}>Collab.</span> 12h
-                                </small>
-                                <div className='fw-bold' style={{color:"#b0b3c9"}}>
-                                    "Love this so much! What tools do you use to create your 3d illustration?"
-                                </div>
-                            </div>
-                        </div>
-                        <div className='d-flex justify-content-end'>
-                            <img src={economy} width={100} className='notif-image p-2 rounded-3' style={{background:"#c4dafb",boxShadow:"rgba(225, 236, 253) 0px 10px 0px 0px"}} alt="" />
-                        </div>
-                    </div>
+                    ))}
                 </div>
             </div>
         </div>
