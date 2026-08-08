@@ -2,6 +2,7 @@ import {Router} from 'express'
 import Room from "../models/Room.js";
 import Booking from '../models/Booking.js';
 import { loginMiddleware } from '../middleware/loginMiddleware.js';
+import mongoose from 'mongoose';
 const router  = Router()
 
 router.get('/getAllRooms',async(req,res)=>{
@@ -12,6 +13,87 @@ router.get('/getAllRooms',async(req,res)=>{
         res.status(500).json('Internal Server Error')
     }
 })
+
+router.post('/getDashboardRooms', async (req, res) => {
+    try {
+        const { searchName, startDate, endDate } = req.body;
+        
+        let baseMatch = {};
+        if (searchName) {
+            baseMatch.name = { $regex: searchName, $options: 'i' };
+        }
+        
+        if (startDate && endDate) {
+            const overlappingBookings = await Booking.find({
+                status: { $nin: ['rejected', 'cancelled'] },
+                check_in: { $lt: endDate },
+                check_out: { $gt: startDate }
+            });
+            const bookedRoomIds = overlappingBookings.map(b => b.room_id).filter(id => id);
+            
+            if (bookedRoomIds.length > 0) {
+                const objectIdArray = bookedRoomIds
+                    .filter(id => mongoose.Types.ObjectId.isValid(id))
+                    .map(id => new mongoose.Types.ObjectId(id));
+                    
+                if (objectIdArray.length > 0) {
+                    baseMatch._id = { $nin: objectIdArray };
+                }
+            }
+        }
+
+        const availableRoomsQuery = Room.find(baseMatch).limit(3);
+        
+        const popularRoomsQuery = Room.aggregate([
+            { $match: baseMatch },
+            { $addFields: { roomIdStr: { $toString: "$_id" } } },
+            { $lookup: {
+                from: "bookings",
+                localField: "roomIdStr",
+                foreignField: "room_id",
+                as: "bookingsList"
+            }},
+            { $addFields: { bookingCount: { $size: "$bookingsList" } } },
+            { $sort: { bookingCount: -1 } },
+            { $limit: 4 },
+            { $project: { bookingsList: 0, roomIdStr: 0, bookingCount: 0 } }
+        ]);
+
+        const specialOfferRoomsQuery = Room.aggregate([
+            { $match: baseMatch },
+            { $addFields: {
+                score: {
+                    $add: [
+                        { $cond: [{ $eq: ["$air_conditioning", true] }, 3, 0] },
+                        { $cond: [{ $eq: ["$bathrrom", true] }, 2, 0] },
+                        { $cond: [{ $eq: ["$key_card_access", true] }, 2, 0] },
+                        { $cond: [{ $eq: ["$free_wifi", true] }, 1, 0] },
+                        { $cond: [{ $eq: ["$smart_tv", true] }, 1, 0] }
+                    ]
+                }
+            }},
+            { $sort: { score: -1 } },
+            { $limit: 4 },
+            { $project: { score: 0 } }
+        ]);
+
+        const [availableRooms, popularRooms, specialOfferRooms] = await Promise.all([
+            availableRoomsQuery,
+            popularRoomsQuery,
+            specialOfferRoomsQuery
+        ]);
+
+        res.json({
+            availableRooms,
+            popularRooms,
+            specialOfferRooms
+        });
+
+    } catch (e) {
+        console.error(e);
+        res.status(500).json('Internal Server Error');
+    }
+});
 
 router.post('/getRoomsBySearch/:bed_type',async(req,res)=>{
     try{
