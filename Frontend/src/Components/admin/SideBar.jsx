@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import useNotificationStore from "../../Hooks/useNotificationStore";
 
 const sidebarItems = [
     {
@@ -51,6 +52,9 @@ const sidebarItems = [
 ];
 
 export default function SideBar(){
+    const { notifications } = useNotificationStore();
+    const unreadCount = notifications.filter(n => !n.isRead).length;
+
     return(
         <div className="ps-4 pe-0 py-2" style={{height:"100vh", backgroundColor:"#fff"}}>
             <ul className="pt-5 list-unstyled d-flex flex-column align-items-stretch gap-2 pe-0">
@@ -59,6 +63,9 @@ export default function SideBar(){
                         <NavLink to={item.path} end={item.end} className="text-decoration-none d-flex align-items-center gap-3 sidebar-link">
                             {item.icon}
                             <span>{item.name}</span>
+                            {item.name === 'Notification' && unreadCount > 0 && (
+                                <span className="badge bg-danger rounded-pill ms-auto me-3">{unreadCount}</span>
+                            )}
                         </NavLink>
                     </li>
                 ))}

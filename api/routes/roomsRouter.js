@@ -30,6 +30,16 @@ router.get('/notifications', async (req, res) => {
     }
 });
 
+router.put('/notifications/:id/read', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const notif = await Notification.findByIdAndUpdate(id, { isRead: true }, { new: true });
+        res.json(notif);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
 const dispatchNotification = async (type, message, details) => {
     try {
         const notif = await Notification.create({ type, message, details });

@@ -18,6 +18,19 @@ const useNotificationStore = create((set) => ({
             notifications: [notification, ...state.notifications]
         }));
     },
+    
+    markAsRead: async (id) => {
+        try {
+            await axios.put(`/notifications/${id}/read`);
+            set((state) => ({
+                notifications: state.notifications.map(notif => 
+                    notif._id === id ? { ...notif, isRead: true } : notif
+                )
+            }));
+        } catch (error) {
+            console.error('Error marking notification as read:', error);
+        }
+    }
 }));
 
 export default useNotificationStore;
