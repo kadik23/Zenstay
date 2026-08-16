@@ -12,6 +12,7 @@ export default function RoomList() {
     const [selectedIds, setSelectedIds] = useState([]);
     const [openDropdownId, setOpenDropdownId] = useState(null);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [editingRoomId, setEditingRoomId] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const { setAlert, clearAlert } = useAlertMessageStore();
     const [sliderImages, setSliderImages] = useState([]);
@@ -75,10 +76,38 @@ export default function RoomList() {
         }
     };
 
+    const handleEditClick = (room) => {
+        setEditingRoomId(room._id);
+        setFormData({
+            name: room.name || '',
+            price: room.price || '',
+            space: room.space || '',
+            places: room.places || room.guests_number || '',
+            guests_number: room.guests_number || room.places || '',
+            bed_type: room.bed_type || 'single bed',
+            images: room.images || (room.image ? [room.image] : []),
+            bathrrom: room.bathrrom || false,
+            key_card_access: room.key_card_access || false,
+            air_conditioning: room.air_conditioning || false,
+            smart_tv: room.smart_tv || false,
+            free_wifi: room.free_wifi || false
+        });
+        setImageFiles([]);
+        setIsCreateModalOpen(true);
+        setOpenDropdownId(null);
+    };
+
     const handleOpenSlider = (room) => {
         const images = (room.images && room.images.length > 0) ? room.images : [room.image || roomFallback];
         setSliderImages(images);
         setCurrentImageIndex(0);
+    };
+
+    const handleRemoveImage = (indexToRemove) => {
+        setFormData(prev => ({
+            ...prev,
+            images: prev.images.filter((_, idx) => idx !== indexToRemove)
+        }));
     };
 
     const handleCreateRoom = async (e) => {
@@ -97,23 +126,31 @@ export default function RoomList() {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
                 if (uploadRes.data && uploadRes.data.length > 0) {
-                    finalImageUrls = uploadRes.data.map(name => `http://localhost:3000/uploads/${name}`);
+                    const newUrls = uploadRes.data.map(name => `http://localhost:3000/uploads/${name}`);
+                    finalImageUrls = [...finalImageUrls, ...newUrls];
                 }
             }
 
-            await axios.post('/room_post', { ...formData, images: finalImageUrls });
+            if (editingRoomId) {
+                await axios.put('/room_edit/' + editingRoomId, { ...formData, images: finalImageUrls });
+                setAlert({ message: 'Room updated successfully!', type: 'success' });
+            } else {
+                await axios.post('/room_post', { ...formData, images: finalImageUrls });
+                setAlert({ message: 'Room created successfully!', type: 'success' });
+            }
+
             setIsCreateModalOpen(false);
+            setEditingRoomId(null);
             setImageFiles([]);
             setFormData({
                 name: '', price: '', space: '', places: '', guests_number: '', bed_type: 'single bed', images: [],
                 bathrrom: false, key_card_access: false, air_conditioning: false, smart_tv: false, free_wifi: false
             });
             getRooms();
-            setAlert({ message: 'Room created successfully!', type: 'success' });
             setTimeout(() => clearAlert(), 3000);
         } catch(err) {
-            console.error('Failed to create room', err);
-            setAlert({ message: 'Failed to create room.', type: 'danger' });
+            console.error('Failed to save room', err);
+            setAlert({ message: 'Failed to save room.', type: 'danger' });
             setTimeout(() => clearAlert(), 3000);
         } finally {
             setIsLoading(false);
@@ -183,7 +220,15 @@ export default function RoomList() {
                         <img src={searchIcon} width={20} alt="Search" />
                     </div>
                     
-                    <button onClick={() => setIsCreateModalOpen(true)} className='btn btn-primary rounded-4 px-4 fw-bold shadow-sm' style={{ flex: '0 0 auto' }}>
+                    <button onClick={() => {
+                        setEditingRoomId(null);
+                        setFormData({
+                            name: '', price: '', space: '', places: '', guests_number: '', bed_type: 'single bed', images: [],
+                            bathrrom: false, key_card_access: false, air_conditioning: false, smart_tv: false, free_wifi: false
+                        });
+                        setImageFiles([]);
+                        setIsCreateModalOpen(true);
+                    }} className='btn btn-primary rounded-4 px-4 fw-bold shadow-sm' style={{ flex: '0 0 auto' }}>
                         + Add Room
                     </button>
                 </div>
@@ -264,7 +309,7 @@ export default function RoomList() {
                                     </div>
                                     {openDropdownId === room._id && (
                                         <div className="position-absolute bg-white shadow-lg rounded-3 border z-3" style={{ right: '40px', top: '50px', minWidth: '120px' }}>
-                                            <div className="p-2 dropdown-item fw-medium" style={{ cursor: 'pointer' }} onClick={() => setOpenDropdownId(null)}>Edit (Soon)</div>
+                                            <div className="p-2 dropdown-item fw-medium" style={{ cursor: 'pointer' }} onClick={() => handleEditClick(room)}>Edit</div>
                                             <div className="p-2 dropdown-item text-danger fw-medium" style={{ cursor: 'pointer' }} onClick={() => handleDeleteSingle(room._id)}>Delete</div>
                                         </div>
                                     )}
@@ -278,7 +323,7 @@ export default function RoomList() {
             {isCreateModalOpen && (
                 <div className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center" style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1050 }}>
                     <div className="bg-white rounded-4 shadow-lg p-5" style={{ width: '600px', maxHeight: '90vh', overflowY: 'auto' }}>
-                        <h4 className="fw-bold mb-4">Create New Room</h4>
+                        <h4 className="fw-bold mb-4">{editingRoomId ? 'Edit Room' : 'Create New Room'}</h4>
                         <form onSubmit={handleCreateRoom}>
                             <div className="row g-3 mb-3">
                                 <div className="col-md-6">
@@ -296,6 +341,28 @@ export default function RoomList() {
                                     <input type="file" multiple accept="image/*" className="form-control rounded-3 bg-light border-0 py-2" 
                                         onChange={e => setImageFiles(Array.from(e.target.files))} />
                                     <small className="text-muted mt-1 d-block">Select one or multiple images from your computer</small>
+                                    
+                                    {formData.images && formData.images.length > 0 && (
+                                        <div className="mt-3">
+                                            <p className="fw-medium text-secondary mb-2" style={{fontSize: '0.9rem'}}>Current Images:</p>
+                                            <div className="d-flex flex-wrap gap-2">
+                                                {formData.images.map((imgUrl, idx) => (
+                                                    <div key={idx} className="position-relative">
+                                                        <img src={imgUrl} alt={`Room image ${idx + 1}`} className="rounded-3 border" style={{ width: '80px', height: '60px', objectFit: 'cover' }} />
+                                                        <button 
+                                                            type="button" 
+                                                            className="btn btn-sm btn-danger position-absolute top-0 end-0 rounded-circle p-0 d-flex align-items-center justify-content-center shadow" 
+                                                            style={{ width: '20px', height: '20px', transform: 'translate(30%, -30%)' }}
+                                                            onClick={() => handleRemoveImage(idx)}
+                                                            title="Remove image"
+                                                        >
+                                                            &times;
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="col-md-4">
                                     <label className="form-label fw-bold text-secondary">Space (m²)</label>
@@ -334,9 +401,9 @@ export default function RoomList() {
                             </div>
                             
                             <div className="d-flex justify-content-end gap-3 mt-4 pt-3 border-top">
-                                <button type="button" className="btn btn-light rounded-4 px-4 fw-bold" onClick={() => setIsCreateModalOpen(false)} disabled={isLoading}>Cancel</button>
+                                <button type="button" className="btn btn-light rounded-4 px-4 fw-bold" onClick={() => { setIsCreateModalOpen(false); setEditingRoomId(null); }} disabled={isLoading}>Cancel</button>
                                 <button type="submit" className="btn btn-primary rounded-4 px-4 fw-bold shadow-sm" disabled={isLoading}>
-                                    {isLoading ? 'Saving...' : 'Save Room'}
+                                    {isLoading ? 'Saving...' : (editingRoomId ? 'Update Room' : 'Save Room')}
                                 </button>
                             </div>
                         </form>

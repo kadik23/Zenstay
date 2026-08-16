@@ -203,7 +203,7 @@ router.get('/getOneRoom/:id',async(req,res)=>{
     }
 })
 
-router.post('/room_post', async(req, res)=>{
+router.post('/room_post', loginMiddleware, async(req, res)=>{
     try{
         let {name,space,bed_type,price,places,images,
 guests_number,bathrrom,key_card_access,air_conditioning,smart_tv,free_wifi} = req.body
@@ -212,12 +212,31 @@ guests_number,bathrrom,key_card_access,air_conditioning,smart_tv,free_wifi} = re
             guests_number, bathrrom, key_card_access, air_conditioning, smart_tv, free_wifi
         }
         const room = await Room.create(doc)
-        if(!room){
-            return res.status(404).json({ error: 'Failed to create room' });
+        res.status(200).json(room)
+    }catch(err){
+        console.error(err)
+        res.status(500).json({ error: "An error occurred while registering" })
+    }
+})
+
+router.put('/room_edit/:id', loginMiddleware, async(req, res)=>{
+    try{
+        const { id } = req.params;
+        let {
+            name, space, bed_type, price, places, images,
+            guests_number, bathrrom, key_card_access, air_conditioning, smart_tv, free_wifi
+        } = req.body
+        
+        const updateDoc = {
+            name, space, bed_type, price, places, images,
+            guests_number, bathrrom, key_card_access, air_conditioning, smart_tv, free_wifi
         }
-        res.json(room)
-    }catch(e){
-        res.status(500).json('Internal Server Error'+e)
+        
+        const updatedRoom = await Room.findByIdAndUpdate(id, updateDoc, { new: true });
+        res.status(200).json(updatedRoom)
+    }catch(err){
+        console.error(err)
+        res.status(500).json({ error: "An error occurred while updating the room" })
     }
 })
 
