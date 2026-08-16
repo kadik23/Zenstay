@@ -3,6 +3,8 @@ import SideBar from '../../Components/admin/SideBar'
 import { Outlet  } from 'react-router-dom'
 import { useEffect } from 'react'
 import useNotificationStore from '../../Hooks/useNotificationStore'
+import ALertMessage from '../../Components/guest/ALertMessage'
+import useAlertMessageStore from '../../Hooks/useAlertMessage'
 
 export default function RootLayout2(){
     const { fetchNotifications, addNotification } = useNotificationStore();
@@ -21,9 +23,13 @@ export default function RootLayout2(){
             eventSource.close();
         };
     }, []);
+    const {alert} = useAlertMessageStore();
 
     return(
         <div className="d-flex">
+            {alert.visible && (
+                <ALertMessage type={alert.type} message={alert.message} />
+            )}
             <div style={{maxWidth:"300px"}}>
                 <SideBar />
             </div>

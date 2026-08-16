@@ -6,6 +6,12 @@ import fs from "fs";
 import multer from "multer";
 import dotenv from 'dotenv';
 import {mongoose} from "mongoose"
+import { fileURLToPath } from 'url';
+import path from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 dotenv.config();
 const port = process.env.PORT || 3000
 const url = process.env.MONGO_URL
@@ -26,15 +32,17 @@ app.use(routes)
 
 
 
-const photosMiddleware = multer({ storage: multer.memoryStorage() });
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+const photosMiddleware = multer({ dest: 'uploads/' });
 app.post('/upload_photos', photosMiddleware.array('photos', 10), async (req,res) => {
     const uploadedImages = [];
     for (let i = 0; i < req.files.length; i++) {
-        const {path,originalname,mimetype} = req.files[i];
+        const {path: tempPath, originalname} = req.files[i];
         const parts = originalname.split('.')
         const ext = parts[parts.length -1]
-        const newPath = path + '.' + ext
-        fs.renameSync(path,newPath)
+        const newPath = tempPath + '.' + ext
+        fs.renameSync(tempPath,newPath)
         uploadedImages.push(newPath.replace('uploads/',''));
     }
     res.json(uploadedImages);

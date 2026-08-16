@@ -9,6 +9,7 @@ const RoomSchema = new Schema({
         required: true
     }, 
     review_id: String , 
+    images: [String],
     price: String,
     status: String,
     places: String,

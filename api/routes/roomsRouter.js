@@ -59,6 +59,46 @@ router.get('/getAllRooms',async(req,res)=>{
     }
 })
 
+router.get('/getAdminRoomList', async (req, res) => {
+    try {
+        const today = new Date().toISOString().split('T')[0];
+        const rooms = await Room.find();
+        const activeBookings = await Booking.find({
+            status: { $nin: ['rejected', 'cancelled'] },
+            check_in: { $lte: today },
+            check_out: { $gte: today }
+        });
+        
+        const bookedRoomIds = new Set(activeBookings.map(b => b.room_id));
+        
+        const roomsWithStatus = rooms.map(room => {
+            const isBooked = bookedRoomIds.has(room._id.toString());
+            return {
+                ...room.toObject(),
+                currentStatus: isBooked ? 'Booked' : 'Available',
+                rating: 4.5 // Mock rating for now
+            };
+        });
+        
+        res.json(roomsWithStatus);
+    } catch(e) {
+        res.status(500).json('Internal Server Error' + e);
+    }
+});
+
+router.post('/delete_bulk_rooms', async (req, res) => {
+    try {
+        const { roomIds } = req.body;
+        if (!Array.isArray(roomIds) || roomIds.length === 0) {
+            return res.status(400).json({ error: 'No room IDs provided' });
+        }
+        await Room.deleteMany({ _id: { $in: roomIds } });
+        res.json({ message: 'Rooms deleted successfully' });
+    } catch(e) {
+        res.status(500).json('Internal Server Error' + e);
+    }
+});
+
 router.post('/getDashboardRooms', async (req, res) => {
     try {
         const { searchName, startDate, endDate } = req.body;
@@ -163,15 +203,19 @@ router.get('/getOneRoom/:id',async(req,res)=>{
     }
 })
 
-router.post('/room_post',loginMiddleware,async(req, res)=>{
+router.post('/room_post', async(req, res)=>{
     try{
-        let {name,space,bed_type,price,places} = req.body
-            const doc = {name : name,space:space,bed_type:bed_type,viewers:0,price:price,places:places}
-            const room = await Room.create(doc)
-            if(!room){
-                return res.status(404).json({ error: 'Room not found' });
-            }
-            res.json(room)
+        let {name,space,bed_type,price,places,images,
+guests_number,bathrrom,key_card_access,air_conditioning,smart_tv,free_wifi} = req.body
+        const doc = {
+            name, space, bed_type, viewers:0, price, places, images,
+            guests_number, bathrrom, key_card_access, air_conditioning, smart_tv, free_wifi
+        }
+        const room = await Room.create(doc)
+        if(!room){
+            return res.status(404).json({ error: 'Failed to create room' });
+        }
+        res.json(room)
     }catch(e){
         res.status(500).json('Internal Server Error'+e)
     }
