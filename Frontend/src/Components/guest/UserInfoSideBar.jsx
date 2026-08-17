@@ -8,10 +8,17 @@ import bathroom from "../../assets/icons/bathroom.png";
 import bedicon from "../../assets/icons/sleeping.png";
 import kingbedicon from "../../assets/icons/bed.png";
 import useBookRoomStore from "../../Hooks/useBookRoomStore";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function UserInfoSideBar({room}) {
 
     const { firstStep, secondStep, handleFirstStepChange, handleSecondStepChange } = useBookRoomStore();
+    const [settings, setSettings] = useState(null);
+
+    useEffect(() => {
+        axios.get('/settings').then(res => setSettings(res.data)).catch(console.error);
+    }, []);
 
     return (
         <div className="d-flex flex-column p-4 text-dark h-100">
@@ -89,24 +96,33 @@ export default function UserInfoSideBar({room}) {
                     <hr />
                     <div className="py-4">
                         <h5 className="mb-3">Step 2: Payment details</h5>
-                        <div className="mb-3">
-                            <label htmlFor="card_name" className="form-label px-2" style={{ fontWeight: "500" }}>Name on card</label>
-                            <input name="card_name" value={secondStep.card_name} onChange={handleSecondStepChange} type="text" className="border border-secondary rounded-pill form-control w-75" id="card_name" placeholder="e.g. Maria Lost" />
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="card_number" className="form-label px-2" style={{ fontWeight: "500" }}>Card number</label>
-                            <input minLength={16} maxLength={16} name="card_number" value={secondStep.card_number} onChange={handleSecondStepChange} type="number" className="border border-secondary rounded-pill form-control w-75" id="card_number" placeholder="**** **** **** ****" />
-                        </div>
-                        <div className="d-flex gap-3 w-75">
-                            <div>
-                                <label htmlFor="exp_date" className="form-label px-2" style={{ fontWeight: "500" }}>Valid until</label>
-                                <input  name="exp_date" value={secondStep.exp_date} onChange={handleSecondStepChange} type="text" className="border border-secondary rounded-pill form-control" id="exp_date" placeholder="MM/YY" />
+                        {!settings || settings.payment_gateway_active ? (
+                            <>
+                                <div className="mb-3">
+                                    <label htmlFor="card_name" className="form-label px-2" style={{ fontWeight: "500" }}>Name on card</label>
+                                    <input name="card_name" value={secondStep.card_name} onChange={handleSecondStepChange} type="text" className="border border-secondary rounded-pill form-control w-75" id="card_name" placeholder="e.g. Maria Lost" />
+                                </div>
+                                <div className="mb-3">
+                                    <label htmlFor="card_number" className="form-label px-2" style={{ fontWeight: "500" }}>Card number</label>
+                                    <input minLength={16} maxLength={16} name="card_number" value={secondStep.card_number} onChange={handleSecondStepChange} type="number" className="border border-secondary rounded-pill form-control w-75" id="card_number" placeholder="**** **** **** ****" />
+                                </div>
+                                <div className="d-flex gap-3 w-75">
+                                    <div>
+                                        <label htmlFor="exp_date" className="form-label px-2" style={{ fontWeight: "500" }}>Valid until</label>
+                                        <input  name="exp_date" value={secondStep.exp_date} onChange={handleSecondStepChange} type="text" className="border border-secondary rounded-pill form-control" id="exp_date" placeholder="MM/YY" />
+                                    </div>
+                                    <div>
+                                        <label htmlFor="cvc" className="form-label px-2" style={{ fontWeight: "500" }}>CVC</label>
+                                        <input minLength={3} maxLength={3} name="cvc" value={secondStep.cvc} onChange={handleSecondStepChange} type="password" className="border border-secondary rounded-pill form-control" id="cvc" placeholder="***" />
+                                    </div>
+                                </div>
+                            </>
+                        ) : (
+                            <div className="bg-light p-4 rounded-4 border border-warning">
+                                <h6 className="fw-bold text-dark mb-2">Pay Outside the Platform</h6>
+                                <p className="text-secondary mb-0">Online credit card payments are currently disabled. Please confirm your booking, and the property management will contact you to arrange payment.</p>
                             </div>
-                            <div>
-                                <label htmlFor="cvc" className="form-label px-2" style={{ fontWeight: "500" }}>CVC</label>
-                                <input minLength={3} maxLength={3} name="cvc" value={secondStep.cvc} onChange={handleSecondStepChange} type="password" className="border border-secondary rounded-pill form-control" id="cvc" placeholder="***" />
-                            </div>
-                        </div>
+                        )}
                     </div>
                 </div>
             )}

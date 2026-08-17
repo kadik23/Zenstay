@@ -136,4 +136,21 @@ router.post('/delete_bulk_users', async (req, res) => {
     }
 });
 
+router.put('/change_password', loginMiddleware, async (req, res) => {
+    const { oldPassword, newPassword } = req.body;
+    try {
+        const user = await User.findById(req.userData.id);
+        if (!user) return res.status(404).json('User not found');
+        
+        const passOk = bcrypt.compareSync(oldPassword, user.password);
+        if (!passOk) return res.status(422).json('Incorrect current password');
+        
+        user.password = bcrypt.hashSync(newPassword, bcryptSalt);
+        await user.save();
+        res.status(200).json('Password changed successfully');
+    } catch (e) {
+        res.status(500).json('Internal Server Error');
+    }
+});
+
 export default router;
