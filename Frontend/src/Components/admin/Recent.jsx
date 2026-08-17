@@ -22,11 +22,13 @@ export default function Recent() {
         { name: "Profile", path: "/admin/profile", icon: userIcon }
     ];
 
+    const imageUrl = user?.image ? (user.image.startsWith('http') ? user.image : `http://localhost:3000/uploads/${user.image}`) : "https://github.com/mdo.png";
+
     return(
         <div className="w-100">
                 <div className="flex-shrink-0 dropdown pb-3 border-bottom mb-4">
                     <a className="d-block px-2 link-body-emphasis text-decoration-none d-flex align-items-center gap-1 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style={{cursor: "pointer"}}>
-                        <img src={user?.profile_picture || "https://github.com/mdo.png"} alt="admin" width="40" height="40" className="rounded-circle me-2" style={{objectFit: "cover"}}/>
+                        <img src={imageUrl} alt="admin" width="40" height="40" className="rounded-circle me-2" style={{objectFit: "cover"}}/>
                         <div className="d-flex flex-column user-select-none me-auto">
                             <strong>{user ? `${user.firstname} ${user.lastname}` : "Admin Name"}</strong>
                             <span style={{color:"#adadad", textTransform: "capitalize"}}>{user?.account_type || "Admin"}</span>

@@ -23,6 +23,8 @@ export default function Header() {
         }
     };
 
+    const imageUrl = user?.image ? (user.image.startsWith('http') ? user.image : `http://localhost:3000/uploads/${user.image}`) : "https://github.com/mdo.png";
+
     return (
         <div>
             <nav className="navbar navbar-expand-md navbar-light bg-white bg-opacity-75 fixed-top">
@@ -57,29 +59,19 @@ export default function Header() {
                                 :
                                 <div className="flex-shrink-0 dropdown">
                                     <a href="#" className="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" className="rounded-circle" />
+                                        <img src={imageUrl} alt="mdo" width="32" height="32" className="rounded-circle" style={{objectFit: "cover"}} />
                                     </a>
                                     <ul className="dropdown-menu text-small shadow">
                                         <li>
-                                            <button className="dropdown-item">
-                                                <div className="d-flex align-items-center">
-                                                    <img src={setting} width={30} alt="user icon" className="pe-2" />
-                                                    Settings
-                                                </div>
-                                            </button>
-                                        </li>
-                                        <li>
                                             <NavLink to='/Profile' className="dropdown-item">
                                                 <div className="d-flex align-items-center">
-                                                    <img src={user} width={30} alt="user icon" className="pe-2" />
                                                     Profile
                                                 </div>
                                             </NavLink>
                                         </li>
                                         <li><hr className="dropdown-divider" /></li>
                                         <li>
-                                            <button className="dropdown-item d-flex align-items-center" onClick={toggleSignin}>
-                                                <img src={logout} width={30} alt="user icon" className="pe-2" />
+                                            <button className="dropdown-item d-flex align-items-center text-danger" onClick={toggleSignin}>
                                                 Sign out
                                             </button>
                                         </li>
