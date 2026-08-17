@@ -137,7 +137,7 @@ export default function GuestList() {
                 </div>
             </div>
 
-            <div className='bg-white rounded-4 shadow-sm overflow-hidden'>
+            <div className='bg-white rounded-4 shadow-sm pb-5'>
                 <table className="table mb-0 table-hover align-middle">
                     <thead className="bg-light">
                         <tr>

@@ -1,6 +1,7 @@
 import {Router} from 'express'
 import Room from "../models/Room.js";
 import Booking from '../models/Booking.js';
+import User from '../models/User.js';
 import Notification from '../models/Notification.js';
 import { loginMiddleware } from '../middleware/loginMiddleware.js';
 import mongoose from 'mongoose';
@@ -284,10 +285,53 @@ router.delete('/delete_room',loginMiddleware,async(req,res)=>{
 })
 
 
-router.get('/getOrders',async(req,res)=>{    
-    let orders=await Booking.find();
-    res.json(orders)
-})
+router.get('/getOrders', async (req, res) => {    
+    try {
+        let orders = await Booking.find().lean();
+        
+        const enhancedOrders = await Promise.all(orders.map(async (order) => {
+            const user = await User.findById(order.user_id).catch(() => null);
+            const room = await Room.findById(order.room_id).catch(() => null);
+            
+            return {
+                ...order,
+                username: user ? `${user.firstname || ''} ${user.lastname || ''}`.trim() || user.username : 'Unknown User',
+                room_name: room ? room.name : 'Unknown Room',
+                room_price: room ? room.price : 0
+            };
+        }));
+        
+        enhancedOrders.sort((a, b) => {
+            const dateA = new Date(a.createdAt || a.check_in || 0).getTime();
+            const dateB = new Date(b.createdAt || b.check_in || 0).getTime();
+            return (dateB || 0) - (dateA || 0);
+        });
+        
+        res.json(enhancedOrders);
+    } catch(e) {
+        res.status(500).json('Internal Server Error: ' + e);
+    }
+});
+
+router.put('/update_booking_status', async (req, res) => {
+    const { _id, status } = req.body;
+    try {
+        const updated = await Booking.findByIdAndUpdate(_id, { status }, { new: true });
+        res.json(updated);
+    } catch (e) {
+        res.status(500).json('Error updating status');
+    }
+});
+
+router.post('/bulk_update_booking_status', async (req, res) => {
+    const { bookingIds, status } = req.body;
+    try {
+        await Booking.updateMany({ _id: { $in: bookingIds } }, { $set: { status } });
+        res.json({ message: 'Success' });
+    } catch (e) {
+        res.status(500).json('Error updating statuses');
+    }
+});
 
 router.get('/getOrder',async(req,res)=>{    
     let orders=await Booking.find();
