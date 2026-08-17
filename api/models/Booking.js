@@ -9,7 +9,7 @@ const BookingSchema = new Schema({
     status: String ,// pending, confirmed, rejected, checked-in, checked-out
     review: Number,
     totalPrice: Number
-})
+}, { timestamps: true })
 
 
 

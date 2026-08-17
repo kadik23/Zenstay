@@ -112,4 +112,28 @@ router.get('/me', loginMiddleware, (req, res) => {
     res.status(200).json({ isValid: true, user: req.userData });
 });
 
+import Booking from "../models/Booking.js";
+
+router.delete('/delete_user', async (req, res) => {
+    const { _id } = req.body;
+    try {
+        await User.findByIdAndDelete(_id);
+        await Booking.deleteMany({ user_id: _id });
+        res.status(200).json({ message: 'User deleted successfully' });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+router.post('/delete_bulk_users', async (req, res) => {
+    const { userIds } = req.body;
+    try {
+        await User.deleteMany({ _id: { $in: userIds } });
+        await Booking.deleteMany({ user_id: { $in: userIds } });
+        res.status(200).json({ message: 'Users deleted successfully' });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
 export default router;

@@ -11,6 +11,7 @@ const UserSchema = new Schema({
     telephone: Number,
     date_of_birth: Object,
     nationality: String,
+    image: String
 })
 
 
