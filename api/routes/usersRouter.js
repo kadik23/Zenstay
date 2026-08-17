@@ -54,7 +54,7 @@ router.post("/login", async (req, res) => {
                 }, jwtSecret, {}, (err, token) => {
                     if (err) throw err;
                     const { password, ...userWithoutPassword } = userDoc.toObject();
-                    res.cookie('token', token,{maxAge:3600*3600,sameSite:'none',path:'*',secure:true}).json(userWithoutPassword);
+                    res.cookie('token', token,{maxAge:3600*3600,sameSite:'none',path:'/',secure:true}).json({ ...userWithoutPassword, token });
                 });
             } else {
                 res.status(422).json('password not ok');

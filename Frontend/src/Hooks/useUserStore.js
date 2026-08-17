@@ -80,8 +80,11 @@ const useUserStore = create(
             },
             update: async () => {
                 try{
-                    console.log(get().user)
-                    let data = await axios.put('/update_profile',get().user)
+                    const currentUser = get().user;
+                    let data = await axios.put('/update_profile', currentUser, { 
+                        withCredentials: true,
+                        headers: currentUser?.token ? { Authorization: `Bearer ${currentUser.token}` } : {}
+                    });
                     if(data.status === 200){
                         alert('Updated successful.')
                     }
