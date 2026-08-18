@@ -8,13 +8,16 @@ import bathroom from "../../assets/icons/bathroom.png";
 import bedicon from "../../assets/icons/sleeping.png";
 import kingbedicon from "../../assets/icons/bed.png";
 import useBookRoomStore from "../../Hooks/useBookRoomStore";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
+import { formatDisplayDate } from "../../Utils/formatDate";
 
 export default function UserInfoSideBar({room}) {
 
     const { firstStep, secondStep, handleFirstStepChange, handleSecondStepChange } = useBookRoomStore();
     const [settings, setSettings] = useState(null);
+    const checkInRef = useRef(null);
+    const checkOutRef = useRef(null);
 
     useEffect(() => {
         axios.get('/settings').then(res => setSettings(res.data)).catch(console.error);
@@ -81,14 +84,20 @@ export default function UserInfoSideBar({room}) {
                         <ul className="list-unstyled flex-column">
                             <li>
                                 <div>
-                                    <label htmlFor="check_in" className="form-label">Check-in date</label>
-                                    <input name="check_in" value={firstStep.check_in} onChange={handleFirstStepChange} type="text" className="border border-secondary rounded-pill form-control" id="check_in" placeholder="Friday, 09 December 2022" />
+                                    <label className="form-label">Check-in date</label>
+                                    <div onClick={() => checkInRef.current?.showPicker()} className="position-relative overflow-hidden border border-secondary rounded-pill form-control d-flex align-items-center" style={{height: "38px", cursor: "pointer"}}>
+                                        {firstStep.check_in ? formatDisplayDate(firstStep.check_in) : <span className="text-muted">Friday, 09 December 2022</span>}
+                                        <input ref={checkInRef} name="check_in" value={firstStep.check_in} onChange={handleFirstStepChange} type="date" className="position-absolute" style={{width: "1px", height: "1px", opacity: 0, bottom: "0", right: "0"}} />
+                                    </div>
                                 </div>
                             </li>
                             <li>
                                 <div>
-                                    <label htmlFor="check_out" className="form-label">Check-out date</label>
-                                    <input name="check_out" value={firstStep.check_out} onChange={handleFirstStepChange} type="text" className="border border-secondary rounded-pill form-control" id="check_out" placeholder="Monday, 12 December 2022" />
+                                    <label className="form-label">Check-out date</label>
+                                    <div onClick={() => checkOutRef.current?.showPicker()} className="position-relative overflow-hidden border border-secondary rounded-pill form-control d-flex align-items-center" style={{height: "38px", cursor: "pointer"}}>
+                                        {firstStep.check_out ? formatDisplayDate(firstStep.check_out) : <span className="text-muted">Monday, 12 December 2022</span>}
+                                        <input ref={checkOutRef} name="check_out" value={firstStep.check_out} onChange={handleFirstStepChange} type="date" className="position-absolute" style={{width: "1px", height: "1px", opacity: 0, bottom: "0", right: "0"}} />
+                                    </div>
                                 </div>
                             </li>
                         </ul>
@@ -104,12 +113,16 @@ export default function UserInfoSideBar({room}) {
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="card_number" className="form-label px-2" style={{ fontWeight: "500" }}>Card number</label>
-                                    <input minLength={16} maxLength={16} name="card_number" value={secondStep.card_number} onChange={handleSecondStepChange} type="number" className="border border-secondary rounded-pill form-control w-75" id="card_number" placeholder="**** **** **** ****" />
+                                    <input name="card_number" value={secondStep.card_number} onChange={(e) => {
+                                        const val = e.target.value.replace(/\D/g, '').slice(0, 16);
+                                        e.target.value = val;
+                                        handleSecondStepChange(e);
+                                    }} type="text" className="border border-secondary rounded-pill form-control w-75" id="card_number" placeholder="**** **** **** ****" />
                                 </div>
                                 <div className="d-flex gap-3 w-75">
                                     <div>
                                         <label htmlFor="exp_date" className="form-label px-2" style={{ fontWeight: "500" }}>Valid until</label>
-                                        <input  name="exp_date" value={secondStep.exp_date} onChange={handleSecondStepChange} type="text" className="border border-secondary rounded-pill form-control" id="exp_date" placeholder="MM/YY" />
+                                        <input  name="exp_date" value={secondStep.exp_date} onChange={handleSecondStepChange} type="month" className="border border-secondary rounded-pill form-control" id="exp_date" placeholder="MM/YY" />
                                     </div>
                                     <div>
                                         <label htmlFor="cvc" className="form-label px-2" style={{ fontWeight: "500" }}>CVC</label>

@@ -3,6 +3,7 @@ import searchIcon from '../../assets/icons/search-blue.png';
 import more from '../../assets/icons/more.png';
 import axios from "axios";
 import ConfirmModal from '../../Components/ConfirmModal';
+import { formatDisplayDate } from '../../Utils/formatDate';
 
 export default function GuestList() {
     const [guests, setGuests] = useState([]);
@@ -189,14 +190,14 @@ export default function GuestList() {
                                 </td>
                                 <td className='fw-medium text-secondary'>
                                     {guest.hasBookings ? (
-                                        guest.checkIn || 'N/A'
+                                        guest.checkIn ? formatDisplayDate(guest.checkIn) : 'N/A'
                                     ) : (
                                         <span className="text-muted fst-italic">Pending</span>
                                     )}
                                 </td>
                                 <td className='fw-medium text-secondary'>
                                     {guest.hasBookings ? (
-                                        guest.checkOut || 'N/A'
+                                        guest.checkOut ? formatDisplayDate(guest.checkOut) : 'N/A'
                                     ) : (
                                         <span className="text-muted fst-italic">Pending</span>
                                     )}

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { create } from 'zustand';
 import useAlertMessageStore from './useAlertMessage'; // Ensure this is a Zustand store too
+import useUserStore from './useUserStore';
 
 const useBookRoomStore = create((set, get) => ({
     firstStep: {
@@ -51,13 +52,29 @@ const useBookRoomStore = create((set, get) => ({
         const { setAlert, clearAlert } = useAlertMessageStore.getState();
 
         try {
-            const response = await axios.post('/booking_room', {
+            const currentUser = useUserStore.getState().user;
+            if (!currentUser || !currentUser.token) {
+                setAlert({ message: 'You must be logged in to book a room. Redirecting...', type: 'danger' });
+                setTimeout(() => {
+                    clearAlert();
+                    window.location.href = '/LogIn';
+                }, 3000);
+                return;
+            }
+
+            const isPaymentActive = get().secondStep.card_number && get().secondStep.exp_date && get().secondStep.cvc;
+            const endpoint = isPaymentActive ? '/process_payment' : '/booking_room';
+
+            const response = await axios.post(endpoint, {
                 user_id,
                 room_id,
                 check_in: get().firstStep.check_in,
                 check_out: get().firstStep.check_out,
                 secondStep: get().secondStep,
                 totalPrice: get().totalPrice,
+            }, {
+                withCredentials: true,
+                headers: currentUser?.token ? { Authorization: `Bearer ${currentUser.token}` } : {}
             });
 
             if (response.data) {
@@ -70,7 +87,16 @@ const useBookRoomStore = create((set, get) => ({
             }
         } catch (e) {
             console.log(e);
-            setAlert({ message: 'Booking room failed. Please try again.', type: 'danger' });
+            if (e.response && e.response.status === 401) {
+                setAlert({ message: 'Session expired. Please log in again.', type: 'danger' });
+                useUserStore.getState().clearUser();
+                setTimeout(() => {
+                    clearAlert();
+                    window.location.href = '/LogIn';
+                }, 3000);
+            } else {
+                setAlert({ message: 'Booking room failed. Please try again.', type: 'danger' });
+            }
         }
     },
 

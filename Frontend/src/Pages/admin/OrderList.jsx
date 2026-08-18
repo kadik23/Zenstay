@@ -3,6 +3,7 @@ import axios from "axios";
 import more from "../../assets/icons/more.png";
 import searchIcon from "../../assets/icons/search-blue.png";
 import ConfirmModal from "../../Components/ConfirmModal";
+import { formatDisplayDate } from "../../Utils/formatDate";
 
 function OrderList() {
   const [bookings, setBookings] = useState([]);
@@ -206,12 +207,12 @@ function OrderList() {
                   </td>
                   <td>
                     <div className="py-2 fw-medium text-secondary">
-                      {booking.check_in || 'N/A'}
+                      {formatDisplayDate(booking.check_in)}
                     </div>
                   </td>
                   <td>
                     <div className="py-2 fw-medium text-secondary">
-                      {booking.check_out || 'N/A'}
+                      {formatDisplayDate(booking.check_out)}
                     </div>
                   </td>
                   <td>

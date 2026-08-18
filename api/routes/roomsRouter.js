@@ -41,7 +41,7 @@ router.put('/notifications/:id/read', async (req, res) => {
     }
 });
 
-const dispatchNotification = async (type, message, details) => {
+export const dispatchNotification = async (type, message, details) => {
     try {
         const notif = await Notification.create({ type, message, details });
         const data = `data: ${JSON.stringify(notif)}\n\n`;

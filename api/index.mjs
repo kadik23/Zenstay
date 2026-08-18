@@ -8,6 +8,9 @@ import dotenv from 'dotenv';
 import {mongoose} from "mongoose"
 import { fileURLToPath } from 'url';
 import path from 'path';
+import Stripe from 'stripe';
+import Booking from './models/Booking.js';
+import Transaction from './models/Transaction.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,6 +27,33 @@ const corsOptions = {
     origin: ['http://localhost:5173', 'https://zenstay-two.vercel.app'],
 };
 app.use(cors(corsOptions));
+
+// Stripe webhook must be parsed as raw body
+let stripe;
+app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+    if (!stripe) stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+    const sig = req.headers['stripe-signature'];
+    let event;
+    try {
+        event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    } catch (err) {
+        console.error('Webhook signature verification failed:', err.message);
+        return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    if (event.type === 'payment_intent.succeeded') {
+        const paymentIntent = event.data.object;
+        console.log(`PaymentIntent for ${paymentIntent.amount} was successful!`);
+        // Update Transaction and Booking status
+        await Transaction.findOneAndUpdate({ stripe_id: paymentIntent.id }, { status: 'succeeded' });
+        const tx = await Transaction.findOne({ stripe_id: paymentIntent.id });
+        if (tx && tx.booking_id) {
+            await Booking.findByIdAndUpdate(tx.booking_id, { status: 'confirmed' });
+        }
+    }
+
+    res.json({received: true});
+});
 app.use(express.json())
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true })); // To parse URL-encoded bodies

@@ -11,7 +11,7 @@ import Profile from './Pages/guest/Profile.jsx'
 import LogIn from './Pages/guest/LogIn'
 import SignUp from './Pages/guest/SignUp'
 import axios from "axios";
-axios.defaults.baseURL = 'https://zenstay-1sey.onrender.com/';
+axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'https://zenstay-1sey.onrender.com/';
 axios.defaults.withCredentials = true;
 
 // Layouts
@@ -28,6 +28,7 @@ import GuestList from './Pages/admin/GuestList';
 import OrderList from './Pages/admin/OrderList';
 import Settings from './Pages/admin/Settings';
 import ProfileAdmin from './Pages/admin/ProfileAdmin';
+import TransactionList from './Pages/admin/TransactionList';
 
 // Layouts
 import RootLayout2 from './Layouts/admin/RootLayout';
@@ -64,6 +65,7 @@ const router = createBrowserRouter(
             <Route path="RoomList" element={<RoomList/>}/>
             <Route path="GuestList" element={<GuestList/>}/>
             <Route path="OrderList" element={<OrderList/>}/>
+            <Route path="TransactionList" element={<TransactionList/>}/>
           </Route>
         </Route>
         {/* ///// */}
