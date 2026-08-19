@@ -17,9 +17,10 @@ export default function RoomBookingInfo({ room }) {
 
     const numberOfNights = firstStep.check_in && firstStep.check_out ? calculateNights(firstStep.check_in, firstStep.check_out) : 0;
     useEffect(()=>{
-        setTotalPrice((parseInt(room?.price) * numberOfNights) + cityTax + serviceFee);
-        
-    },[numberOfNights])
+        if (room?.price) {
+            setTotalPrice((parseInt(room.price) * numberOfNights) + cityTax + serviceFee);
+        }
+    },[numberOfNights, room?.price]);
 
     const checkDate = () => {
         if (!firstStep.check_in || !firstStep.check_out) {

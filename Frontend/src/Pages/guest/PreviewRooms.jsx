@@ -2,13 +2,24 @@ import SideBar from "../../Components/guest/SideBar";
 import RoomsCards from "../../Components/guest/RoomsCards";
 import axios from 'axios'
 import { useEffect,useState } from "react";
+import { useLocation } from "react-router-dom";
 import useRoomsStore from "../../Hooks/useRoomsStore";
 import Loading from "../../Components/guest/Loading";
+
 export default function PreviewRooms() {
-    const { rooms, fetchRooms, filteredRooms,setSortBy } = useRoomsStore();
+    const { rooms, fetchRooms, filteredRooms, setSortBy, setBedType, setCheckIn, setCheckOut, setGuests } = useRoomsStore();
+    const location = useLocation();
+
     useEffect(() =>{
+        const params = new URLSearchParams(location.search);
+        
+        if (params.has("bedType")) setBedType(params.get("bedType"));
+        if (params.has("checkIn")) setCheckIn(params.get("checkIn"));
+        if (params.has("checkOut")) setCheckOut(params.get("checkOut"));
+        if (params.has("guests")) setGuests(params.get("guests"));
+
         fetchRooms()
-    },[])
+    }, [location.search]);
 
     if(!rooms){
         return (<Loading/>)

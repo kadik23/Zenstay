@@ -6,16 +6,27 @@ import { useEffect, useState } from "react";
 import ALertMessage from "../../Components/guest/ALertMessage";
 import useAlertMessageStore from "../../Hooks/useAlertMessage";
 import useBookRoomStore from "../../Hooks/useBookRoomStore";
+import useRoomsStore from "../../Hooks/useRoomsStore";
 
 export default function BookingOpt(){
     const { id } = useParams();
     const { room, fetchRoomById } = useRoomStore();
-    const {getBookedAppointments} = useBookRoomStore()
+    const { getBookedAppointments, setFirstStep, firstStep } = useBookRoomStore();
+    const { checkIn, checkOut } = useRoomsStore()
     const {alert} = useAlertMessageStore()
     useEffect(() => {
         fetchRoomById(id);
-        getBookedAppointments(id)
+        getBookedAppointments(id);
     }, [id]);
+
+    useEffect(() => {
+        if (!firstStep.check_in && checkIn) {
+            setFirstStep({ check_in: checkIn });
+        }
+        if (!firstStep.check_out && checkOut) {
+            setFirstStep({ check_out: checkOut });
+        }
+    }, [checkIn, checkOut, firstStep.check_in, firstStep.check_out, setFirstStep]);
     return(
         <div className="container-fluid">
             {alert.visible && (

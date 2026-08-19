@@ -6,7 +6,9 @@ import axios from "axios";
 export default function PersonalDetails() {
   const { user, setUser, logout, update } = useUserStore();
   const initState = {
-    name: user.firstname + " " + user.lastname || "",
+    firstname: user.firstname || "",
+    lastname: user.lastname || "",
+    telephone: user.telephone || "",
     email: user.email || "",
     location: user.location || "",
     nationality: user.nationality || "",
@@ -14,7 +16,9 @@ export default function PersonalDetails() {
   };
 
   const [isEditing, setIsEditing] = useState({
-    name: false,
+    firstname: false,
+    lastname: false,
+    telephone: false,
     location: false,
     email: false,
     nationality: false,

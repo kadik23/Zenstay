@@ -6,6 +6,9 @@ const useRoomsStore = create((set, get) => ({
     setRooms: (rooms) => set({ rooms }),
     clearRooms: () => set({ rooms: null }),
     guests: '',
+    bedType: '',
+    checkIn: '',
+    checkOut: '',
     priceRange: [],
     ratingRange: [],
     filteredRooms: null,
@@ -18,7 +21,12 @@ const useRoomsStore = create((set, get) => ({
 
     fetchRooms: async () => {
         try {
-            const response = await axios.get('/getAllRooms');
+            const { checkIn, checkOut } = get();
+            let url = '/getAllRooms';
+            if (checkIn && checkOut) {
+                url += `?check_in=${checkIn}&check_out=${checkOut}`;
+            }
+            const response = await axios.get(url);
             if (response.data) {
                 set({ rooms: response.data });
                 get().applyFilters();
@@ -34,6 +42,18 @@ const useRoomsStore = create((set, get) => ({
         set({ guests });
     },
 
+    setBedType: (bedType) => {
+        set({ bedType });
+    },
+
+    setCheckIn: (checkIn) => {
+        set({ checkIn });
+    },
+
+    setCheckOut: (checkOut) => {
+        set({ checkOut });
+    },
+
     setPriceRange: (priceRange) => {
         set({ priceRange });
         get().applyFilters();
@@ -45,7 +65,7 @@ const useRoomsStore = create((set, get) => ({
     },
 
     applyFilters: () => {
-        const { rooms, guests, priceRange, ratingRange } = get();
+        const { rooms, guests, bedType, priceRange, ratingRange } = get();
 
         const filteredRooms = rooms?.filter(room => {
             let matchesPrice = true;
@@ -66,7 +86,6 @@ const useRoomsStore = create((set, get) => ({
                 if (ratingRange === "<5.0") {
                     matchesGuestsRating = room.rating <= 5.0;
                 } else if (ratingRange === "5.0-6.0") {
-                    console.log("first")
                     matchesGuestsRating = room.rating >= 5.0 && room.rating <= 6.0;
                 } else if (ratingRange === "6.0-7.0") {
                     matchesGuestsRating = room.rating >= 6.0 && room.rating <= 7.0;
@@ -76,8 +95,9 @@ const useRoomsStore = create((set, get) => ({
             }
 
             let matchesGuests = guests ? room.guests_number == guests : true;
+            let matchesBedType = bedType ? room.bed_type === bedType : true;
 
-            return matchesGuestsRating && matchesPrice && matchesGuests;
+            return matchesGuestsRating && matchesPrice && matchesGuests && matchesBedType;
         });
 
         if (get().sortBy === 'price') {

@@ -53,9 +53,32 @@ export const dispatchNotification = async (type, message, details) => {
 
 router.get('/getAllRooms',async(req,res)=>{
     try{
-        const rooms = await Room.find()
+        const { check_in, check_out } = req.query;
+        let baseMatch = {};
+        
+        if (check_in && check_out) {
+            const overlappingBookings = await Booking.find({
+                status: { $nin: ['rejected', 'cancelled', 'Canceled'] },
+                check_in: { $lt: check_out },
+                check_out: { $gt: check_in }
+            });
+            const bookedRoomIds = overlappingBookings.map(b => b.room_id).filter(id => id);
+            
+            if (bookedRoomIds.length > 0) {
+                const objectIdArray = bookedRoomIds
+                    .filter(id => mongoose.Types.ObjectId.isValid(id))
+                    .map(id => new mongoose.Types.ObjectId(id));
+                    
+                if (objectIdArray.length > 0) {
+                    baseMatch._id = { $nin: objectIdArray };
+                }
+            }
+        }
+        
+        const rooms = await Room.find(baseMatch);
         res.json(rooms)
     }catch(e){
+        console.error(e);
         res.status(500).json('Internal Server Error')
     }
 })
