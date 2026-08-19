@@ -33,17 +33,18 @@ export default function BookingOpt(){
     }, []);
 
     useEffect(() => {
-        console.log("id"+id)
-        getBookedAppointments(id)
-    }, [id])
-    
-    useEffect(() =>{
-        setAppointment(Object.values(bookedAppointments).reduce((acc, appoint) => {
-            return appoint.user_id === user._id ? appoint : acc;
-        }, null));
-        console.log(appointment)
-    
-    },[bookedAppointments])
+        const fetchBooking = async () => {
+            try {
+                const response = await axios.get(`/getBookingById/${id}`);
+                if (response.data && response.data.data) {
+                    setAppointment(response.data.data);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        };
+        fetchBooking();
+    }, [id]);
 
     return(
         <div className="container">

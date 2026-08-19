@@ -68,9 +68,12 @@ export default function RoomsOverview() {
                         </span>
                     </div>
                 </div>
-                <div className="d-flex justify-content-end align-items-center w-100 order-1 order-md-2">
-                    <span className="flex-1 rounded-pill px-3 room-status">{getRatingStatus(room.rating)}</span>
-                    <span className="rating rounded-pill px-3">{room.rating}</span>
+                <div className="d-flex flex-column justify-content-end align-items-md-end align-items-start w-100 order-1 order-md-2">
+                    <div className="d-flex align-items-center mb-2">
+                        <span className="flex-1 rounded-pill px-3 room-status">{getRatingStatus(room.rating)}</span>
+                        <span className="rating rounded-pill px-3 ms-2">{room.rating}</span>
+                    </div>
+                    <NavLink to={`/BookingOpt/${room._id}`} className="btn btn-primary rounded-pill px-4">Book Now</NavLink>
                 </div>
             </div>
             <a href="#" className="text-decoration-none text-primary fw-bold">Overview</a>

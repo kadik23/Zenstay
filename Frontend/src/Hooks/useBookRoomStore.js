@@ -79,10 +79,14 @@ const useBookRoomStore = create((set, get) => ({
 
             if (response.data) {
                 console.log("Booking successful");
+                
+                // Get the booking ID depending on which endpoint was called
+                const bookingId = response.data.booking ? response.data.booking._id : response.data.data._id;
+                
                 setAlert({ message: 'Booking room completed successfully!', type: 'success' });
                 setTimeout(() => {
                     clearAlert()
-                    window.location.href = `/BookingConfirmed/${room_id}`
+                    window.location.href = `/BookingConfirmed/${bookingId}`
                 }, 3000)
             }
         } catch (e) {

@@ -148,7 +148,7 @@ export default function PersonalDetails() {
             </span>
           </div>
           <div>
-            <button onClick={Signout} className="btn btn-outline-primary rounded-pill w-100">Sign up now</button>
+            <button onClick={() => alert("Thanks for joining our Travel Club! You will receive our secret offers soon.")} className="btn btn-outline-primary rounded-pill w-100">Sign up now</button>
           </div>
         </div>
       </div>

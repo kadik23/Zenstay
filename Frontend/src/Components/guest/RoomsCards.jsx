@@ -23,10 +23,14 @@ export default function RoomsCards({room}) {
                 <div className="d-lg-flex align-items-center justify-content-between h-100 p-2 pb-3 text-dark text-shadow-1">
                     <div className="d-lg-flex gap-3 h-lg-100">
                         <div className="Rooms-cards-img">
-                            <img width={300} src={image} className="rounded-4" alt="" />
+                            <NavLink to={`/RoomOverview/${room._id}`}>
+                                <img width={300} src={image} className="rounded-4" alt="" />
+                            </NavLink>
                         </div>
                         <div className="h-lg-100 d-flex flex-column">
-                            <h4 className="mb-auto">Room {room.name}</h4>
+                            <NavLink to={`/RoomOverview/${room._id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                <h4 className="mb-auto">Room {room.name}</h4>
+                            </NavLink>
                             {room.air_conditioning && (<span>1x Air conditioning</span>)}
                             {room.bathroom && (<span>1x Bathroom</span>)}
                             {room.free_wifi && (<span>1x Free Wifi</span>)}

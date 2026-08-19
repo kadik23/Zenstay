@@ -363,8 +363,17 @@ router.get('/getOrder',async(req,res)=>{
 
 router.get('/getBookedRoomById/:room_id', async(req,res)=>{
     try{
-        let bookedRoom = await Booking.findOne(req.params);
-        res.status(200).json({'data': bookedRoom})
+        let bookedRooms = await Booking.find({ room_id: req.params.room_id });
+        res.status(200).json({'data': bookedRooms})
+    }catch(e){
+        res.status(500).json('Internal Server Error' + e);
+    }
+})
+
+router.get('/getBookingById/:booking_id', async(req,res)=>{
+    try{
+        let booking = await Booking.findById(req.params.booking_id);
+        res.status(200).json({'data': booking})
     }catch(e){
         res.status(500).json('Internal Server Error' + e);
     }
