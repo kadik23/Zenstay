@@ -76,10 +76,10 @@ export default function RoomBookingInfo({ room }) {
                             </div>
                             <div className='d-flex flex-column'>
                                 <span className=''>
-                                    {firstStep.check_in}
+                                    {firstStep.check_in || '-'}
                                 </span>
                                 <span className=''>
-                                    {firstStep.check_out}
+                                    {firstStep.check_out || '-'}
                                 </span>
                             </div>
                         </div>
@@ -90,11 +90,11 @@ export default function RoomBookingInfo({ room }) {
                             <div className='mb-3'>
                                 <div className='row'>
                                     <span className='col-4'>Price per night</span>
-                                    <span className='col-4'>${room?.price}</span>
+                                    <span className='col-4'>${room?.price || '-'}</span>
                                 </div>
                                 <div className='row'>
                                     <span className='col-4'>{numberOfNights} nights</span>
-                                    <span className='col-4'>${room?.price * numberOfNights}</span>
+                                    <span className='col-4'>${room?.price ? room.price * numberOfNights : '-'}</span>
                                 </div>
                             </div>
                             <div>
@@ -111,7 +111,7 @@ export default function RoomBookingInfo({ room }) {
                         <div>
                             <div className='row'>
                                 <strong className='col-4'>Total</strong>
-                                <span className='col-4'>${totalPrice}</span>
+                                <span className='col-4'>${isNaN(totalPrice) ? '-' : totalPrice}</span>
                             </div>
                         </div>
                     </div>
