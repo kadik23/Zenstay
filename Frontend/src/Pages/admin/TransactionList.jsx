@@ -3,6 +3,7 @@ import axios from 'axios';
 import search from '../../assets/icons/search.png';
 import ALertMessage from '../../Components/guest/ALertMessage';
 import useAlertMessageStore from '../../Hooks/useAlertMessage';
+import useSettingsStore from '../../Hooks/useSettingsStore';
 
 export default function TransactionList() {
     const [transactions, setTransactions] = useState([]);
@@ -92,7 +93,7 @@ export default function TransactionList() {
                                     </td>
                                     <td className="py-3 border-0 text-secondary">{formatDate(tx.createdAt)}</td>
                                     <td className="py-3 border-0">
-                                        <div className="fw-bold">${tx.amount}</div>
+                                        <div className="fw-bold">{currencySymbol === 'DA' ? `${tx.amount} ${currencySymbol}` : `${currencySymbol}${tx.amount}`}</div>
                                     </td>
                                     <td className="py-3 border-0 text-secondary">{tx.booking_id}</td>
                                     <td className="py-3 border-0">{getStatusBadge(tx.status)}</td>

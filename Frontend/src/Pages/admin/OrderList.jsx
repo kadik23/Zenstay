@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import useSettingsStore from "../../Hooks/useSettingsStore";
 import more from "../../assets/icons/more.png";
 import searchIcon from "../../assets/icons/search-blue.png";
 import ConfirmModal from "../../Components/ConfirmModal";
 import { formatDisplayDate } from "../../Utils/formatDate";
 
 function OrderList() {
+  const currencySymbol = useSettingsStore(state => state.currencySymbol);
   const [bookings, setBookings] = useState([]);
   const [activeTab, setActiveTab] = useState('All Bookings');
   const [searchQuery, setSearchQuery] = useState('');
@@ -217,12 +219,12 @@ function OrderList() {
                   </td>
                   <td>
                     <div className="py-2 fw-bold text-dark">
-                      ${booking.room_price || 0}
+                      {currencySymbol === 'DA' ? `${booking.room_price || 0} ${currencySymbol}` : `${currencySymbol}${booking.room_price || 0}`}
                     </div>
                   </td>
                   <td>
                     <div className="py-2 fw-bold text-dark">
-                      ${booking.totalPrice || 0}
+                      {currencySymbol === 'DA' ? `${booking.totalPrice || 0} ${currencySymbol}` : `${currencySymbol}${booking.totalPrice || 0}`}
                     </div>
                   </td>
                   <td className="text-center">

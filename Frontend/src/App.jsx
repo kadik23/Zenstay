@@ -77,7 +77,16 @@ const router = createBrowserRouter(
     )
 )
 
+import { useEffect } from 'react';
+import useSettingsStore from './Hooks/useSettingsStore';
+
 function App() {
+  const fetchSettings = useSettingsStore(state => state.fetchSettings);
+
+  useEffect(() => {
+    fetchSettings();
+  }, [fetchSettings]);
+
   return (
       <RouterProvider router={router} />
   );

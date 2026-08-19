@@ -1,9 +1,13 @@
 import { NavLink } from "react-router-dom"
 import rightChevrone from "../../assets/right-chevron.png"
 import image from "../../assets/room1.jpg"
+import useSettingsStore from "../../Hooks/useSettingsStore"
 
 export default function LovedRooms(props) {
     const room = props.room
+    const currencySymbol = useSettingsStore(state => state.currencySymbol);
+    const displayPrice = currencySymbol === 'DA' ? `${room.price} ${currencySymbol}` : `${currencySymbol}${room.price}`;
+
     return(
         <div>
             <div className="col">
@@ -21,7 +25,7 @@ export default function LovedRooms(props) {
                             <li className="w-100">
                                     <NavLink to={`RoomOverview/${room._id}`} className="text-decoration-none text-body-emphasis me-lg-4" href="#">
                                         <small className="d-flex justify-content-between align-items-center">
-                                            from ${room.price}/night
+                                            from {displayPrice}/night
                                             <img src={rightChevrone} alt="" />
                                         </small>
                                     </NavLink>

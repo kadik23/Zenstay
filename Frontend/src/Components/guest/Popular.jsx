@@ -1,6 +1,8 @@
 import { NavLink } from "react-router-dom";
+import useSettingsStore from "../../Hooks/useSettingsStore";
 
 export default function Popular({room}) {
+    const currencySymbol = useSettingsStore(state => state.currencySymbol);
 
     return(
         <div>           
@@ -13,7 +15,7 @@ export default function Popular({room}) {
                                 <NavLink to={`/RoomOverview/${room._id}`} className="text-decoration-none text-white shadow-lg me-lg-4">    View Details</NavLink>
                             </li>
                             <li className="rounded-pill bg-white px-2 text-black">
-                                <small>{room.price}$</small>
+                                <small>{currencySymbol === 'DA' ? `${room.price} ${currencySymbol}` : `${currencySymbol}${room.price}`}</small>
                             </li>
                         </ul>
                     </div>

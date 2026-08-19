@@ -16,10 +16,26 @@ const useBookRoomStore = create((set, get) => ({
     },
     bookedAppointments: [],
     setBookedAppointments: (bookedAppointments) => set({ bookedAppointments }),
-    cityTax: 40,
-    serviceFee: 20,
-    totalPrice: 60,
+    cityTax: 0,
+    serviceFee: 0,
+    totalPrice: 0,
     setTotalPrice: (totalPrice) => set({ totalPrice }),
+    
+    fetchTaxes: async () => {
+        try {
+            const response = await axios.get('/settings');
+            if (response.data) {
+                set({ 
+                    cityTax: response.data.city_tax || 0,
+                    serviceFee: response.data.service_tax || 0
+                });
+            }
+        } catch (e) {
+            console.error('Failed to fetch taxes:', e);
+            // Default to 0 if failed
+            set({ cityTax: 0, serviceFee: 0 });
+        }
+    },
     
     handleFirstStepChange: (e) => {
         const { name, value } = e.target;

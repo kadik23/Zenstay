@@ -11,12 +11,13 @@ import useRoomsStore from "../../Hooks/useRoomsStore";
 export default function BookingOpt(){
     const { id } = useParams();
     const { room, fetchRoomById } = useRoomStore();
-    const { getBookedAppointments, setFirstStep, firstStep } = useBookRoomStore();
+    const { getBookedAppointments, setFirstStep, firstStep, fetchTaxes } = useBookRoomStore();
     const { checkIn, checkOut } = useRoomsStore()
     const {alert} = useAlertMessageStore()
     useEffect(() => {
         fetchRoomById(id);
         getBookedAppointments(id);
+        fetchTaxes();
     }, [id]);
 
     useEffect(() => {

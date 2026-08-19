@@ -1,7 +1,12 @@
 import { NavLink } from "react-router-dom"
 import image from "../../assets/room2.jpg"
 import getRatingStatus from "../../Utils/getRatingStatus";
+import useSettingsStore from "../../Hooks/useSettingsStore";
+
 export default function RoomsCards({room}) {
+    const currencySymbol = useSettingsStore(state => state.currencySymbol);
+    const displayPrice = currencySymbol === 'DA' ? `${room.price} ${currencySymbol}` : `${currencySymbol}${room.price}`;
+
     function getRatingClass(rating) {
         if (rating < 5.0) return 'bad';
         if (rating < 6.0) return 'alright';
@@ -56,7 +61,7 @@ export default function RoomsCards({room}) {
                         </span>
                         <span className={`rounded-pill px-3 ${getRatingClass(room.rating)}`}>{room.rating}</span>
                     </div>
-                        <strong className="align-self-end">${room.price}</strong>
+                        <strong className="align-self-end">{displayPrice}</strong>
                         <span className="align-self-end">1x {room.bed_type}</span>
                         <NavLink to={`/BookingOpt/${room._id}`} className="w-md-75 btn btn-primary rounded-pill w-lg-100 mt-2">See booking options</NavLink>
                     </div>

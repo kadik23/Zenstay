@@ -6,8 +6,10 @@ import axios from "axios";
 import {useState,useEffect} from "react"
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import useSettingsStore from "../../Hooks/useSettingsStore";
 
 export default function Dashboard(){
+    const currencySymbol = useSettingsStore(state => state.currencySymbol);
     const [isLoading, setIsLoading] = useState(false);
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
@@ -108,7 +110,7 @@ export default function Dashboard(){
                                     <h5 className="mt-3 text-capitalize">{r.name}</h5>
                                 </div>
                                 <div className="fw-bold fs-5 text-primary">
-                                    ${r.price}
+                                    {currencySymbol === 'DA' ? `${r.price} ${currencySymbol}` : `${currencySymbol}${r.price}`}
                                 </div>
                             </div>
                         )) : (
@@ -138,7 +140,7 @@ export default function Dashboard(){
                                     <h5 className="m-0 text-capitalize">{r.name}</h5>
                                 </div>
                                 <div className="fw-bold fs-5 text-primary">
-                                    ${r.price}
+                                    {currencySymbol === 'DA' ? `${r.price} ${currencySymbol}` : `${currencySymbol}${r.price}`}
                                 </div>
                             </div>
                         </div>

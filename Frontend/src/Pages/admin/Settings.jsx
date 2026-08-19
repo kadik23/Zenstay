@@ -82,10 +82,16 @@ export default function Settings() {
                     onChange={e => setSettings({...settings, cancellation_policy: e.target.value})}></textarea>
             </div>
             <div className="mb-4">
-                <label className="form-label fw-medium">Tax Rate (%)</label>
+                <label className="form-label fw-medium">City Tax ($)</label>
                 <input type="number" className="form-control rounded-3 w-25" 
-                    value={settings.tax_rate} 
-                    onChange={e => setSettings({...settings, tax_rate: Number(e.target.value)})} />
+                    value={settings.city_tax || 0} 
+                    onChange={e => setSettings({...settings, city_tax: Number(e.target.value)})} />
+            </div>
+            <div className="mb-4">
+                <label className="form-label fw-medium">Service Tax ($)</label>
+                <input type="number" className="form-control rounded-3 w-25" 
+                    value={settings.service_tax || 0} 
+                    onChange={e => setSettings({...settings, service_tax: Number(e.target.value)})} />
             </div>
             <button onClick={handleSaveSettings} className="btn btn-primary rounded-pill px-4 py-2 fw-bold">Save Settings</button>
         </div>

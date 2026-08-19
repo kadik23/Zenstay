@@ -1,9 +1,13 @@
 import { NavLink } from "react-router-dom"
 import backarrow from "../../assets/icons/back-arrow.png"
 import useRoomsStore from "../../Hooks/useRoomsStore";
+import useSettingsStore from "../../Hooks/useSettingsStore";
+
 export default function roomsPreview() {
 
     const { setRatingRange, setPriceRange, priceRange, ratingRange, setGuests, guests, applyFilters } = useRoomsStore();
+    const currencySymbol = useSettingsStore(state => state.currencySymbol);
+    const formatPrice = (price) => currencySymbol === 'DA' ? `${price} ${currencySymbol}` : `${currencySymbol}${price}`;
 
     const handleInputsChanges = () => {
         applyFilters();
@@ -19,19 +23,6 @@ export default function roomsPreview() {
             </div>
             <strong className="py-3">Your Search</strong>
             <ul className="list-unstyled flex-column">
-                {/* soon */}
-                {/* <li>
-                    <div>
-                        <label htmlFor="email" className="form-label px-2">Check-in date</label>
-                        <input type="text" className="border border-secondary rounded-pill form-control" id="checkIn-date" placeholder="Friday, 09 December 2022"/>
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        <label htmlFor="email" className="form-label px-2">Check-out date</label>
-                        <input type="text" className="border border-secondary rounded-pill form-control" id="checkOut-date" placeholder="Monday, 12 December 2022"/>
-                    </div>
-                </li> */}
                 <li>
                     <div>
                         <label htmlFor="email" className="form-label px-2">Guests</label>
@@ -48,25 +39,25 @@ export default function roomsPreview() {
                 <div className="form-check">
                     <input checked={priceRange === "<50"} className="form-check-input" type="checkbox" name="price" id="price1" value="<50" onChange={(e) => setPriceRange(e.target.checked ? "<50" : [])}/>
                     <label className="form-check-label" htmlFor="price1">
-                        less than $50
+                        less than {formatPrice(50)}
                     </label>
                 </div>
                 <div className="form-check">
                     <input checked={priceRange === "50-100"} className="form-check-input" type="checkbox" name="price" id="price2" value="50-100" onChange={(e) => setPriceRange(e.target.checked ? "50-100" : [])}/>
                     <label className="form-check-label" htmlFor="price2">
-                        $50 to 100$
+                        {currencySymbol === 'DA' ? `50 to 100 ${currencySymbol}` : `${currencySymbol}50 to ${currencySymbol}100`}
                     </label>
                 </div>
                 <div className="form-check">
                     <input checked={priceRange === "100-150"} className="form-check-input" type="checkbox" name="price" id="price3" value="100-150" onChange={(e) => setPriceRange(e.target.checked ? "100-150" : [])}/>
                     <label className="form-check-label" htmlFor="price3">
-                        $100 to 150$
+                        {currencySymbol === 'DA' ? `100 to 150 ${currencySymbol}` : `${currencySymbol}100 to ${currencySymbol}150`}
                     </label>
                 </div>
                 <div className="form-check">
                     <input checked={priceRange === ">150"} className="form-check-input" type="checkbox" name="price" id="price4" value=">150" onChange={(e) => setPriceRange(e.target.checked ? ">150" : [])}/>
                     <label className="form-check-label" htmlFor="price4">
-                        150$ and more
+                        {formatPrice(150)} and more
                     </label>
                 </div>
             </form>

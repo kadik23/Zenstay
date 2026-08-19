@@ -9,8 +9,11 @@ import useUserStore from "../../Hooks/useUserStore";
 import useAlertMessageStore from "../../Hooks/useAlertMessage";
 import ALertMessage from "../../Components/guest/ALertMessage";
 import axios from "axios";
+import useSettingsStore from "../../Hooks/useSettingsStore";
 
 export default function BookingOpt(){
+    const currencySymbol = useSettingsStore(state => state.currencySymbol);
+    const settings = useSettingsStore(state => state.settings);
     const {getBookedAppointments, bookedAppointments, cancelReservation} = useBookRoomStore();
     const {user} = useUserStore()
     const {id} = useParams();
@@ -114,12 +117,18 @@ export default function BookingOpt(){
                             </div>
                             <div className="d-flex flex-column gap-2">
                                 <div className=" d-flex gap-3 align-items-center">
-                                    {appointment && (<span>${appointment.totalPrice}</span>)}
+                                    {appointment && (<span>{currencySymbol === 'DA' ? `${appointment.totalPrice} ${currencySymbol}` : `${currencySymbol}${appointment.totalPrice}`}</span>)}
                                     <span className="rating rounded-pill px-3">paid</span>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    {settings?.cancellation_policy && (
+                        <div className='mb-4 p-3 bg-light rounded-3 text-secondary border' style={{ fontSize: '0.9rem' }}>
+                            <strong className="d-block mb-1 text-dark">Cancellation Policy</strong>
+                            {settings.cancellation_policy}
+                        </div>
+                    )}
                     <div className="d-flex flex-column flex-md-row gap-3 align-items-center mb-5">
                         {appointment && (<a href="tel:+213798816073" style={{ fontWeight: "500" }} className="btn btn-primary rounded-pill w-100 w-md-50">Contact property</a>)}
                         <button onClick={() => cancelReservation(appointment._id)} style={{ fontWeight: "500" }} className="btn btn-outline-primary rounded-pill w-100 w-md-50">Cancel reservation</button>

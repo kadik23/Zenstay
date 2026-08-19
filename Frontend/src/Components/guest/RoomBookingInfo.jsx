@@ -3,11 +3,16 @@ import image from '../../assets/room1.jpg';
 import useBookRoomStore from '../../Hooks/useBookRoomStore';
 import "react-datepicker/dist/react-datepicker.css";
 import useUserStore from '../../Hooks/useUserStore';
+import useSettingsStore from '../../Hooks/useSettingsStore';
 
 export default function RoomBookingInfo({ room }) {
     const { handleSubmit, firstStep, setTotalPrice, totalPrice, cityTax, serviceFee, bookedAppointments, secondStep } = useBookRoomStore();
     const [error, setError] = useState('');
-    const {user} = useUserStore()
+    const {user} = useUserStore();
+    const currencySymbol = useSettingsStore(state => state.currencySymbol);
+    const settings = useSettingsStore(state => state.settings);
+    const formatPrice = (price) => currencySymbol === 'DA' ? `${price} ${currencySymbol}` : `${currencySymbol}${price}`;
+
     const calculateNights = (check_in, check_out) => {
         const checkInDate = new Date(check_in);
         const checkOutDate = new Date(check_out);
@@ -28,9 +33,11 @@ export default function RoomBookingInfo({ room }) {
             return;
         }
 
-        if(!secondStep.card_name && !secondStep.card_number && !secondStep.exp_date && !secondStep.cvc){
-            setError('Fill payment details please.');
-            return;
+        if(settings?.payment_gateway_active !== false) {
+            if(!secondStep.card_name && !secondStep.card_number && !secondStep.exp_date && !secondStep.cvc){
+                setError('Fill payment details please.');
+                return;
+            }
         }
 
         const checkInDate = new Date(firstStep.check_in);
@@ -90,30 +97,36 @@ export default function RoomBookingInfo({ room }) {
                             <div className='mb-3'>
                                 <div className='row'>
                                     <span className='col-4'>Price per night</span>
-                                    <span className='col-4'>${room?.price || '-'}</span>
+                                    <span className='col-4'>{room?.price ? formatPrice(room.price) : '-'}</span>
                                 </div>
                                 <div className='row'>
                                     <span className='col-4'>{numberOfNights} nights</span>
-                                    <span className='col-4'>${room?.price ? room.price * numberOfNights : '-'}</span>
+                                    <span className='col-4'>{room?.price ? formatPrice(room.price * numberOfNights) : '-'}</span>
                                 </div>
                             </div>
                             <div>
                                 <div className='row'>
                                     <span className='col-4'>City tax</span>
-                                    <span className='col-4'>${cityTax}</span>
+                                    <span className='col-4'>{formatPrice(cityTax)}</span>
                                 </div>
                                 <div className='row'>
                                     <span className='col-4'>Service fee</span>
-                                    <span className='col-4'>${serviceFee}</span>
+                                    <span className='col-4'>{formatPrice(serviceFee)}</span>
                                 </div>
                             </div>
                         </div>
                         <div>
                             <div className='row'>
                                 <strong className='col-4'>Total</strong>
-                                <span className='col-4'>${isNaN(totalPrice) ? '-' : totalPrice}</span>
+                                <span className='col-4'>{isNaN(totalPrice) ? '-' : formatPrice(totalPrice)}</span>
                             </div>
                         </div>
+                        {settings?.cancellation_policy && (
+                            <div className='mt-4 p-3 bg-light rounded-3 text-secondary border' style={{ fontSize: '0.9rem' }}>
+                                <strong className="d-block mb-1 text-dark">Cancellation Policy</strong>
+                                {settings.cancellation_policy}
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
