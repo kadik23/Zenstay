@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import useUserStore from "../../Hooks/useUserStore";
 import paymentIcon from "../../assets/icons/credit-card.png";
 import ConfirmModal from "../ConfirmModal"; 
+import { getAuthHeader } from "../../Utils/auth";
 
 export default function PaymentInfo() {
     const [savedCards, setSavedCards] = useState([]);
@@ -10,9 +10,6 @@ export default function PaymentInfo() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [confirmModal, setConfirmModal] = useState({ isOpen: false, cardId: null });
-    const currentUser = useUserStore(state => state.user);
-
-    const getAuthHeader = () => currentUser?.token ? { Authorization: `Bearer ${currentUser.token}` } : {};
 
     useEffect(() => {
         fetchSavedCards();

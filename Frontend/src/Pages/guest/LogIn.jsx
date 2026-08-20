@@ -40,9 +40,6 @@ export default function LogIn(){
     return(
         <>
             <div className="modal modal-sheet position-static d-block p-4 py-md-5" tabIndex="-1" role="dialog" id="modalSignin">
-                {alert.visible && (
-                    <ALertMessage type={alert.type} message={alert.message} />
-                )}
                 <div className="modal-dialog" role="document">
                     <div className="modal-content rounded-4 shadow">
                         <div className="modal-header p-5 pb-4 border-bottom-0"> 

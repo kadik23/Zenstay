@@ -51,8 +51,7 @@ export default function TransactionList() {
     };
 
     return (
-        <div>
-            {alert.visible && <ALertMessage type={alert.type} message={alert.message} />}
+        <div className="container-fluid p-0">
             <div className='mb-4 d-flex align-items-center justify-content-between'>
                 <div className='d-flex flex-column gap-1'>
                     <h3 className='fw-bold mb-0' style={{color:"#2b2b2b"}}>Transactions</h3>

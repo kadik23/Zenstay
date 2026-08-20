@@ -30,9 +30,6 @@ export default function BookingOpt(){
     }, [checkIn, checkOut, firstStep.check_in, firstStep.check_out, setFirstStep]);
     return(
         <div className="container-fluid">
-            {alert.visible && (
-                <ALertMessage type={alert.type} message={alert.message} />
-            )}
             <div className="row flex-column flex-md-row w-100">
                 <div className="col-md-5 col-12">
                     <UserInfoSideBar room={room} />

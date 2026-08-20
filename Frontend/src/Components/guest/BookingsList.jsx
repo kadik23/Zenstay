@@ -2,21 +2,20 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import useSettingsStore from "../../Hooks/useSettingsStore";
-import useUserStore from "../../Hooks/useUserStore";
 import { formatDisplayDate } from "../../Utils/formatDate";
+import { getAuthHeader } from "../../Utils/auth";
 
 export default function BookingsList() {
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(true);
     const currencySymbol = useSettingsStore(state => state.currencySymbol);
-    const currentUser = useUserStore(state => state.user);
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchBookings = async () => {
             try {
                 const response = await axios.get('/getUserBookings', {
-                    headers: currentUser?.token ? { Authorization: `Bearer ${currentUser.token}` } : {}
+                    headers: getAuthHeader()
                 });
                 if (response.data && response.data.data) {
                     setBookings(response.data.data);

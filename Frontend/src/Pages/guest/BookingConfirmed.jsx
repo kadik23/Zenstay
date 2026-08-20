@@ -51,9 +51,6 @@ export default function BookingOpt(){
 
     return(
         <div className="container">
-            {alert.visible && (
-                <ALertMessage type={alert.type} message={alert.message} />
-            )}
             <div className="row w-100">
                 <div className="col-sm-12 col-md-8 col-xl-5 order-2 order-md-1" style={{ marginTop: "100px" }}>
                     {appointment && (<RoomBooked appointment={appointment}/>)}
@@ -131,7 +128,14 @@ export default function BookingOpt(){
                     )}
                     <div className="d-flex flex-column flex-md-row gap-3 align-items-center mb-5">
                         {appointment && (<a href="tel:+213798816073" style={{ fontWeight: "500" }} className="btn btn-primary rounded-pill w-100 w-md-50">Contact property</a>)}
-                        <button onClick={() => cancelReservation(appointment._id)} style={{ fontWeight: "500" }} className="btn btn-outline-primary rounded-pill w-100 w-md-50">Cancel reservation</button>
+                        <button 
+                            onClick={() => cancelReservation(appointment._id)} 
+                            style={{ fontWeight: "500" }} 
+                            className="btn btn-outline-primary rounded-pill w-100 w-md-50"
+                            disabled={appointment?.status === 'Canceled' || appointment?.status === 'cancelled'}
+                        >
+                            {appointment?.status === 'Canceled' || appointment?.status === 'cancelled' ? 'Already Canceled' : 'Cancel reservation'}
+                        </button>
                     </div>
                 </div>
                 <div className="col-sm-12 col-md-4 col-xl-7 px-md-5 text-center order-1 order-md-2">

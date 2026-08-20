@@ -12,6 +12,7 @@ import useUserStore from "../../Hooks/useUserStore";
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { formatDisplayDate } from "../../Utils/formatDate";
+import { getAuthHeader } from "../../Utils/auth";
 
 export default function UserInfoSideBar({room}) {
 
@@ -31,7 +32,7 @@ export default function UserInfoSideBar({room}) {
     const fetchSavedCards = async () => {
         try {
             const response = await axios.get('/get_saved_cards', {
-                headers: currentUser?.token ? { Authorization: `Bearer ${currentUser.token}` } : {}
+                headers: getAuthHeader()
             });
             if (response.data && response.data.length > 0) {
                 setSavedCards(response.data);

@@ -2,6 +2,7 @@ import axios from 'axios';
 import { create } from 'zustand';
 import useAlertMessageStore from './useAlertMessage'; // Ensure this is a Zustand store too
 import useUserStore from './useUserStore';
+import { getAuthHeader } from '../Utils/auth';
 
 const useBookRoomStore = create((set, get) => ({
     firstStep: {
@@ -94,7 +95,7 @@ const useBookRoomStore = create((set, get) => ({
                 paymentMethodId: paymentMethodId || undefined
             }, {
                 withCredentials: true,
-                headers: currentUser?.token ? { Authorization: `Bearer ${currentUser.token}` } : {}
+                headers: getAuthHeader()
             });
 
             if (response.data) {
@@ -126,11 +127,10 @@ const useBookRoomStore = create((set, get) => ({
 
     cancelReservation: async (id) => {
         const { setAlert, clearAlert } = useAlertMessageStore.getState();
-        const currentUser = useUserStore.getState().user;
 
         try {
             const response = await axios.delete(`/cancel_reservation/${id}`, {
-                headers: currentUser?.token ? { Authorization: `Bearer ${currentUser.token}` } : {}
+                headers: getAuthHeader()
             });
 
             if (response.data) {
