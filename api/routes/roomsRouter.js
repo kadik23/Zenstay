@@ -370,6 +370,31 @@ router.get('/getBookedRoomById/:room_id', async(req,res)=>{
     }
 })
 
+router.get('/getUserBookings', loginMiddleware, async(req, res)=>{
+    try{
+        let userBookings = await Booking.find({ user_id: req.userData.id }).lean();
+        
+        const enhancedBookings = await Promise.all(userBookings.map(async (booking) => {
+            const room = await Room.findById(booking.room_id).catch(() => null);
+            return {
+                ...booking,
+                room_name: room ? room.name : 'Unknown Room',
+                room_price: room ? room.price : 0
+            };
+        }));
+        
+        enhancedBookings.sort((a, b) => {
+            const dateA = new Date(a.createdAt || a.check_in || 0).getTime();
+            const dateB = new Date(b.createdAt || b.check_in || 0).getTime();
+            return (dateB || 0) - (dateA || 0);
+        });
+        
+        res.status(200).json({'data': enhancedBookings})
+    }catch(e){
+        res.status(500).json('Internal Server Error' + e);
+    }
+})
+
 router.get('/getBookingById/:booking_id', async(req,res)=>{
     try{
         let booking = await Booking.findById(req.params.booking_id);
@@ -382,11 +407,11 @@ router.get('/getBookingById/:booking_id', async(req,res)=>{
 router.delete('/cancel_reservation/:id',loginMiddleware,async(req,res)=>{
     try{
         const {id} = req.params
-        const result = await Booking.findByIdAndDelete(id);
+        const result = await Booking.findByIdAndUpdate(id, { status: 'Canceled' }, { new: true });
         console.log(id)
         if (result) {
             await dispatchNotification('CANCEL_RESERVATION', `A reservation was cancelled!`, { id });
-            res.json({ message: "Deleted Successfully" });
+            res.json({ message: "Cancelled Successfully", data: result });
         } else {
             res.status(404).json({ message: "Reservation not found" });
         }

@@ -14,6 +14,8 @@ const useBookRoomStore = create((set, get) => ({
         exp_date: '',
         cvc: ''
     },
+    selectedPaymentMethod: null,
+    setSelectedPaymentMethod: (id) => set({ selectedPaymentMethod: id }),
     bookedAppointments: [],
     setBookedAppointments: (bookedAppointments) => set({ bookedAppointments }),
     cityTax: 0,
@@ -78,7 +80,8 @@ const useBookRoomStore = create((set, get) => ({
                 return;
             }
 
-            const isPaymentActive = get().secondStep.card_number && get().secondStep.exp_date && get().secondStep.cvc;
+            const paymentMethodId = get().selectedPaymentMethod;
+            const isPaymentActive = paymentMethodId || (get().secondStep.card_number && get().secondStep.exp_date && get().secondStep.cvc);
             const endpoint = isPaymentActive ? '/process_payment' : '/booking_room';
 
             const response = await axios.post(endpoint, {
@@ -88,6 +91,7 @@ const useBookRoomStore = create((set, get) => ({
                 check_out: get().firstStep.check_out,
                 secondStep: get().secondStep,
                 totalPrice: get().totalPrice,
+                paymentMethodId: paymentMethodId || undefined
             }, {
                 withCredentials: true,
                 headers: currentUser?.token ? { Authorization: `Bearer ${currentUser.token}` } : {}
@@ -122,13 +126,16 @@ const useBookRoomStore = create((set, get) => ({
 
     cancelReservation: async (id) => {
         const { setAlert, clearAlert } = useAlertMessageStore.getState();
+        const currentUser = useUserStore.getState().user;
 
         try {
-            const response = await axios.delete(`/cancel_reservation/${id}`);
+            const response = await axios.delete(`/cancel_reservation/${id}`, {
+                headers: currentUser?.token ? { Authorization: `Bearer ${currentUser.token}` } : {}
+            });
 
             if (response.data) {
                 console.log("Reservation canceled successful");
-                setAlert({ message: 'Booking room completed successfully!', type: 'success' });
+                setAlert({ message: 'Reservation canceled successfully!', type: 'success' });
                 setTimeout(() => {
                     clearAlert()
                     window.location.href = `/`

@@ -6,7 +6,7 @@ import useUserStore from '../../Hooks/useUserStore';
 import useSettingsStore from '../../Hooks/useSettingsStore';
 
 export default function RoomBookingInfo({ room }) {
-    const { handleSubmit, firstStep, setTotalPrice, totalPrice, cityTax, serviceFee, bookedAppointments, secondStep } = useBookRoomStore();
+    const { handleSubmit, firstStep, setTotalPrice, totalPrice, cityTax, serviceFee, bookedAppointments, secondStep, selectedPaymentMethod } = useBookRoomStore();
     const [error, setError] = useState('');
     const {user} = useUserStore();
     const currencySymbol = useSettingsStore(state => state.currencySymbol);
@@ -34,7 +34,7 @@ export default function RoomBookingInfo({ room }) {
         }
 
         if(settings?.payment_gateway_active !== false) {
-            if(!secondStep.card_name && !secondStep.card_number && !secondStep.exp_date && !secondStep.cvc){
+            if(!selectedPaymentMethod && (!secondStep.card_name || !secondStep.card_number || !secondStep.exp_date || !secondStep.cvc)){
                 setError('Fill payment details please.');
                 return;
             }
