@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom"
-import image from "../../assets/room2.jpg"
+import { getImageUrl } from "../../Utils/getImageUrl"
 import getRatingStatus from "../../Utils/getRatingStatus";
 import useSettingsStore from "../../Hooks/useSettingsStore";
 
@@ -29,7 +29,7 @@ export default function RoomsCards({room}) {
                     <div className="d-lg-flex gap-3 h-lg-100">
                         <div className="Rooms-cards-img">
                             <NavLink to={`/RoomOverview/${room._id}`}>
-                                <img width={300} src={image} className="rounded-4" alt="" />
+                                <img width={300} src={getImageUrl(room?.images?.[0])} className="rounded-4" alt="" />
                             </NavLink>
                         </div>
                         <div className="h-lg-100 d-flex flex-column">

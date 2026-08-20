@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import image from '../../assets/room1.jpg';
+import { getImageUrl } from '../../Utils/getImageUrl';
 import useBookRoomStore from '../../Hooks/useBookRoomStore';
 import "react-datepicker/dist/react-datepicker.css";
 import useUserStore from '../../Hooks/useUserStore';
@@ -68,7 +68,7 @@ export default function RoomBookingInfo({ room }) {
     return (
         <div>
             <div className='p-4 rounded-3 shadow'>
-                <img src={image} height={250} style={{ objectFit: 'cover' }} className='w-100 rounded-4' alt="" />
+                <img src={getImageUrl(room?.images?.[0])} height={250} style={{ objectFit: 'cover' }} className='w-100 rounded-4' alt="" />
                 <div className='mt-4'>
                     <h4 className="mb-5 fw-bold">Room </h4>
                     <div>

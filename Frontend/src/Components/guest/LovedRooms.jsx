@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom"
 import rightChevrone from "../../assets/right-chevron.png"
-import image from "../../assets/room1.jpg"
+import { getImageUrl } from "../../Utils/getImageUrl"
 import useSettingsStore from "../../Hooks/useSettingsStore"
 
 export default function LovedRooms(props) {
@@ -14,7 +14,7 @@ export default function LovedRooms(props) {
                 <div className="card card-cover h-100 overflow-hidden rounded-4 shadow lovedRooms">
                     <div className="d-flex flex-column h-100 p-2 text-black text-shadow-1">
                         <div>
-                            <img src={image} className="position-relative w-100 rounded-4" alt="" />
+                            <img src={getImageUrl(room?.images?.[0])} className="position-relative w-100 rounded-4" alt="" />
                         </div>
                         <div className="position-absolute mt-2 ms-2 rounded-pill bg-warning px-3 text-dark bg-opacity-70">{room.rating}</div>
                         <h5 className="pt-2 mb-2 lh-1 fw-bold">Room {room.name}</h5>

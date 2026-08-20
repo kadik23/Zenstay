@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import image from '../../assets/room1.jpg'
+import { getImageUrl } from '../../Utils/getImageUrl';
 import useRoomStore from '../../Hooks/useRoomStore'
 import { useEffect } from 'react';
 export default function RoomBooked({appointment}){
@@ -15,7 +15,7 @@ export default function RoomBooked({appointment}){
     }    
     return(
         <div className='shadow rounded-4 p-3'>
-            <img src={image} height={250} style={{objectFit:'cover'}} className='w-100 rounded-4' alt="" />
+            <img src={getImageUrl(room?.images?.[0])} height={250} style={{objectFit:'cover'}} className='w-100 rounded-4' alt="" />
             <div className='mt-2'>
                 <h4 className="mb-2 fw-bold">Room</h4>
                 <div>

@@ -1,4 +1,4 @@
-import image from "../../assets/room1.jpg";
+import { getImageUrl } from "../../Utils/getImageUrl";
 import backarrow from "../../assets/icons/back-arrow.png"
 import adulticon from "../../assets/icons/person.png"
 import kidicon from "../../assets/icons/jumping-man.png"
@@ -35,23 +35,23 @@ export default function RoomsOverview() {
             </div>
             <div className="row row-cols-1 row-cols-lg-2 mb-4">
                 <div className="col mb-3 mb-lg-0">
-                    <img src={image} className="w-100 h-100 rounded-4" alt="" />
+                    <img src={getImageUrl(room?.images?.[0])} className="w-100 h-100 rounded-4" style={{objectFit:"cover"}} alt="" />
                 </div>
                 <div className="col d-flex flex-column gap-3">
                     <div className="row mb-3">
                         <div className="col-6">
-                            <img src={image} className="w-100 h-100 rounded-4" alt="" />
+                            <img src={getImageUrl(room?.images?.[1])} className="w-100 h-100 rounded-4" style={{objectFit:"cover"}} alt="" />
                         </div>
                         <div className="col-6">
-                            <img src={image} className="w-100 h-100 rounded-4" alt="" />
+                            <img src={getImageUrl(room?.images?.[2])} className="w-100 h-100 rounded-4" style={{objectFit:"cover"}} alt="" />
                         </div>
                     </div>
                     <div className="row">
                         <div className="col-6">
-                            <img src={image} className="w-100 h-100 rounded-4" alt="" />
+                            <img src={getImageUrl(room?.images?.[3])} className="w-100 h-100 rounded-4" style={{objectFit:"cover"}} alt="" />
                         </div>
                         <div className="col-6">
-                            <img src={image} className="w-100 h-100 rounded-4" alt="" />
+                            <img src={getImageUrl(room?.images?.[4])} className="w-100 h-100 rounded-4" style={{objectFit:"cover"}} alt="" />
                         </div>
                     </div>
                 </div>
