@@ -11,6 +11,8 @@ import ALertMessage from "../../Components/guest/ALertMessage";
 import axios from "axios";
 import useSettingsStore from "../../Hooks/useSettingsStore";
 
+import RatingComponent from "../../Components/guest/RatingComponent";
+
 export default function BookingOpt(){
     const currencySymbol = useSettingsStore(state => state.currencySymbol);
     const settings = useSettingsStore(state => state.settings);
@@ -137,6 +139,16 @@ export default function BookingOpt(){
                             {appointment?.status === 'Canceled' || appointment?.status === 'cancelled' ? 'Already Canceled' : 'Cancel reservation'}
                         </button>
                     </div>
+
+                    {appointment && appointment.status !== 'Canceled' && appointment.status !== 'canceled' && appointment.status !== 'cancelled' && (
+                        <div className="mb-5">
+                            <RatingComponent 
+                                bookingId={appointment._id} 
+                                roomId={appointment.room_id} 
+                                bookingStatus={appointment.status}
+                            />
+                        </div>
+                    )}
                 </div>
                 <div className="col-sm-12 col-md-4 col-xl-7 px-md-5 text-center order-1 order-md-2">
                     <div style={{ marginTop: "100px" }} className="d-flex justify-content-center">

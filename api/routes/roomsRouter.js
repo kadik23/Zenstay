@@ -3,6 +3,7 @@ import Room from "../models/Room.js";
 import Booking from '../models/Booking.js';
 import User from '../models/User.js';
 import Notification from '../models/Notification.js';
+import Rating from '../models/Rating.js';
 import { loginMiddleware } from '../middleware/loginMiddleware.js';
 import mongoose from 'mongoose';
 const router  = Router()
@@ -420,5 +421,126 @@ router.delete('/cancel_reservation/:id',loginMiddleware,async(req,res)=>{
         res.status(500).json('Internal Server Error' + e.message);
     }
 })
+
+router.post('/submitRating', loginMiddleware, async (req, res) => {
+    try {
+        const { booking_id, room_id, ratings, comment } = req.body;
+        const user_id = req.userData.id;
+
+        if (!booking_id || !room_id) {
+            return res.status(400).json({ message: 'booking_id and room_id are required' });
+        }
+
+        const cleanedRatings = {};
+        let sum = 0;
+        let count = 0;
+
+        if (ratings && typeof ratings === 'object') {
+            for (const [key, val] of Object.entries(ratings)) {
+                if (val !== null && val !== undefined && val !== '') {
+                    const numVal = Number(val);
+                    if (!isNaN(numVal) && numVal >= 0 && numVal <= 10) {
+                        cleanedRatings[key] = numVal;
+                        sum += numVal;
+                        count += 1;
+                    }
+                }
+            }
+        }
+
+        if (count === 0) {
+            return res.status(400).json({ message: 'At least one valid rating (0-10) is required' });
+        }
+
+        const overallRating = parseFloat((sum / count).toFixed(1));
+
+        const ratingDoc = await Rating.findOneAndUpdate(
+            { booking_id },
+            {
+                booking_id,
+                room_id,
+                user_id,
+                overallRating,
+                ratings: cleanedRatings,
+                comment: comment || ''
+            },
+            { new: true, upsert: true }
+        );
+
+        await Booking.findByIdAndUpdate(booking_id, { review: overallRating });
+
+        const roomRatings = await Rating.find({ room_id });
+        if (roomRatings.length > 0) {
+            const roomSum = roomRatings.reduce((acc, curr) => acc + curr.overallRating, 0);
+            const roomAvg = (roomSum / roomRatings.length).toFixed(1);
+            await Room.findByIdAndUpdate(room_id, { rating: roomAvg });
+        }
+
+        res.status(200).json({ message: 'Rating submitted successfully', data: ratingDoc });
+    } catch (e) {
+        console.error('Error submitting rating:', e);
+        res.status(500).json({ message: 'Internal Server Error: ' + e.message });
+    }
+});
+
+router.get('/getRatingByBooking/:booking_id', async (req, res) => {
+    try {
+        const ratingDoc = await Rating.findOne({ booking_id: req.params.booking_id });
+        res.status(200).json({ data: ratingDoc });
+    } catch (e) {
+        res.status(500).json({ message: 'Internal Server Error: ' + e.message });
+    }
+});
+
+router.get('/getRoomRatingStats/:room_id', async (req, res) => {
+    try {
+        const room_id = req.params.room_id;
+        const roomRatings = await Rating.find({ room_id });
+        const room = await Room.findById(room_id);
+
+        if (!roomRatings || roomRatings.length === 0) {
+            return res.status(200).json({
+                data: {
+                    averageRating: room ? parseFloat(room.rating || 0) : 0,
+                    totalRatingsCount: 0,
+                    categoryAverages: {}
+                }
+            });
+        }
+
+        const totalRatingsCount = roomRatings.length;
+        const sumOverall = roomRatings.reduce((acc, curr) => acc + curr.overallRating, 0);
+        const averageRating = parseFloat((sumOverall / totalRatingsCount).toFixed(1));
+
+        const categorySums = {};
+        const categoryCounts = {};
+
+        roomRatings.forEach(doc => {
+            if (doc.ratings) {
+                Object.entries(doc.ratings).forEach(([catKey, val]) => {
+                    if (val !== null && val !== undefined && typeof val === 'number') {
+                        categorySums[catKey] = (categorySums[catKey] || 0) + val;
+                        categoryCounts[catKey] = (categoryCounts[catKey] || 0) + 1;
+                    }
+                });
+            }
+        });
+
+        const categoryAverages = {};
+        Object.keys(categorySums).forEach(catKey => {
+            categoryAverages[catKey] = parseFloat((categorySums[catKey] / categoryCounts[catKey]).toFixed(1));
+        });
+
+        res.status(200).json({
+            data: {
+                averageRating,
+                totalRatingsCount,
+                categoryAverages
+            }
+        });
+    } catch (e) {
+        res.status(500).json({ message: 'Internal Server Error: ' + e.message });
+    }
+});
 
 export default router

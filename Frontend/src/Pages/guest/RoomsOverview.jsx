@@ -11,22 +11,44 @@ import airconicon from "../../assets/icons/air-conditioner.png"
 import plusicon from "../../assets/icons/plus.png"
 import bathroom from "../../assets/icons/bathroom.png"
 import { NavLink } from "react-router-dom";
-import { useEffect } from "react"
+import { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom';
+import axios from "axios";
 import useUserStore from "../../Hooks/useUserStore";
 import useRoomStore from "../../Hooks/useRoomStore";
 import getRatingStatus from "../../Utils/getRatingStatus";
 
 export default function RoomsOverview() {
 
-    const {user,setUser} = useUserStore()
+    const {user,setUser} = useUserStore();
     const {id} = useParams();
-    const {room,fetchRoomById} = useRoomStore()
+    const {room,fetchRoomById} = useRoomStore();
+    const [ratingStats, setRatingStats] = useState(null);
 
-    useEffect(()=>{
-        fetchRoomById(id)
-    }
-    ,[id])
+    useEffect(() => {
+        fetchRoomById(id);
+        const fetchRatingStats = async () => {
+            try {
+                const res = await axios.get(`/getRoomRatingStats/${id}`);
+                if (res.data && res.data.data) {
+                    setRatingStats(res.data.data);
+                }
+            } catch (err) {
+                console.error("Failed to fetch rating stats", err);
+            }
+        };
+        fetchRatingStats();
+    }, [id]);
+
+    const categoryLabels = {
+        cleanliness: 'Cleanliness',
+        comfort: 'Comfort',
+        air_conditioning: 'Air Conditioning',
+        free_wifi: 'WiFi Connection',
+        smart_tv: 'Smart TV',
+        key_card_access: 'Key Card Access',
+        bathroom: 'Bathroom',
+    };
 
     return(
         <div className="container">
@@ -70,8 +92,8 @@ export default function RoomsOverview() {
                 </div>
                 <div className="d-flex flex-column justify-content-end align-items-md-end align-items-start w-100 order-1 order-md-2">
                     <div className="d-flex align-items-center mb-2">
-                        <span className="flex-1 rounded-pill px-3 room-status">{getRatingStatus(room.rating)}</span>
-                        <span className="rating rounded-pill px-3 ms-2">{room.rating}</span>
+                        <span className="flex-1 rounded-pill px-3 room-status">{getRatingStatus(ratingStats?.averageRating || room.rating)}</span>
+                        <span className="rating rounded-pill px-3 ms-2">{ratingStats?.averageRating || room.rating}</span>
                     </div>
                     <NavLink to={`/BookingOpt/${room._id}`} className="btn btn-primary rounded-pill px-4">Book Now</NavLink>
                 </div>
@@ -136,126 +158,44 @@ export default function RoomsOverview() {
                 </div>
             </div>
             <hr className="my-4 border-t border-gray-300" />
-            <h5 className="mt-4">Reviews</h5>
+            <h5 className="mt-4">Reviews & Ratings</h5>
             <div className="row row-clos-md-2 row-cols-1">
-                <div className="col-md-4 col">
-                    <div className="display-6 text-primary mb-2"><strong>{room.rating}/10</strong></div>
-                    <div>
-                        <div className="d-flex justify-content-between align-items-center text-secondary mb-1">
-                            <span>
-                                Cleanliness
-                            </span>
-                            <span>
-                                10/10
-                            </span>
-
-                        </div>
-                        <div className="progress mb-3 rounded-pill">
-                            <div className="progress-bar" style={{width:"100%"}} role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
+                <div className="col-md-5 col">
+                    <div className="d-flex align-items-baseline mb-2">
+                        <span className="display-6 text-primary me-2"><strong>{ratingStats?.averageRating || room.rating || 0}/10</strong></span>
+                        <span className="text-secondary fw-semibold">
+                            ({ratingStats?.totalRatingsCount || 0} {ratingStats?.totalRatingsCount === 1 ? 'rating' : 'ratings'})
+                        </span>
                     </div>
-                    <div>
-                        <div className="d-flex justify-content-between align-items-center text-secondary mb-1">
-                            <span>
-                                Amenities
-                            </span>
-                            <span>
-                                7/10
-                            </span>
-
-                        </div>
-                        <div className="progress mb-3 rounded-pill">
-                            <div className="progress-bar" style={{width:"70%"}} role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </div>
-                    <div>
-                        <div className="d-flex justify-content-between align-items-center text-secondary mb-1">
-                            <span>
-                                Bathroom
-                            </span>
-                            <span>
-                                9/10
-                            </span>
-
-                        </div>
-                        <div className="progress mb-3 rounded-pill">
-                            <div className="progress-bar" style={{width:"90%"}} role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </div>
-                    <div>
-                        <div className="d-flex justify-content-between align-items-center text-secondary mb-1">
-                            <span>
-                                Comfort
-                            </span>
-                            <span>
-                                8/10
-                            </span>
-
-                        </div>
-                        <div className="progress mb-3 rounded-pill">
-                            <div className="progress-bar" style={{width:"80%"}} role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </div>
-                    <div>
-                        <div className="d-flex justify-content-between align-items-center text-secondary mb-1">
-                            <span>
-                                Wifi Connection
-                            </span>
-                            <span>
-                                9/10
-                            </span>
-
-                        </div>
-                        <div className="progress mb-3 rounded-pill">
-                            <div className="progress-bar" style={{width:"90%"}} role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </div>
-                </div>
-                <div className="col-md-8 col">
-                    {/* <div className="row row-cols-1">
-                        <div className="col d-flex justify-content-between">
-                            <div className="">
-                                <div className="">
-                                    <strong className="">Hotel Norrebro</strong>
-                                </div>
-                                <span className="text-secondary">Mark M.</span>
-                                <div className="mb-3">
-                                    <p className="mb-3">
-                                        we enjoyed our stay at this Hotelwe will definetly come back
-                                    </p>
-                                    <div>
-                                        <div className="d-flex align-items-center mb-1">
-                                            <img src={plusicon} width={10} alt="" />
-                                            <span className="ms-2">Great location!</span>
-                                        </div>
-                                        <div className="d-flex align-items-center mb-1">
-                                            <img src={plusicon} width={10} alt="" />
-                                            <span className="ms-2">Service</span>
-                                        </div>
-                                        <div className="d-flex align-items-center mb-1">
-                                            <img src={plusicon} width={10} alt="" />
-                                            <span className="ms-2">Bottle of champagne in the room!</span>
-                                        </div>
-
+                    
+                    {ratingStats?.categoryAverages && Object.keys(ratingStats.categoryAverages).length > 0 ? (
+                        Object.entries(ratingStats.categoryAverages).map(([catKey, avgScore]) => {
+                            const label = categoryLabels[catKey] || catKey;
+                            const pct = Math.round((avgScore / 10) * 100);
+                            return (
+                                <div key={catKey}>
+                                    <div className="d-flex justify-content-between align-items-center text-secondary mb-1">
+                                        <span>{label}</span>
+                                        <span className="fw-semibold">{avgScore}/10</span>
+                                    </div>
+                                    <div className="progress mb-3 rounded-pill" style={{ height: '8px' }}>
+                                        <div 
+                                            className="progress-bar bg-primary" 
+                                            style={{ width: `${pct}%` }} 
+                                            role="progressbar" 
+                                            aria-valuenow={pct} 
+                                            aria-valuemin="0" 
+                                            aria-valuemax="100"
+                                        ></div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="d-flex flex-column justify-content-between">
-                                <div className="">
-                                    <span className="flex-1 rounded-pill px-3 room-status">Excellent</span>
-                                    <span className="rating rounded-pill px-3">10</span>
-                                </div>
-                                <div className="">
-                                    <div className="text-secondary">Reviewed on</div>
-                                    <div className="text-secondary">20 September, 2022</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> */}
-                    {/* Comments soon... */}
+                            );
+                        })
+                    ) : (
+                        <div className="text-secondary my-3 small">No category ratings recorded yet for this room.</div>
+                    )}
                 </div>
             </div>
-            
             </>
         )}
         </div>
