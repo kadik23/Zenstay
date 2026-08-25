@@ -292,9 +292,15 @@ export default function RoomList() {
                                     {room.guests_number || room.places || 'N/A'} Guests
                                 </td>
                                 <td>
-                                    <span className="badge bg-warning text-dark rounded-pill px-3 py-2">
-                                        ⭐ {room.rating}
-                                    </span>
+                                    {room.rating && Number(room.rating) > 0 ? (
+                                        <span className="badge bg-warning text-dark rounded-pill px-3 py-2 fw-semibold">
+                                            ⭐ {room.rating}/10 {room.ratingCount ? `(${room.ratingCount})` : ''}
+                                        </span>
+                                    ) : (
+                                        <span className="badge bg-light text-muted rounded-pill px-3 py-2 border">
+                                            No ratings
+                                        </span>
+                                    )}
                                 </td>
                                 <td>
                                     {room.currentStatus === 'Available' ? (

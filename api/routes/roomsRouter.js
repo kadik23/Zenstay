@@ -96,14 +96,23 @@ router.get('/getAdminRoomList', async (req, res) => {
         
         const bookedRoomIds = new Set(activeBookings.map(b => b.room_id));
         
-        const roomsWithStatus = rooms.map(room => {
+        const roomsWithStatus = await Promise.all(rooms.map(async (room) => {
             const isBooked = bookedRoomIds.has(room._id.toString());
+            const roomRatings = await Rating.find({ room_id: room._id.toString() });
+            
+            let avgRating = room.rating ? parseFloat(room.rating) : 0;
+            if (roomRatings.length > 0) {
+                const sum = roomRatings.reduce((acc, curr) => acc + curr.overallRating, 0);
+                avgRating = parseFloat((sum / roomRatings.length).toFixed(1));
+            }
+
             return {
                 ...room.toObject(),
                 currentStatus: isBooked ? 'Booked' : 'Available',
-                rating: 4.5 // Mock rating for now
+                rating: avgRating || 0,
+                ratingCount: roomRatings.length
             };
-        });
+        }));
         
         res.json(roomsWithStatus);
     } catch(e) {
@@ -316,12 +325,15 @@ router.get('/getOrders', async (req, res) => {
         const enhancedOrders = await Promise.all(orders.map(async (order) => {
             const user = await User.findById(order.user_id).catch(() => null);
             const room = await Room.findById(order.room_id).catch(() => null);
+            const ratingDoc = await Rating.findOne({ booking_id: order._id.toString() }).catch(() => null);
             
             return {
                 ...order,
                 username: user ? `${user.firstname || ''} ${user.lastname || ''}`.trim() || user.username : 'Unknown User',
                 room_name: room ? room.name : 'Unknown Room',
-                room_price: room ? room.price : 0
+                room_price: room ? room.price : 0,
+                userRating: ratingDoc ? ratingDoc.overallRating : (order.review || null),
+                ratingDetails: ratingDoc ? ratingDoc.ratings : null
             };
         }));
         
@@ -377,10 +389,13 @@ router.get('/getUserBookings', loginMiddleware, async(req, res)=>{
         
         const enhancedBookings = await Promise.all(userBookings.map(async (booking) => {
             const room = await Room.findById(booking.room_id).catch(() => null);
+            const ratingDoc = await Rating.findOne({ booking_id: booking._id.toString() }).catch(() => null);
+            
             return {
                 ...booking,
                 room_name: room ? room.name : 'Unknown Room',
-                room_price: room ? room.price : 0
+                room_price: room ? room.price : 0,
+                review: ratingDoc ? ratingDoc.overallRating : (booking.review || null)
             };
         }));
         

@@ -174,13 +174,14 @@ function OrderList() {
               <th scope="col" className="border-0 py-3">Price</th>
               <th scope="col" className="border-0 py-3">Total</th>
               <th scope="col" className="border-0 py-3 text-center">Status</th>
+              <th scope="col" className="border-0 py-3 text-center">User Rating</th>
               <th scope="col" className="border-0 py-3"></th>
             </tr>
           </thead>
           <tbody>
             {filteredBookings.length === 0 && (
                 <tr>
-                    <td colSpan="10" className="text-center py-5 text-muted">No bookings found.</td>
+                    <td colSpan="11" className="text-center py-5 text-muted">No bookings found.</td>
                 </tr>
             )}
             {filteredBookings.map(booking => {
@@ -233,6 +234,15 @@ function OrderList() {
                       {currentStatus === 'Completed' && <span className="badge bg-success rounded-pill px-3 py-2 fw-bold">Completed</span>}
                       {currentStatus === 'Canceled' && <span className="badge bg-danger rounded-pill px-3 py-2 fw-bold">Canceled</span>}
                     </div>
+                  </td>
+                  <td className="text-center">
+                    {booking.userRating ? (
+                      <span className="badge bg-warning text-dark rounded-pill px-3 py-2 fw-semibold">
+                        ⭐ {booking.userRating}/10
+                      </span>
+                    ) : (
+                      <span className="text-muted small">-</span>
+                    )}
                   </td>
                   <td className="pe-4 position-relative">
                     <div style={{ cursor: 'pointer' }} onClick={() => setOpenDropdownId(openDropdownId === booking._id ? null : booking._id)}>

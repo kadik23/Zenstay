@@ -65,6 +65,7 @@ export default function BookingsList() {
                                     <th>Check-out</th>
                                     <th>Total Price</th>
                                     <th>Status</th>
+                                    <th>Rating</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -98,6 +99,15 @@ export default function BookingsList() {
                                                 </span>
                                             </td>
                                             <td>
+                                                {booking.review ? (
+                                                    <span className="badge bg-warning text-dark rounded-pill px-3 py-2 fw-semibold">
+                                                        ⭐ {booking.review}/10
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-muted small">-</span>
+                                                )}
+                                            </td>
+                                            <td>
                                                 {canRate ? (
                                                     <button
                                                         type="button"
@@ -108,7 +118,7 @@ export default function BookingsList() {
                                                             setShowRatingModal(true);
                                                         }}
                                                     >
-                                                        {booking.review ? `⭐ ${booking.review}/10` : 'Rate'}
+                                                        {booking.review ? 'Edit Rating' : 'Rate'}
                                                     </button>
                                                 ) : (
                                                     <span className="text-muted small">-</span>
