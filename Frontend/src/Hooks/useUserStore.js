@@ -90,6 +90,28 @@ const useUserStore = create(
                     setAlert({ message: 'Google Sign-in failed. Please try again.', type: 'danger' });
                 }
             },
+            facebookLogin: async (fbResponse) => {
+                const { setAlert, clearAlert } = useAlertMessageStore.getState();
+                try {
+                    const accessToken = fbResponse.accessToken || fbResponse.access_token;
+                    if (!accessToken) throw new Error('No Facebook Access Token');
+
+                    let response = await axios.post('/auth/facebook', { accessToken });
+                    setAlert({ message: 'Facebook Sign-in successful!', type: 'success' });
+                    set({ user: response.data });
+                    setTimeout(() => {
+                        clearAlert();
+                        if (response.data.account_type === 'admin') {
+                            window.location.href = '/admin';
+                        } else {
+                            window.location.href = '/';
+                        }
+                    }, 1500);
+                } catch (e) {
+                    console.error("Facebook login failed", e);
+                    setAlert({ message: 'Facebook Sign-in failed. Please try again.', type: 'danger' });
+                }
+            },
             logout: async () => {
                 const { setAlert,clearAlert } = useAlertMessageStore.getState();
                 try{

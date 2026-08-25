@@ -104,6 +104,72 @@ router.post("/auth/google", async (req, res) => {
     }
 });
 
+router.post("/auth/facebook", async (req, res) => {
+    const { accessToken, access_token } = req.body;
+    const token = accessToken || access_token;
+
+    if (!token) {
+        return res.status(400).json({ error: 'Facebook access token required' });
+    }
+
+    try {
+        const response = await fetch(`https://graph.facebook.com/v18.0/me?fields=id,name,email,first_name,last_name,picture.type(large),location,birthday&access_token=${token}`);
+        const payload = await response.json();
+
+        if (payload.error) {
+            console.error("Facebook Graph API error:", payload.error);
+            return res.status(400).json({ error: payload.error.message || 'Failed to authenticate with Facebook' });
+        }
+
+        const facebookId = payload.id;
+        const email = payload.email || `fb_${facebookId}@facebook.com`;
+        const firstname = payload.first_name || payload.name || 'Facebook User';
+        const lastname = payload.last_name || '';
+        const picture = payload.picture?.data?.url || '';
+        const location = payload.location?.name || null;
+        const date_of_birth = payload.birthday || null;
+
+        let userDoc = await User.findOne({ email });
+
+        if (!userDoc) {
+            userDoc = await User.create({
+                email,
+                username: (payload.name || `user_${facebookId}`).toLowerCase().replace(/\s+/g, ''),
+                firstname,
+                lastname,
+                image: picture,
+                location,
+                date_of_birth,
+                password: null,
+                auth_provider: 'facebook',
+                account_type: 'Guest',
+            });
+        } else {
+            const updates = {};
+            if (picture && (!userDoc.image || userDoc.image !== picture)) updates.image = picture;
+            if (location && !userDoc.location) updates.location = location;
+            if (date_of_birth && !userDoc.date_of_birth) updates.date_of_birth = date_of_birth;
+
+            if (Object.keys(updates).length > 0) {
+                userDoc = await User.findByIdAndUpdate(userDoc._id, updates, { new: true });
+            }
+        }
+
+        jwt.sign({
+            email: userDoc.email,
+            id: userDoc._id
+        }, jwtSecret, {}, (err, jwtToken) => {
+            if (err) return res.status(500).json({ error: err.message });
+            const { password, ...userWithoutPassword } = userDoc.toObject();
+            res.cookie('token', jwtToken, { maxAge: 3600 * 3600, sameSite: 'none', path: '/', secure: true })
+               .json({ ...userWithoutPassword, token: jwtToken });
+        });
+    } catch (e) {
+        console.error("Facebook Auth error:", e);
+        res.status(500).json({ error: e.message || 'Facebook Auth Failed' });
+    }
+});
+
 router.post("/register",
     [
         body('password')
@@ -141,8 +207,9 @@ router.post("/login", async (req, res) => {
         const userDoc = await User.findOne({ email });
 
         if (userDoc) {
-            if (!userDoc.password || userDoc.auth_provider === 'google') {
-                return res.status(422).json('This account uses Google Login. Please click Login with Google.');
+            if (!userDoc.password || userDoc.auth_provider === 'google' || userDoc.auth_provider === 'facebook') {
+                const providerName = userDoc.auth_provider === 'google' ? 'Google' : 'Facebook';
+                return res.status(422).json(`This account uses ${providerName} Login. Please click Login with ${providerName}.`);
             }
             const passOk = bcrypt.compareSync(password, userDoc.password);
             if (passOk) {

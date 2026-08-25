@@ -5,10 +5,11 @@ import axios from "axios";
 import { useState, useContext, useReducer } from "react";
 import useUserStore from '../../Hooks/useUserStore';
 import { useGoogleLogin } from '@react-oauth/google';
+import FacebookLogin from '@greatsumini/react-facebook-login';
 
 export default function SingUp() {
     const [errorPassword, setErrorPassword] = useState(false)
-    const { register, googleLogin } = useUserStore();
+    const { register, googleLogin, facebookLogin } = useUserStore();
 
     const triggerGoogleLogin = useGoogleLogin({
         onSuccess: (tokenResponse) => googleLogin(tokenResponse),
@@ -149,10 +150,22 @@ export default function SingUp() {
                                     <img src={googleicon} width={20} alt="Google" className='me-2' />
                                     Sign up with Google
                                 </button>
-                                <button type="button" className="d-flex justify-content-center align-items-center w-100 py-2 mb-2 btn btn-outline-primary rounded-3">
-                                    <img src={fbicon} width={20} alt="facebook" className='me-2' />
-                                    Sign up with Facebook
-                                </button>
+                                <FacebookLogin
+                                    appId={import.meta.env.VITE_FACEBOOK_APP_ID || 'your_facebook_app_id'}
+                                    scope="public_profile,email"
+                                    onSuccess={(response) => facebookLogin(response)}
+                                    onFail={(error) => console.error("Facebook Login Failed:", error)}
+                                    render={({ onClick }) => (
+                                        <button 
+                                            type="button" 
+                                            onClick={onClick} 
+                                            className="d-flex justify-content-center align-items-center w-100 py-2 mb-2 btn btn-outline-primary rounded-3"
+                                        >
+                                            <img src={fbicon} width={20} alt="facebook" className='me-2' />
+                                            Sign up with Facebook
+                                        </button>
+                                    )}
+                                />
                             </form>
                         </div>
                     </div>
