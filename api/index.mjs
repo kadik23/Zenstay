@@ -24,7 +24,7 @@ import routes from "./routes/index.js"
 const app = express()
 const corsOptions = {
     credentials: true,
-    origin: ['http://localhost:5173', 'https://zenstay-two.vercel.app'],
+    origin: ['http://localhost:5174', 'http://localhost:5173', 'https://zenstay-two.vercel.app'],
 };
 app.use(cors(corsOptions));
 
