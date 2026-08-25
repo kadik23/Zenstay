@@ -62,6 +62,34 @@ const useUserStore = create(
                     setAlert({ message: 'Login failed!', type: 'danger' });
                 }
             },
+            googleLogin: async (googleResponse) => {
+                const { setAlert, clearAlert } = useAlertMessageStore.getState();
+                try {
+                    let payload = {};
+                    if (googleResponse.credential) {
+                        payload = { credential: googleResponse.credential };
+                    } else if (googleResponse.access_token) {
+                        payload = { access_token: googleResponse.access_token };
+                    } else {
+                        throw new Error('Invalid Google Response');
+                    }
+
+                    let response = await axios.post('/auth/google', payload);
+                    setAlert({ message: 'Google Sign-in successful!', type: 'success' });
+                    set({ user: response.data });
+                    setTimeout(() => {
+                        clearAlert();
+                        if (response.data.account_type === 'admin') {
+                            window.location.href = '/admin';
+                        } else {
+                            window.location.href = '/';
+                        }
+                    }, 1500);
+                } catch (e) {
+                    console.error("Google login failed", e);
+                    setAlert({ message: 'Google Sign-in failed. Please try again.', type: 'danger' });
+                }
+            },
             logout: async () => {
                 const { setAlert,clearAlert } = useAlertMessageStore.getState();
                 try{

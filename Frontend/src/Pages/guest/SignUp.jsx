@@ -4,10 +4,16 @@ import googleicon from '../../assets/icons/google.png'
 import axios from "axios";
 import { useState, useContext, useReducer } from "react";
 import useUserStore from '../../Hooks/useUserStore';
+import { useGoogleLogin } from '@react-oauth/google';
 
 export default function SingUp() {
     const [errorPassword, setErrorPassword] = useState(false)
-    const { register } = useUserStore();
+    const { register, googleLogin } = useUserStore();
+
+    const triggerGoogleLogin = useGoogleLogin({
+        onSuccess: (tokenResponse) => googleLogin(tokenResponse),
+        onError: (err) => console.error("Google Sign Up Error:", err),
+    });
 
     const initState = {
         email: "",
@@ -135,11 +141,15 @@ export default function SingUp() {
                                 <small className="text-secondary">By clicking Sign up, you agree to the terms of use.</small>
                                 <hr className="" />
                                 <h2 className="fs-5 fw-bold mb-3 text-white">Or use a third-party</h2>
-                                <button className="d-flex justify-content-center align-items-center w-100 py-2 mb-2 btn btn-outline-light rounded-3" type="submit">
-                                    <img src={googleicon} width={20} alt="Twitter" className='me-2' />
+                                <button 
+                                    type="button" 
+                                    onClick={() => triggerGoogleLogin()} 
+                                    className="d-flex justify-content-center align-items-center w-100 py-2 mb-2 btn btn-outline-light rounded-3"
+                                >
+                                    <img src={googleicon} width={20} alt="Google" className='me-2' />
                                     Sign up with Google
                                 </button>
-                                <button className="d-flex justify-content-center align-items-center w-100 py-2 mb-2 btn btn-outline-primary rounded-3" type="submit">
+                                <button type="button" className="d-flex justify-content-center align-items-center w-100 py-2 mb-2 btn btn-outline-primary rounded-3">
                                     <img src={fbicon} width={20} alt="facebook" className='me-2' />
                                     Sign up with Facebook
                                 </button>

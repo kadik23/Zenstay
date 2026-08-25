@@ -5,14 +5,15 @@ import axios from "axios";
 
 export default function PersonalDetails() {
   const { user, setUser, logout, update } = useUserStore();
+
   const initState = {
-    firstname: user.firstname || "",
-    lastname: user.lastname || "",
-    telephone: user.telephone || "",
-    email: user.email || "",
-    location: user.location || "",
-    nationality: user.nationality || "",
-    date_of_birth: user.date_of_birth || "",
+    firstname: user?.firstname || "",
+    lastname: user?.lastname || "",
+    telephone: user?.telephone || "",
+    email: user?.email || "",
+    location: user?.location || "",
+    nationality: user?.nationality || "",
+    date_of_birth: user?.date_of_birth || "",
   };
 
   const [isEditing, setIsEditing] = useState({
@@ -43,9 +44,11 @@ export default function PersonalDetails() {
     }
   };
 
-  const update_user = async () =>{
-    await update()
-  }
+  const [state, dispatch] = useReducer(Reducer, initState);
+
+  const update_user = async () => {
+    await update();
+  };
 
   const uploadPhoto = async (ev) => {
     const files = ev.target.files;
@@ -65,17 +68,22 @@ export default function PersonalDetails() {
     }
   };
 
-  const imageUrl = user?.image ? (user.image.startsWith('http') ? user.image : `http://localhost:3000/uploads/${user.image}`) : "https://github.com/mdo.png";
-
-  const [state, dispatch] = useReducer(Reducer, initState);
+  const imageUrl = user?.image 
+    ? (user.image.startsWith('http://') || user.image.startsWith('https://') 
+        ? user.image 
+        : `http://localhost:3000/uploads/${user.image}`) 
+    : "https://github.com/mdo.png";
 
   const Signout = async () => {
     const response = await logout();
-    console.log(response);
     if (response) {
       window.location.href = "/";
     }
   };
+
+  if (!user) {
+    return <div className="p-5 text-center text-muted">Please log in to view personal details.</div>;
+  }
 
   return (
     <div className="p-md-5 row">

@@ -72,7 +72,7 @@ export default function ProfileAdmin() {
     }
   };
 
-  const imageUrl = user.image ? (user.image.startsWith('http') ? user.image : `http://localhost:3000/uploads/${user.image}`) : "https://github.com/mdo.png";
+  const imageUrl = user?.image ? (user.image.startsWith('http') ? user.image : `http://localhost:3000/uploads/${user.image}`) : "https://github.com/mdo.png";
 
   return (
     <div>

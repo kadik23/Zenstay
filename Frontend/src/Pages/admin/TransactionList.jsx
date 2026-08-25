@@ -6,6 +6,7 @@ import useAlertMessageStore from '../../Hooks/useAlertMessage';
 import useSettingsStore from '../../Hooks/useSettingsStore';
 
 export default function TransactionList() {
+    const currencySymbol = useSettingsStore(state => state.currencySymbol);
     const [transactions, setTransactions] = useState([]);
     const [filteredTransactions, setFilteredTransactions] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
