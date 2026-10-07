@@ -6,7 +6,7 @@ export default function Footer() {
                 <div className="col">
                 <a className="navbar-brand text-body-emphasis fw-bold me-lg-4" href="#">Zenstay</a><br />
                 <small>Your favourite hotel booking experience since 1997!</small>
-                <p className="text-body-secondary mt-5">© 2023</p>
+                <p className="text-body-secondary mt-5">© {new Date().getFullYear()} Zenstay. All rights reserved.</p>
                 </div>
 
                 <div className="col ">
