@@ -11,6 +11,8 @@ import path from 'path';
 import Stripe from 'stripe';
 import Booking from './models/Booking.js';
 import Transaction from './models/Transaction.js';
+import { createAdmin } from "./create_admin.mjs";
+import { seed, seedIfEmpty } from "./seed.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,7 +20,15 @@ const __dirname = path.dirname(__filename);
 dotenv.config();
 const port = process.env.PORT || 3000
 const url = process.env.MONGO_URL
-mongoose.connect(url)
+
+mongoose.connect(url).then(async () => {
+    console.log("Connected to MongoDB");
+    await createAdmin();
+    await seedIfEmpty();
+}).catch(err => {
+    console.error("MongoDB connection error:", err);
+});
+
 import routes from "./routes/index.js"
 
 const app = express()
@@ -79,6 +89,21 @@ app.post('/upload_photos', photosMiddleware.array('photos', 10), async (req,res)
 });
 
 
+
+// HTTP endpoint to manually trigger/re-seed the database without terminal access
+app.get('/api/seed', async (req, res) => {
+    try {
+        const rooms = await seed();
+        res.json({
+            success: true,
+            message: `Successfully seeded ${rooms.length} rooms!`,
+            count: rooms.length
+        });
+    } catch (err) {
+        console.error("Error running /api/seed:", err);
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
 
 app.get('*',async(req,res)=>{
     res.status(422).json('not found')

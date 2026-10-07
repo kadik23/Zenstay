@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node index.mjs",
     "test": "jest --forceExit",
     "build": "echo \"Error: no build specified\" ",
-    "dev": "nodemon index.mjs"
+    "dev": "nodemon index.mjs",
+    "seed": "node create_admin.mjs && node seed.mjs"
   },
   "author": "",
   "license": "ISC",

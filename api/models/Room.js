@@ -14,11 +14,14 @@ const RoomSchema = new Schema({
     status: String,
     places: String,
     bathrrom: Boolean,
+    bathroom: Boolean,
     key_card_access: Boolean,
     air_conditioning: Boolean,
     smart_tv: Boolean,
     free_wifi: Boolean,
     guests_number: String,
+    rating: { type: Number, default: 0 },
+    viewers: { type: Number, default: 0 },
 })
 
 const RoomModel = mongoose.model('Room',RoomSchema)

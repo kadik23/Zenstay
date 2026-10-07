@@ -4,6 +4,7 @@ import more from '../../assets/icons/more.png';
 import roomFallback from "../../assets/img/room5.jpg";
 import axios from "axios";
 import useAlertMessageStore from "../../Hooks/useAlertMessage";
+import { getImageUrl } from "../../Utils/getImageUrl";
 
 export default function RoomList() {
     const [rooms, setRooms] = useState([]);
@@ -98,7 +99,8 @@ export default function RoomList() {
     };
 
     const handleOpenSlider = (room) => {
-        const images = (room.images && room.images.length > 0) ? room.images : [room.image || roomFallback];
+        const rawImages = (room.images && room.images.length > 0) ? room.images : [room.image || roomFallback];
+        const images = rawImages.map(img => (typeof img === 'string' ? getImageUrl(img) : img));
         setSliderImages(images);
         setCurrentImageIndex(0);
     };
@@ -271,7 +273,7 @@ export default function RoomList() {
                                 </th>
                                 <td>
                                     <div className='d-flex gap-3 align-items-center py-2'>
-                                        <img src={(room.images && room.images.length > 0) ? room.images[0] : (room.image || roomFallback)} width={120} height={80} 
+                                        <img src={getImageUrl((room.images && room.images.length > 0) ? room.images[0] : (room.image || roomFallback))} width={120} height={80} 
                                             className='rounded-3 shadow-sm' 
                                             style={{objectFit:"cover", cursor: "pointer"}} alt={room.name} 
                                             onClick={() => handleOpenSlider(room)}
@@ -354,7 +356,7 @@ export default function RoomList() {
                                             <div className="d-flex flex-wrap gap-2">
                                                 {formData.images.map((imgUrl, idx) => (
                                                     <div key={idx} className="position-relative">
-                                                        <img src={imgUrl} alt={`Room image ${idx + 1}`} className="rounded-3 border" style={{ width: '80px', height: '60px', objectFit: 'cover' }} />
+                                                        <img src={getImageUrl(imgUrl)} alt={`Room image ${idx + 1}`} className="rounded-3 border" style={{ width: '80px', height: '60px', objectFit: 'cover' }} />
                                                         <button 
                                                             type="button" 
                                                             className="btn btn-sm btn-danger position-absolute top-0 end-0 rounded-circle p-0 d-flex align-items-center justify-content-center shadow" 
