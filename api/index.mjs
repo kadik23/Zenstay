@@ -90,6 +90,19 @@ app.post('/upload_photos', photosMiddleware.array('photos', 10), async (req,res)
 
 
 
+// Health check endpoints (supports Render, monitoring, and uptime checks)
+const healthHandler = (req, res) => {
+    const isDbConnected = mongoose.connection.readyState === 1;
+    res.status(isDbConnected ? 200 : 503).json({
+        status: isDbConnected ? 'ok' : 'degraded',
+        uptime: Math.floor(process.uptime()),
+        timestamp: new Date().toISOString(),
+        database: isDbConnected ? 'connected' : 'disconnected'
+    });
+};
+
+app.get('/health', healthHandler);
+
 // HTTP endpoint to manually trigger/re-seed the database without terminal access
 app.get('/api/seed', async (req, res) => {
     try {
