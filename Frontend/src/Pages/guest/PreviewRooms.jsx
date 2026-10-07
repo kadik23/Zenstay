@@ -39,7 +39,7 @@ export default function PreviewRooms() {
                 <div >
                     <SideBar />
                 </div>
-                <div className="flex-grow-1 px-4" style={{marginLeft:"36opx"}}>
+                <div className="flex-grow-1 px-4">
                     <div className="d-flex justify-content-between align-items-center" style={{marginTop:"60px"}}>
                         <h4>Room Services</h4>
                         <select 

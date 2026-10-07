@@ -69,6 +69,66 @@ export const clientUsersData = [
         telephone: 213550123456,
         image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=256&q=80',
         date_of_birth: { day: 12, month: 1, year: 1995 }
+    },
+    {
+        email: 'marcus.vance@example.com',
+        username: 'marcusv',
+        firstname: 'Marcus',
+        lastname: 'Vance',
+        location: 'Melbourne, Australia',
+        nationality: 'Australia',
+        account_type: 'Guest',
+        telephone: 61412345678,
+        image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=256&q=80',
+        date_of_birth: { day: 18, month: 4, year: 1988 }
+    },
+    {
+        email: 'chloe.martin@example.com',
+        username: 'chloem',
+        firstname: 'Chloe',
+        lastname: 'Martin',
+        location: 'Berlin, Germany',
+        nationality: 'Germany',
+        account_type: 'Guest',
+        telephone: 4915123456789,
+        image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=256&q=80',
+        date_of_birth: { day: 5, month: 8, year: 1993 }
+    },
+    {
+        email: 'lucas.silva@example.com',
+        username: 'lucass',
+        firstname: 'Lucas',
+        lastname: 'Silva',
+        location: 'Rio de Janeiro, Brazil',
+        nationality: 'Brazil',
+        account_type: 'Guest',
+        telephone: 5521998765432,
+        image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=256&q=80',
+        date_of_birth: { day: 25, month: 12, year: 1990 }
+    },
+    {
+        email: 'sophia.chen@example.com',
+        username: 'sophiac',
+        firstname: 'Sophia',
+        lastname: 'Chen',
+        location: 'Singapore',
+        nationality: 'Singapore',
+        account_type: 'Guest',
+        telephone: 6591234567,
+        image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=256&q=80',
+        date_of_birth: { day: 14, month: 2, year: 1997 }
+    },
+    {
+        email: 'kenji.sato@example.com',
+        username: 'kenjis',
+        firstname: 'Kenji',
+        lastname: 'Sato',
+        location: 'Tokyo, Japan',
+        nationality: 'Japan',
+        account_type: 'Guest',
+        telephone: 819012345678,
+        image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=256&q=80',
+        date_of_birth: { day: 3, month: 7, year: 1991 }
     }
 ];
 
@@ -532,51 +592,255 @@ export async function seed() {
         await RatingModel.deleteMany({});
 
         const clientBookingsData = [
+            // --- Single Bed Rooms (Rooms 101 - 104) ---
+            {
+                user_id: clients[5]._id.toString(), // Marcus Vance
+                room_id: insertedRooms[0]._id.toString(), // Room 101 - Cozy Standard Single
+                check_in: '2026-09-05',
+                check_out: '2026-09-08',
+                numberOfGuests: 1,
+                status: 'checked-out',
+                totalPrice: 135,
+                review: 8.5,
+                ratingInfo: {
+                    overallRating: 8.5,
+                    ratings: { cleanliness: 9, comfort: 8, air_conditioning: 9, free_wifi: 9, smart_tv: 7, key_card_access: 9, bathroom: 8 },
+                    comment: 'Very quiet and cozy single room. The wifi was lightning fast and check-in was seamless.'
+                }
+            },
             {
                 user_id: clients[0]._id.toString(), // Sarah Jenkins
                 room_id: insertedRooms[1]._id.toString(), // Room 102 - Deluxe Solo Studio
-                check_in: '2026-10-10',
-                check_out: '2026-10-14',
+                check_in: '2026-09-10',
+                check_out: '2026-09-14',
                 numberOfGuests: 1,
-                status: 'confirmed',
+                status: 'checked-out',
                 totalPrice: 260,
-                review: 8.0,
+                review: 9.0,
                 ratingInfo: {
-                    overallRating: 8.0,
-                    ratings: { cleanliness: 9, comfort: 8, air_conditioning: 8, free_wifi: 9, smart_tv: 7, key_card_access: 9, bathroom: 8 },
+                    overallRating: 9.0,
+                    ratings: { cleanliness: 9, comfort: 9, air_conditioning: 9, free_wifi: 9, smart_tv: 9, key_card_access: 9, bathroom: 9 },
                     comment: 'Loved my solo trip stay! The room was very modern, clean, and quiet.'
                 }
             },
             {
+                user_id: clients[3]._id.toString(), // David Kim
+                room_id: insertedRooms[2]._id.toString(), // Room 103 - Urban Business Single
+                check_in: '2026-09-12',
+                check_out: '2026-09-15',
+                numberOfGuests: 1,
+                status: 'checked-out',
+                totalPrice: 165,
+                review: 8.4,
+                ratingInfo: {
+                    overallRating: 8.4,
+                    ratings: { cleanliness: 9, comfort: 8, air_conditioning: 8, free_wifi: 10, smart_tv: 7, key_card_access: 9, bathroom: 8 },
+                    comment: 'Great room for business work trips. Ergonomic space and remarkably steady internet.'
+                }
+            },
+            {
+                user_id: clients[8]._id.toString(), // Sophia Chen
+                room_id: insertedRooms[3]._id.toString(), // Room 104 - Minimalist Garden Single
+                check_in: '2026-09-15',
+                check_out: '2026-09-18',
+                numberOfGuests: 1,
+                status: 'checked-out',
+                totalPrice: 180,
+                review: 8.7,
+                ratingInfo: {
+                    overallRating: 8.7,
+                    ratings: { cleanliness: 9, comfort: 9, air_conditioning: 8, free_wifi: 9, smart_tv: 8, key_card_access: 9, bathroom: 9 },
+                    comment: 'A serene garden oasis in the city. Spotless bathroom and very restful ambiance.'
+                }
+            },
+
+            // --- Twin Bed Rooms (Rooms 201 - 204) ---
+            {
                 user_id: clients[1]._id.toString(), // Alexandre Dubois
                 room_id: insertedRooms[4]._id.toString(), // Room 201 - Classic Twin Comfort
-                check_in: '2026-10-12',
-                check_out: '2026-10-15',
+                check_in: '2026-09-18',
+                check_out: '2026-09-21',
                 numberOfGuests: 2,
-                status: 'confirmed',
+                status: 'checked-out',
                 totalPrice: 255,
                 review: 9.0,
                 ratingInfo: {
                     overallRating: 9.0,
-                    ratings: { cleanliness: 9, comfort: 9, air_conditioning: 8, free_wifi: 9, smart_tv: 8, key_card_access: 9, bathroom: 9 },
+                    ratings: { cleanliness: 9, comfort: 9, air_conditioning: 9, free_wifi: 9, smart_tv: 8, key_card_access: 9, bathroom: 9 },
                     comment: 'Great twin beds, friendly staff and fast wifi connection.'
                 }
             },
             {
+                user_id: clients[6]._id.toString(), // Chloe Martin
+                room_id: insertedRooms[5]._id.toString(), // Room 202 - Superior Twin Room
+                check_in: '2026-09-20',
+                check_out: '2026-09-24',
+                numberOfGuests: 2,
+                status: 'checked-out',
+                totalPrice: 380,
+                review: 8.9,
+                ratingInfo: {
+                    overallRating: 8.9,
+                    ratings: { cleanliness: 9, comfort: 9, air_conditioning: 9, free_wifi: 9, smart_tv: 8, key_card_access: 9, bathroom: 9 },
+                    comment: 'Very comfortable twin beds and great rainfall shower. Everything was spotless.'
+                }
+            },
+            {
+                user_id: clients[4]._id.toString(), // Amira Benali
+                room_id: insertedRooms[6]._id.toString(), // Room 203 - Family Quad Twin Suite
+                check_in: '2026-09-22',
+                check_out: '2026-09-26',
+                numberOfGuests: 4,
+                status: 'checked-out',
+                totalPrice: 540,
+                review: 9.3,
+                ratingInfo: {
+                    overallRating: 9.3,
+                    ratings: { cleanliness: 10, comfort: 9, air_conditioning: 9, free_wifi: 9, smart_tv: 9, key_card_access: 9, bathroom: 10 },
+                    comment: 'Wonderful spacious suite for our family. Kids loved the smart TV and the beds were heavenly.'
+                }
+            },
+            {
+                user_id: clients[7]._id.toString(), // Lucas Silva
+                room_id: insertedRooms[7]._id.toString(), // Room 204 - Deluxe Balcony Twin
+                check_in: '2026-09-25',
+                check_out: '2026-09-28',
+                numberOfGuests: 2,
+                status: 'checked-out',
+                totalPrice: 330,
+                review: 8.8,
+                ratingInfo: {
+                    overallRating: 8.8,
+                    ratings: { cleanliness: 9, comfort: 9, air_conditioning: 8, free_wifi: 9, smart_tv: 8, key_card_access: 9, bathroom: 9 },
+                    comment: 'The balcony view was delightful for breakfast. Fresh air, clean room and great service.'
+                }
+            },
+
+            // --- Queen Bed Rooms (Rooms 301 - 304) ---
+            {
                 user_id: clients[2]._id.toString(), // Elena Rostova
                 room_id: insertedRooms[8]._id.toString(), // Room 301 - Executive Queen Suite
-                check_in: '2026-10-02',
-                check_out: '2026-10-06',
+                check_in: '2026-09-26',
+                check_out: '2026-09-30',
                 numberOfGuests: 2,
                 status: 'checked-out',
                 totalPrice: 500,
-                review: 9.5,
+                review: 9.6,
                 ratingInfo: {
-                    overallRating: 9.5,
+                    overallRating: 9.6,
                     ratings: { cleanliness: 10, comfort: 10, air_conditioning: 9, free_wifi: 10, smart_tv: 9, key_card_access: 10, bathroom: 9 },
                     comment: 'Exceptional queen suite! Stunning interior and very comfortable bed.'
                 }
             },
+            {
+                user_id: clients[9]._id.toString(), // Kenji Sato
+                room_id: insertedRooms[9]._id.toString(), // Room 302 - Premium Panoramic Queen
+                check_in: '2026-09-28',
+                check_out: '2026-10-02',
+                numberOfGuests: 2,
+                status: 'checked-out',
+                totalPrice: 580,
+                review: 9.4,
+                ratingInfo: {
+                    overallRating: 9.4,
+                    ratings: { cleanliness: 10, comfort: 9, air_conditioning: 9, free_wifi: 9, smart_tv: 10, key_card_access: 9, bathroom: 9 },
+                    comment: 'Breathtaking panoramic views of the city. Cleanliness was 10/10 and the smart TV was great.'
+                }
+            },
+            {
+                user_id: clients[0]._id.toString(), // Sarah Jenkins
+                room_id: insertedRooms[10]._id.toString(), // Room 303 - Boutique Heritage Queen
+                check_in: '2026-10-01',
+                check_out: '2026-10-04',
+                numberOfGuests: 2,
+                status: 'checked-out',
+                totalPrice: 390,
+                review: 9.0,
+                ratingInfo: {
+                    overallRating: 9.0,
+                    ratings: { cleanliness: 9, comfort: 9, air_conditioning: 9, free_wifi: 9, smart_tv: 9, key_card_access: 9, bathroom: 9 },
+                    comment: 'Charming heritage styling with 5-star modern comforts. Highly recommended.'
+                }
+            },
+            {
+                user_id: clients[5]._id.toString(), // Marcus Vance
+                room_id: insertedRooms[11]._id.toString(), // Room 304 - Sunset View Queen
+                check_in: '2026-10-02',
+                check_out: '2026-10-05',
+                numberOfGuests: 2,
+                status: 'checked-out',
+                totalPrice: 420,
+                review: 9.2,
+                ratingInfo: {
+                    overallRating: 9.2,
+                    ratings: { cleanliness: 9, comfort: 9, air_conditioning: 9, free_wifi: 9, smart_tv: 9, key_card_access: 10, bathroom: 9 },
+                    comment: 'Watching the sunset from the queen bed was magical. Truly relaxing getaway.'
+                }
+            },
+
+            // --- King Bed Rooms (Rooms 401 - 404) ---
+            {
+                user_id: clients[1]._id.toString(), // Alexandre Dubois
+                room_id: insertedRooms[12]._id.toString(), // Room 401 - Presidential King Suite
+                check_in: '2026-10-03',
+                check_out: '2026-10-07',
+                numberOfGuests: 2,
+                status: 'checked-out',
+                totalPrice: 1000,
+                review: 9.8,
+                ratingInfo: {
+                    overallRating: 9.8,
+                    ratings: { cleanliness: 10, comfort: 10, air_conditioning: 10, free_wifi: 10, smart_tv: 10, key_card_access: 10, bathroom: 9 },
+                    comment: 'Pure luxury! The presidential king suite exceeded every expectation. Flawless hospitality.'
+                }
+            },
+            {
+                user_id: clients[3]._id.toString(), // David Kim
+                room_id: insertedRooms[13]._id.toString(), // Room 402 - Penthouse Royal King
+                check_in: '2026-10-05',
+                check_out: '2026-10-09',
+                numberOfGuests: 2,
+                status: 'checked-out',
+                totalPrice: 1280,
+                review: 9.7,
+                ratingInfo: {
+                    overallRating: 9.7,
+                    ratings: { cleanliness: 10, comfort: 10, air_conditioning: 10, free_wifi: 10, smart_tv: 9, key_card_access: 9, bathroom: 10 },
+                    comment: 'The best penthouse in the city. Breathtaking views, king bed and marble bathroom.'
+                }
+            },
+            {
+                user_id: clients[2]._id.toString(), // Elena Rostova
+                room_id: insertedRooms[14]._id.toString(), // Room 403 - Grand Terrace King
+                check_in: '2026-10-06',
+                check_out: '2026-10-10',
+                numberOfGuests: 2,
+                status: 'checked-out',
+                totalPrice: 880,
+                review: 9.5,
+                ratingInfo: {
+                    overallRating: 9.5,
+                    ratings: { cleanliness: 10, comfort: 9, air_conditioning: 9, free_wifi: 10, smart_tv: 9, key_card_access: 10, bathroom: 9 },
+                    comment: 'Expansive private terrace and plush king bed. Room service was fast and the room was immaculate.'
+                }
+            },
+            {
+                user_id: clients[6]._id.toString(), // Chloe Martin
+                room_id: insertedRooms[15]._id.toString(), // Room 404 - Skyline Master King
+                check_in: '2026-10-07',
+                check_out: '2026-10-11',
+                numberOfGuests: 2,
+                status: 'checked-out',
+                totalPrice: 1120,
+                review: 9.6,
+                ratingInfo: {
+                    overallRating: 9.6,
+                    ratings: { cleanliness: 10, comfort: 10, air_conditioning: 9, free_wifi: 10, smart_tv: 9, key_card_access: 9, bathroom: 10 },
+                    comment: 'Top-floor skyline view is unforgettable. Deep soaking tub, super quiet AC, wonderful stay.'
+                }
+            },
+
+            // --- Upcoming active client bookings ---
             {
                 user_id: clients[3]._id.toString(), // David Kim
                 room_id: insertedRooms[13]._id.toString(), // Room 402 - Penthouse Royal King
@@ -615,6 +879,18 @@ export async function seed() {
             }
         }
         console.log(`✨ Successfully created ${insertedBookings.length} reservations booked by real clients!\n`);
+
+        // 5. Recalculate room ratings so RoomModel.rating exactly matches client reviews
+        console.log('⭐ Updating rooms with client ratings...');
+        for (const room of insertedRooms) {
+            const roomRatings = await RatingModel.find({ room_id: room._id.toString() });
+            if (roomRatings.length > 0) {
+                const sum = roomRatings.reduce((acc, curr) => acc + curr.overallRating, 0);
+                const avg = parseFloat((sum / roomRatings.length).toFixed(1));
+                await RoomModel.findByIdAndUpdate(room._id, { rating: avg });
+                room.rating = avg;
+            }
+        }
 
         // Print Summary Tables
         console.log('\n📋 Seeded Rooms Overview:');

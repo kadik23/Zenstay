@@ -6,23 +6,32 @@ export default function Popular({room}) {
     const currencySymbol = useSettingsStore(state => state.currencySymbol);
     const bgImage = `url("${getImageUrl(room?.images?.[0])}")`;
 
-    return(
-        <div>           
-            <div className="col">
-                <div className="popularCard card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style={{ backgroundImage: bgImage }}>
-                    <div className="d-flex flex-column h-100 py-3 px-4 pb-3 text-white text-shadow-1">
-                        <h3 className="pt-5 mb-4 display-7 lh-1 fw-bold">Room {room.name}</h3>
-                        <ul className="d-flex list-unstyled mt-auto">
-                            <li className="me-auto">
-                                <NavLink to={`/RoomOverview/${room._id}`} className="text-decoration-none text-white shadow-lg me-lg-4">    View Details</NavLink>
-                            </li>
-                            <li className="rounded-pill bg-white px-2 text-black">
-                                <small>{currencySymbol === 'DA' ? `${room.price} ${currencySymbol}` : `${currencySymbol}${room.price}`}</small>
-                            </li>
-                        </ul>
+    return (
+        <div className="col mb-3">
+            <div className="popularCard card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg border-0" 
+                 style={{ backgroundImage: bgImage }}>
+                <div className="d-flex flex-column h-100 py-3 px-4 pb-3 text-white text-shadow-1 popularCard-overlay">
+                    <div className="d-flex justify-content-between align-items-center mb-auto">
+                        <span className="badge bg-primary rounded-pill px-3 py-2 fw-semibold">Popular</span>
+                        {room.rating && (
+                            <span className="badge bg-warning text-dark rounded-pill px-2 py-1 fw-bold">⭐ {room.rating}</span>
+                        )}
                     </div>
+                    <h4 className="pt-3 mb-3 fw-bold text-white text-truncate" title={`Room ${room.name}`}>
+                        Room {room.name}
+                    </h4>
+                    <ul className="d-flex list-unstyled mt-auto mb-0 align-items-center">
+                        <li className="me-auto">
+                            <NavLink to={`/RoomOverview/${room._id}`} className="btn btn-sm btn-outline-light rounded-pill px-3">
+                                View Details
+                            </NavLink>
+                        </li>
+                        <li className="rounded-pill bg-white px-3 py-1 text-black fw-bold">
+                            <small>{currencySymbol === 'DA' ? `${room.price} ${currencySymbol}` : `${currencySymbol}${room.price}`}</small>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
-    )
+    );
 }

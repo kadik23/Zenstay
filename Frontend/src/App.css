@@ -36,15 +36,106 @@
 .excellent-room-status {
     color: #3bb37a;
 }
-.popularCard {
-    background-image: url("/src/assets/breakfast.jpg");
-    object-fit: cover;
-    background-size: cover;
+/* --- Standardized Listing Room Cards --- */
+.room-listing-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background-color: #ffffff;
 }
 
-.popularCard > div {
-    background: transparent;
-    backdrop-filter: blur(2px);
+.room-listing-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08) !important;
+}
+
+.Rooms-cards-img {
+    width: 280px;
+    height: 200px;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 1rem;
+    position: relative;
+    background-color: #f0f0f0;
+}
+
+.Rooms-cards-img a {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.Rooms-cards-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.Rooms-cards-img:hover img {
+    transform: scale(1.04);
+}
+
+@media (max-width: 991.98px) {
+    .Rooms-cards-img {
+        width: 100%;
+        height: 220px;
+    }
+}
+
+/* Loved Rooms (Home page cards) */
+.lovedRooms {
+    min-height: 290px;
+    height: 100%;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background-color: #ffffff;
+}
+
+.lovedRooms:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.1) !important;
+}
+
+.loved-room-img-wrapper {
+    width: 100%;
+    height: 180px;
+    border-radius: 1rem;
+    overflow: hidden;
+    background-color: #f0f0f0;
+}
+
+.loved-room-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+    border-radius: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.loved-room-img:hover {
+    transform: scale(1.04);
+}
+
+/* Popular Room Cards */
+.popularCard {
+    height: 380px;
+    min-height: 380px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.popularCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22) !important;
+}
+
+.popularCard-overlay {
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.15) 100%);
+    backdrop-filter: blur(1px);
+    border-radius: 1rem;
 }
 
 
