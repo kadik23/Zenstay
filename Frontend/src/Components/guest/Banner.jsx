@@ -31,7 +31,7 @@ export default function Banner() {
                 <div className="banner p-4 p-md-5 rounded-4 text-white text-center position-relative" style={{ minHeight: '350px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                     <div>
                         <h1 className="display-5 fw-bold">Book your stay with Zenstay</h1>
-                        <p className="lead my-3 fw-700">{rooms && rooms.length} rooms around the world are waiting for you!</p>
+                        <p className="lead my-3 fw-700">{rooms && rooms.length} rooms around the hotel are waiting for you!</p>
                     </div>
                 </div>
                 
